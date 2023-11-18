@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Contacts {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+
+  age              Int
+  city             String
+  email            String @unique
+  gender           String
+  country          String
+  timezone         String
+  occupation       String
+  sourceOfReferral String
+  eduQuestDecision String
+
+  birthDate                DateTime @db.Date
+  eduQuestSelectedDateTime DateTime @db.Date
+
+  sentEmails     SentEmails[]
+  scheduledMails ScheduledMails[]
+
+  listIds String[]       @db.ObjectId
+  lists   ContactLists[] @relation(fields: [listIds], references: [id])
+}
+
+model ContactLists {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  listName String
+
+  contactIds String[]   @db.ObjectId
+  contacts   Contacts[] @relation(fields: [contactIds], references: [id])
+}
+
+model ScheduledMails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String   @db.ObjectId
+  contact   Contacts @relation(fields: [contactId], references: [id])
+
+  templateId String        @db.ObjectId
+  template   MailTemplates @relation(fields: [templateId], references: [id])
+
+  timeZone      String
+  scheduledDate DateTime @db.Date
+
+  senderProfileId String        @db.ObjectId
+  senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
+}
+
+model SentEmails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String   @db.ObjectId
+  contact   Contacts @relation(fields: [contactId], references: [id])
+
+  templateId String        @db.ObjectId
+  template   MailTemplates @relation(fields: [templateId], references: [id])
+
+  timeZone      String
+  scheduledDate DateTime @db.Date
+
+  senderProfileId String        @db.ObjectId
+  senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
+
+  emailStatus EmailStatus @default(PENDING)
+}
+
+model MailTemplates {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  link String
+
+  sentEmails     SentEmails[]
+  scheduledMails ScheduledMails[]
+}
+
+model SenderProfile {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  email String @unique
+
+  scheduledMails ScheduledMails[]
+  sentMails      SentEmails[]
+}
+
+enum EmailStatus {
+  PENDING
+  OPENED
+}
