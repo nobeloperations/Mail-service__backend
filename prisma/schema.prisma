@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Contacts {
+model Contact {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   firstName String
   lastName  String
@@ -25,29 +25,29 @@ model Contacts {
   birthDate                DateTime @db.Date
   eduQuestSelectedDateTime DateTime @db.Date
 
-  sentEmails     SentEmails[]
-  scheduledMails ScheduledMails[]
+  sentMail       SentMail[]
+  scheduledMails ScheduledMail[]
 
-  listIds String[]       @db.ObjectId
-  lists   ContactLists[] @relation(fields: [listIds], references: [id])
+  listIds String[]      @db.ObjectId
+  lists   ContactList[] @relation(fields: [listIds], references: [id])
 }
 
-model ContactLists {
+model ContactList {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   listName String
 
-  contactIds String[]   @db.ObjectId
-  contacts   Contacts[] @relation(fields: [contactIds], references: [id])
+  contactIds String[]  @db.ObjectId
+  contacts   Contact[] @relation(fields: [contactIds], references: [id])
 }
 
-model ScheduledMails {
+model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  contactId String   @db.ObjectId
-  contact   Contacts @relation(fields: [contactId], references: [id])
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
 
-  templateId String        @db.ObjectId
-  template   MailTemplates @relation(fields: [templateId], references: [id])
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
 
   timeZone      String
   scheduledDate DateTime @db.Date
@@ -56,14 +56,14 @@ model ScheduledMails {
   senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
 }
 
-model SentEmails {
+model SentMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  contactId String   @db.ObjectId
-  contact   Contacts @relation(fields: [contactId], references: [id])
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
 
-  templateId String        @db.ObjectId
-  template   MailTemplates @relation(fields: [templateId], references: [id])
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
 
   timeZone      String
   scheduledDate DateTime @db.Date
@@ -74,13 +74,13 @@ model SentEmails {
   emailStatus EmailStatus @default(PENDING)
 }
 
-model MailTemplates {
+model MailTemplate {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   link String
 
-  sentEmails     SentEmails[]
-  scheduledMails ScheduledMails[]
+  sentMails      SentMail[]
+  scheduledMails ScheduledMail[]
 }
 
 model SenderProfile {
@@ -88,8 +88,8 @@ model SenderProfile {
   name  String
   email String @unique
 
-  scheduledMails ScheduledMails[]
-  sentMails      SentEmails[]
+  scheduledMails ScheduledMail[]
+  sentMails      SentMail[]
 }
 
 enum EmailStatus {
