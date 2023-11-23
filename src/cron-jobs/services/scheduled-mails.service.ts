@@ -2,7 +2,7 @@ import prismaClient from '../../database/prisma-client';
 
 const retrievePendingMails = async () => {
     const currentDateTime = new Date();
-    const mails = await prismaClient.scheduledMails.findMany({
+    const mails = await prismaClient.scheduledMail.findMany({
         where: {
             scheduledDate: {
                 lte: currentDateTime

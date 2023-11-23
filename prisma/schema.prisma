@@ -92,6 +92,12 @@ model SenderProfile {
   sentMails      SentMail[]
 }
 
+model ContactDataPlacehodelr {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  contactFieldName String
+  placeholderTag   String
+}
+
 enum EmailStatus {
   PENDING
   OPENED
