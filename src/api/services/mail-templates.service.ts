@@ -1,15 +1,15 @@
 import { FileArray, UploadedFile } from 'express-fileupload';
 
 import prismaClient from '../../database/prisma-client';
+import BaseApiError from '../../utils/errors/custom-api-errors';
 import GoogleDriveMaiTemplatesService from '../../google-services/mail-templates.driver-service';
 
 
 const getMailTemplateDataById = async (id: string) => {
     const databaseResult = await prismaClient.mailTemplate.findUnique({ where: { id } });
-
+    
     if (!databaseResult) {
-        //TODO: API Errors
-        throw new Error('Not found');
+        throw BaseApiError.NotFound(`The requested resource with id - ${id} could not be found on the server`);
     }
 
     const templateFileData = await GoogleDriveMaiTemplatesService.getMailTemplateFileDataById(databaseResult.googleDriveFileId);
@@ -33,6 +33,10 @@ const createMailTemplates = async (files: FileArray) => {
 
 const deleteMailTemplateById = async (id: string) => {
     const databaseSearchingResult = await prismaClient.mailTemplate.findUnique({ where: { id } });
+
+    if (!databaseSearchingResult) {
+        throw BaseApiError.NotFound(`The requested resource with id - ${id} could not be found on the server`);
+    }
 
     const deleteFromGoogleDriveResult = await GoogleDriveMaiTemplatesService.deleteMailTemplateFileById(databaseSearchingResult.googleDriveFileId);
     const databaseDeletingResult = await prismaClient.mailTemplate.delete({ where: { id } })
