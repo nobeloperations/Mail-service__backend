@@ -5,7 +5,9 @@
     "target": "es2021",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["global"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
   },
   "lib": ["es2021"]
 }

@@ -75,9 +75,10 @@ model SentMail {
 }
 
 model MailTemplate {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  link String
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  googleDriveFileId String
+  createdAt      DateTime @default(now()) @db.Date
 
   sentMails      SentMail[]
   scheduledMails ScheduledMail[]
