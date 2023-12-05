@@ -2,7 +2,7 @@ import { Contact } from '@prisma/client';
 
 import PlaceholderService from './services/placeholder.service';
 
-const replacePlaceholdersWithContactDataInMailTemplate = async (mailText: string, contactData: Contact): Promise<string> => {
+export const replacePlaceholdersWithContactDataInMailTemplate = async (mailText: string, contactData: Contact): Promise<string> => {
     const contactDataplaceholderRegex = /%(\w+)%/g;
     const placeholdersData = await PlaceholderService.getMapCollectionOfContactPlaceholders();
 
@@ -16,7 +16,3 @@ const replacePlaceholdersWithContactDataInMailTemplate = async (mailText: string
 
     return formatedMailText;
 };
-
-export default {
-    replacePlaceholdersWithContactDataInMailTemplate
-}

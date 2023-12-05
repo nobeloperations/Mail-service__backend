@@ -13,6 +13,16 @@ const retrievePendingMails = async () => {
     return mails;
 };
 
+const deletePendingMail = async (id: string) => {
+    const mail = await prismaClient.scheduledMail.delete({
+        where: {
+          id,
+        },
+      })
+
+      return mail
+}
 export default {
-    retrievePendingMails
+    retrievePendingMails,
+    deletePendingMail
 }
