@@ -34,7 +34,7 @@ const getMailTemplateFileDataById = async (fileId: string) => {
         { responseType: 'stream' }
     );
 
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
         let data = '';
         response.data
             .on('data', chunk => data += chunk)
