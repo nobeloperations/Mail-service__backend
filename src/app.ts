@@ -7,6 +7,8 @@ import startCronJobs from './cron-jobs';
 
 import MailTemplatesRouter from './api/routes/mail-templates.route';
 import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
+import ContactRouter from "./api/routes/contact.router";
+
 import sentPendingMails from './cron-jobs/jobs/sent-pending-mails';
 
 import errorHandler from './api/middlewares/error-handler.middleware';
@@ -21,6 +23,7 @@ app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 
 app.use('/api', MailTemplatesRouter);
 app.use('/api', ScheduledMailsRouter);
+app.use('/api', ContactRouter);
 
 app.get('/test', async (req, res, next) => {
     const result = await sentPendingMails()
