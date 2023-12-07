@@ -12,7 +12,7 @@ router.get(
 
 router.get(
     '/scheduled-mails/:id', 
-    ExceptionInterceptor(ScheduledMailsController.deleteMailById)
+    ExceptionInterceptor(ScheduledMailsController.getMailById)
 );
 
 router.post(
