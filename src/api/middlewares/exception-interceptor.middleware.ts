@@ -1,13 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 
-const ExceptionInterceptor = (handler: (req: Request, res: Response, next: NextFunction) => any) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+type ControllerFunction = (req: Request, res: Response, next: NextFunction) => Promise<any>;
+
+const ExceptionInterceptor = (controller: ControllerFunction) => {
+    const func = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            await handler(req, res, next);
+            await controller(req, res, next);
         } catch (error) {
             next(error);
         }
     };
+    return func;
 };
+
 
 export default ExceptionInterceptor;

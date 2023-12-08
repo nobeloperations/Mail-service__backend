@@ -30,6 +30,8 @@ model Contact {
 
   listIds String[]      @db.ObjectId
   lists   ContactList[] @relation(fields: [listIds], references: [id])
+
+  isSubscribed Boolean @default(true)
 }
 
 model ContactList {
@@ -97,6 +99,14 @@ model ContactDataPlacehodelr {
   id               String @id @default(auto()) @map("_id") @db.ObjectId
   contactFieldName String
   placeholderTag   String
+}
+
+model Users {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  password String
+  name     String
+  token    String?
 }
 
 enum EmailStatus {

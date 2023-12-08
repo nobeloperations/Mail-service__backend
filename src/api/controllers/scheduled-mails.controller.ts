@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-
+import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
 import ScheduleMailService from '../services/scheduled-mails.service';
 
 const createMails = async (req: Request, res: Response) => {
@@ -40,9 +40,9 @@ const getMailsList = async (req: Request, res: Response) => {
 };
 
 export default {
-    createMails,
-    getMailById,
-    deleteMailById,
-    updateMailById,
-    getMailsList,
+    createMails: ExceptionInterceptor(createMails),
+    getMailById: ExceptionInterceptor(getMailById),
+    deleteMailById: ExceptionInterceptor(deleteMailById),
+    updateMailById: ExceptionInterceptor(updateMailById),
+    getMailsList: ExceptionInterceptor(getMailsList),
 };

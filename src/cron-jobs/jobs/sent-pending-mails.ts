@@ -6,6 +6,7 @@ import ContactDataService from '../services/contactData'
 import SendedMailsService from '../services/sended-mails'
 import { replacePlaceholdersWithContactDataInMailTemplate } from "../../mails-processor/mail-placeholder-replacer"
 import { Contact } from '@prisma/client';
+import MailTemplateService from '../../api/services/mail-templates.service'
 
 const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_REFRESH_TOKEN} = process.env
 
@@ -24,20 +25,24 @@ const transporter = nodemailer.createTransport(config);
   
 const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
-    pendingMails.map(async ({contactId, id, ...restOfFields}) => {
+
+    pendingMails.forEach(async (proccessedScheduledMailData) => {
+        const { contactId, templateId } = proccessedScheduledMailData
+
         const contactData = await ContactDataService.retrieveContactData(contactId)
-        const proccessedMessage = await replacePlaceholdersWithContactDataInMailTemplate(`<html><body>
-        <p>Hi, I test everything</p>
-        <img src="http://localhost:3000/tracking?emailId=${id}" width="1" height="1" />
-        </body></html>`, contactData)
+        if(!contactData.isSubscribed){
+            return
+        }
+        const message = await MailTemplateService.getMailTemplateDataById(templateId)
+        const proccessedMessage = await replacePlaceholdersWithContactDataInMailTemplate(message, contactData)
 
         transporter
         .sendMail(setAppropriateMailOptions(contactData, proccessedMessage))
         .then(() => {
-            ScheduledMailsService.deletePendingMail(id)
-            SendedMailsService.addSendedMail({...restOfFields, contactId})
+            // ScheduledMailsService.deletePendingMail(id)
+            SendedMailsService.addSendedMail(proccessedScheduledMailData)
         })
-        .catch(err => console.log(err.message));
+        .catch((err: Error) => console.log(err.message));
     }) 
 };
 
