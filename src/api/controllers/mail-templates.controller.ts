@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-
+import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
 import MailTemplatesService from '../services/mail-templates.service';
 
 const getMailTemplateDataById = async (req: Request, res: Response) => {
@@ -37,8 +37,8 @@ const createMailTemplates = async (req: Request, res: Response) => {
 };
 
 export default {
-    createMailTemplates,
-    getMailTemplatesList,
-    deleteMailTemplateById,
-    getMailTemplateDataById,
+    createMailTemplates: ExceptionInterceptor(createMailTemplates),
+    getMailTemplatesList: ExceptionInterceptor(getMailTemplatesList),
+    deleteMailTemplateById: ExceptionInterceptor(deleteMailTemplateById),
+    getMailTemplateDataById: ExceptionInterceptor(getMailTemplateDataById),
 };

@@ -2,13 +2,14 @@ import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
+import prismaClient from './database/prisma-client'
 
 import startCronJobs from './cron-jobs';
 
 import MailTemplatesRouter from './api/routes/mail-templates.route';
 import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
+import AuthRouter from './api/routes/auth';
 import ContactRouter from "./api/routes/contact.router";
-
 import sentPendingMails from './cron-jobs/jobs/sent-pending-mails';
 
 import errorHandler from './api/middlewares/error-handler.middleware';
@@ -23,6 +24,8 @@ app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 
 app.use('/api', MailTemplatesRouter);
 app.use('/api', ScheduledMailsRouter);
+
+app.use('/api', AuthRouter);
 app.use('/api', ContactRouter);
 
 app.get('/test', async (req, res, next) => {
@@ -34,6 +37,15 @@ app.get('/tracking', (req, res) => {
     const emailId = req.query.emailId;
     console.log(`Email with ID ${emailId} was opened`);
 
+    prismaClient.sentMail.update({
+        where: {
+          id: "emailId",
+        },
+        data: {
+          emailStatus: 'OPENED',
+        },
+      })
+
     const base64Image = 'R0lGODlhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=';
     const imgBuffer = Buffer.from(base64Image, 'base64');
     res.writeHead(200, {
@@ -42,6 +54,7 @@ app.get('/tracking', (req, res) => {
     });
     res.end(imgBuffer);
 });
+
 app.use(prismaErrorHandler);
 app.use(errorHandler);
 

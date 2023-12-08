@@ -68,6 +68,15 @@ class BaseApiError extends Error {
             false
         );
     }
+
+    static Conflict(description: string = DefaultErrorsDescription.INTERNAL_SERVER_ERROR) {
+        return this.createError(
+            ReasonPhrases.CONFLICT, 
+            StatusCodes.CONFLICT, 
+            description, 
+            false
+        );
+    }
 }
 
 export default BaseApiError;
