@@ -51,8 +51,9 @@ model ScheduledMail {
   templateId String       @db.ObjectId
   template   MailTemplate @relation(fields: [templateId], references: [id])
 
-  timeZone      String
-  scheduledDate DateTime @db.Date
+  timeZone           String
+  scheduledDate      DateTime @db.Date
+  useContactTimezone Boolean
 
   senderProfileId String        @db.ObjectId
   senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
@@ -80,7 +81,7 @@ model MailTemplate {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   googleDriveFileId String
-  createdAt      DateTime @default(now()) @db.Date
+  createdAt         DateTime @default(now()) @db.Date
 
   sentMails      SentMail[]
   scheduledMails ScheduledMail[]

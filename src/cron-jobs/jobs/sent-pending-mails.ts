@@ -1,57 +1,31 @@
-const nodemailer = require('nodemailer');
-require("dotenv").config()
 
-import ScheduledMailsService from '../services/scheduled-mails.service';
 import ContactDataService from '../services/contactData'
 import SendedMailsService from '../services/sended-mails'
-import { replacePlaceholdersWithContactDataInMailTemplate } from "../../mails-processor/mail-placeholder-replacer"
-import { Contact } from '@prisma/client';
-import MailTemplateService from '../../api/services/mail-templates.service'
+import ScheduledMailsService from '../services/scheduled-mails.service';
 
-const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_REFRESH_TOKEN} = process.env
+import MailSender from '../../infrustructure/services/mail/mail-sender.service';
+import MailComposer from '../../infrustructure/services/mail/mail-composer.service';
+import MailTimeCoordinator from '../../infrustructure/services/mail/mail-time-coordinator.service';
 
 
-const config = {
-    service: 'gmail',
-    auth: {
-        type: 'OAuth2',
-        user: 'nikita.k@nobelcoaching.com',
-        clientId: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        refreshToken: GOOGLE_CLIENT_REFRESH_TOKEN,
-    }
-}
-const transporter = nodemailer.createTransport(config);
-  
 const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
 
-    pendingMails.forEach(async (proccessedScheduledMailData) => {
-        const { contactId, templateId } = proccessedScheduledMailData
+    //TODO: Handle an error if it was not possible to send a mail
+    for (const processedSheduledMailData of pendingMails) {
+        
+        const { contactId, id, templateId, ...scheduledMailData } = processedSheduledMailData;
+        const contactData = await ContactDataService.retrieveContactData(contactId);
 
-        const contactData = await ContactDataService.retrieveContactData(contactId)
-        if(!contactData.isSubscribed){
-            return
-        }
-        const message = await MailTemplateService.getMailTemplateDataById(templateId)
-        const proccessedMessage = await replacePlaceholdersWithContactDataInMailTemplate(message, contactData)
+        if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData)) {
+            const composedMail = await MailComposer.composeMail(contactData, templateId);
 
-        transporter
-        .sendMail(setAppropriateMailOptions(contactData, proccessedMessage))
-        .then(() => {
-            // ScheduledMailsService.deletePendingMail(id)
-            SendedMailsService.addSendedMail(proccessedScheduledMailData)
-        })
-        .catch((err: Error) => console.log(err.message));
-    }) 
+            await MailSender.sentComposedMail(contactData.email, composedMail);
+    
+            await ScheduledMailsService.deletePendingMail(id);
+            await SendedMailsService.addSendedMail(processedSheduledMailData);
+        }        
+    }
 };
-
-function setAppropriateMailOptions(contactData: Contact, html: string){
-    return {
-        to: contactData.email,
-        subject: 'Nodemailer test',
-        html,
-      };
-}
 
 export default sentPendingMails;
