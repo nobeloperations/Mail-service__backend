@@ -1,0 +1,1 @@
+{"version":3,"file":"contactData.js","sourceRoot":"","sources":["../../../src/cron-jobs/services/contactData.ts"],"names":[],"mappings":";;;;;AAAA,iFAAwD;AAExD,MAAM,mBAAmB,GAAG,KAAK,EAAE,EAAU,EAAE,EAAE;IAC7C,MAAM,OAAO,GAAG,MAAM,uBAAY,CAAC,OAAO,CAAC,UAAU,CAAC,EAAE,KAAK,EAAE,EAAE,EAAE,EAAE,EAAC,CAAC,CAAC;IAExE,OAAO,OAAO,CAAC;AACnB,CAAC,CAAC;AAEF,kBAAe;IACX,mBAAmB;CACtB,CAAA"}
