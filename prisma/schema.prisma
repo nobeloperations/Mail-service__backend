@@ -32,9 +32,6 @@ model Contact {
   listIds String[]        @db.ObjectId
   lists   ContactstList[] @relation(fields: [listIds], references: [id])
 
-  listIds String[]      @db.ObjectId
-  lists   ContactList[] @relation(fields: [listIds], references: [id])
-
   isSubscribed Boolean @default(true)
 }
 
