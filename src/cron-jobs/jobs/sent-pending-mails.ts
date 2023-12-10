@@ -11,21 +11,21 @@ import MailTimeCoordinator from '../../infrustructure/services/mail/mail-time-co
 const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
 
-    //TODO: Handle an error if it was not possible to send a mail
-    for (const processedSheduledMailData of pendingMails) {
+    pendingMails.forEach(async (processedSheduledMailData) => {
         
-        const { contactId, id, templateId, ...scheduledMailData } = processedSheduledMailData;
+        const { contactId, id, templateId, useContactTimezone, ...restOfFields } = processedSheduledMailData;
         const contactData = await ContactDataService.retrieveContactData(contactId);
-
-        if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData)) {
+        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) && 
+        console.log(pendingMails)
+        if (contactData.isSubscribed) {
             const composedMail = await MailComposer.composeMail(contactData, templateId);
 
             await MailSender.sentComposedMail(contactData.email, composedMail);
     
-            await ScheduledMailsService.deletePendingMail(id);
-            await SendedMailsService.addSendedMail(processedSheduledMailData);
+            // await ScheduledMailsService.deletePendingMail(id);
+            await SendedMailsService.addSendedMail({emailId: id, contactId, templateId, ...restOfFields});
         }        
-    }
+    })
 };
 
 export default sentPendingMails;
