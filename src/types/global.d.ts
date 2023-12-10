@@ -1,3 +1,5 @@
+import { Users } from "@prisma/client";
+
 export {};
 
 declare global {
@@ -5,4 +7,18 @@ declare global {
         page: number;
         pageSize: number;
     }
+    interface Registration {
+        name: string;
+        password: string;
+        email: string;
+    }
+    interface Login {
+        password: string;
+        email: string;
+    }
+    namespace Express {
+        interface Request {
+          user?: Users;
+        }
+      }
 }
