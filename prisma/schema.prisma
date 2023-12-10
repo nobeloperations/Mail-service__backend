@@ -31,7 +31,8 @@ model Contact {
   listIds String[]      @db.ObjectId
   lists   ContactList[] @relation(fields: [listIds], references: [id])
 
-  isSubscribed Boolean @default(true)
+  isSubscribed    Boolean           @default(true)
+  ContactsActions ContactsActions[]
 }
 
 model ContactList {
@@ -74,7 +75,9 @@ model SentMail {
   senderProfileId String        @db.ObjectId
   senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
 
-  emailStatus EmailStatus @default(PENDING)
+  emailId String @unique
+
+  emailStatus   EmailStatus?   @default(PENDING)
 }
 
 model MailTemplate {
@@ -103,14 +106,31 @@ model ContactDataPlacehodelr {
 }
 
 model Users {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
   password String
   name     String
   token    String?
 }
 
+model ContactsActions {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
+
+  typeOfActivity      TypeOfActivity
+  activityDescription String
+  createdAt           DateTime       @default(now()) @db.Date
+}
+
 enum EmailStatus {
   PENDING
   OPENED
+}
+
+enum TypeOfActivity {
+  EMAIL
+  LINK
+  UNSUBSCRIBE
 }
