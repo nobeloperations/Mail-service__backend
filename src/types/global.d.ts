@@ -3,9 +3,10 @@ import { Users } from "@prisma/client";
 export {};
 
 declare global {
-    interface PaginationOptions {
-        page: number;
-        pageSize: number;
+    interface ApiResourceFilteringParams {
+        page?: number;
+        pageSize?: number;
+        search?: string;
     }
     interface Registration {
         name: string;
