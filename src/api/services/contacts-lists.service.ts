@@ -21,8 +21,8 @@ const deleteContactsListById = async (id: string) => {
     return result;
 };
 
-const getListContactsLists = async (paginationOptions: PaginationOptions) => {
-    const { page, pageSize } = paginationOptions;
+const getListContactsLists = async (filteringParams: ApiResourceFilteringParams) => {
+    const { page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
 
     const listOfContactsLists = await prismaClient.contactstList.findMany({

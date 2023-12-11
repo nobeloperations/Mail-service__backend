@@ -22,7 +22,7 @@ const sentPendingMails = async () => {
 
             await MailSender.sentComposedMail(contactData.email, composedMail);
     
-            await ScheduledMailsService.deletePendingMail(id);
+            // await ScheduledMailsService.deletePendingMail(id);
             await SendedMailsService.addSendedMail(processedSheduledMailData);
         }        
     }
