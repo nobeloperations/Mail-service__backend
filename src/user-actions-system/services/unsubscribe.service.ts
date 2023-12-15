@@ -1,7 +1,8 @@
 import prismaClient from '../../database/prisma-client';
+import descriptionGenerator from '../helpers/descriptionCreator';
 
 const unsubscribe = async (id: string) => {
-    await prismaClient.contact.update({ 
+    const { email } = await prismaClient.contact.update({ 
         where: {
             id
         }, 
@@ -10,11 +11,13 @@ const unsubscribe = async (id: string) => {
         }
     })
 
+    const activityDescription = descriptionGenerator.generateDescriptionForUnsubscribeAction(email)
+
     await prismaClient.contactsActions.create({
         data: {
             contactId: id,
             typeOfActivity: "UNSUBSCRIBE",
-            activityDescription: "User was unsubscribed success"
+            activityDescription
         }
     })
 }
