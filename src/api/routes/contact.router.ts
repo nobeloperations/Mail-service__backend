@@ -3,6 +3,7 @@ import authenticate from '../middlewares/authenticate'
 
 import contactController from '../controllers/contactController'
 import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
+import isValidId from '../middlewares/isValidId';
 
 const router=Router();
 
@@ -15,6 +16,7 @@ router.get(
 router.get(
     '/contact/:id',
     authenticate,
+    isValidId,
     ExceptionInterceptor(contactController.getContactById)
 );
 
@@ -27,12 +29,14 @@ router.post(
 router.put(
     '/contact/:id',
     authenticate,
+    isValidId,
     ExceptionInterceptor(contactController.updateContactById)
 );
 
 router.delete(
     '/contact/:id',
     authenticate,
+    isValidId,
     ExceptionInterceptor(contactController.deleteContactById)
 );
 
