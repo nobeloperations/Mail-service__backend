@@ -18,7 +18,7 @@ const sentPendingMails = async () => {
         if (mail_time_coordinator_service_1.default.isTimeToSendMail(processedSheduledMailData, contactData)) {
             const composedMail = await mail_composer_service_1.default.composeMail(contactData, templateId);
             await mail_sender_service_1.default.sentComposedMail(contactData.email, composedMail);
-            await scheduled_mails_service_1.default.deletePendingMail(id);
+            // await ScheduledMailsService.deletePendingMail(id);
             await sended_mails_1.default.addSendedMail(processedSheduledMailData);
         }
     }

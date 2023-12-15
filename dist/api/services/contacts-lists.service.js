@@ -19,8 +19,8 @@ const deleteContactsListById = async (id) => {
     const result = await prisma_client_1.default.contactstList.delete({ where: { id } });
     return result;
 };
-const getListContactsLists = async (paginationOptions) => {
-    const { page, pageSize } = paginationOptions;
+const getListContactsLists = async (filteringParams) => {
+    const { page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
     const listOfContactsLists = await prisma_client_1.default.contactstList.findMany({
         skip,

@@ -12,27 +12,30 @@ model Contact {
   firstName String
   lastName  String
 
-  age              Int
-  city             String
-  email            String @unique
-  gender           String
-  country          String
-  timezone         String
-  occupation       String
-  sourceOfReferral String
-  eduQuestDecision String
+  age                 Int
+  city                String
+  email               String @unique
+  gender              String
+  country             String
+  timezone            String
+  occupation          String
+  sourceOfReferral    String
+  eduQuestDecision    String
+  intershipMotivation String
 
   birthDate                DateTime @db.Date
   eduQuestSelectedDateTime DateTime @db.Date
 
+  isSubscribed               Boolean @default(true)
+  isEqParticipationConfirmed Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Date
+
   sentMail       SentMail[]
   scheduledMails ScheduledMail[]
 
-
   listIds String[]        @db.ObjectId
   lists   ContactstList[] @relation(fields: [listIds], references: [id])
-
-  isSubscribed    Boolean           @default(true)
   ContactsActions ContactsActions[]
 }
 

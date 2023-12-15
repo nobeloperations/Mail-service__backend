@@ -35,6 +35,9 @@ class BaseApiError extends Error {
     static InternalServerError(description = DefaultErrorsDescription.INTERNAL_SERVER_ERROR) {
         return this.createError(http_status_codes_1.ReasonPhrases.INTERNAL_SERVER_ERROR, http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR, description, false);
     }
+    static Conflict(description = DefaultErrorsDescription.INTERNAL_SERVER_ERROR) {
+        return this.createError(http_status_codes_1.ReasonPhrases.CONFLICT, http_status_codes_1.StatusCodes.CONFLICT, description, false);
+    }
 }
 exports.default = BaseApiError;
 //# sourceMappingURL=custom-api-errors.js.map

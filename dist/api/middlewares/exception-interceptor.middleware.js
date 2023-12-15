@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ExceptionInterceptor = (handler) => {
-    return async (req, res, next) => {
+const ExceptionInterceptor = (controller) => {
+    const func = async (req, res, next) => {
         try {
-            await handler(req, res, next);
+            await controller(req, res, next);
         }
         catch (error) {
             next(error);
         }
     };
+    return func;
 };
 exports.default = ExceptionInterceptor;
 //# sourceMappingURL=exception-interceptor.middleware.js.map
