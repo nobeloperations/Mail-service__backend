@@ -31,7 +31,6 @@ const getMailTemplateFileDataById = async (fileId) => {
         response.data
             .on('data', chunk => data += chunk)
             .on('end', () => {
-            console.log(data);
             resolve(data);
         });
         //TODO: Handle error while reading file

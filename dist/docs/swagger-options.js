@@ -8,8 +8,9 @@ const _1 = __importDefault(require("."));
 exports.swaggerOptions = {
     swaggerDefinition: {
         ..._1.default,
-        basePath: '/',
+        basePath: '/api',
     },
+    apis: ['./src/api/**/*.ts'],
 };
 exports.default = exports.swaggerOptions;
 //# sourceMappingURL=swagger-options.js.map
