@@ -10,10 +10,14 @@ import MailTemplatesRouter from './api/routes/mail-templates.route';
 import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
 import AuthRouter from './api/routes/auth';
 import ContactRouter from "./api/routes/contact.router";
+
 import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
 import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
 import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
 import UserActionsRouter from './user-actions-system/routes/userActions.router'
+
+
+import ContactsListsRouter from './api/routes/contacts-lists.route';
 
 import sentPendingMails from './cron-jobs/jobs/sent-pending-mails';
 
@@ -32,6 +36,7 @@ app.use('/api', ScheduledMailsRouter);
 
 app.use('/api', AuthRouter);
 app.use('/api', ContactRouter);
+app.use('/api', ContactsListsRouter);
 
 app.use('/action', EmailOpenTrackingRouter)
 app.use('/action', EmailLinkTrackingRouter)
