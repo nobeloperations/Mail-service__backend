@@ -9,7 +9,7 @@ import startCronJobs from './cron-jobs';
 import MailTemplatesRouter from './api/routes/mail-templates.route';
 import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
 import AuthRouter from './api/routes/auth';
-import ContactRouter from "./api/routes/contact.router";
+import ContactRouter from './api/routes/contacts.router';
 
 import ContactsListsRouter from './api/routes/contacts-lists.route';
 
@@ -24,6 +24,19 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
+
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+import swaggerOptions from './docs/swagger-options';
+
+const specs = swaggerJsdoc(swaggerOptions);
+
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
 
 app.use('/api', MailTemplatesRouter);
 app.use('/api', ScheduledMailsRouter);
@@ -62,6 +75,6 @@ app.get('/tracking', (req, res) => {
 app.use(prismaErrorHandler);
 app.use(errorHandler);
 
-startCronJobs();
+// startCronJobs();
 
 export default app;
