@@ -3,11 +3,14 @@ import ExceptionInterceptor from '../../api/middlewares/exception-interceptor.mi
 import EmailLinkTrackingService from '../services/clickedLinks.service'
 
 const emailLinkTracking = async (req: Request, res: Response) => {
-    const contactId = req.query.contactId as string
+    const emailId = req.query.emailId as string;
+    const linkName = req.query.linkName as string;
 
-    await EmailLinkTrackingService.emailLinkTracking(contactId)
+    const redirectLink = linkName === "EduQuest" ? "https://eduquest.nobelexplorers.live" : "https://nobelexplorers.com/nobel-internships"
 
-    res.json({message: "progress"})
+    await EmailLinkTrackingService.emailLinkTracking(emailId, linkName)
+
+    res.redirect(redirectLink)
 }
 
 export default {

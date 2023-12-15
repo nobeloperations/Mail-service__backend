@@ -1,7 +1,8 @@
 import prismaClient from '../../database/prisma-client';
+import descriptionGenerator from '../helpers/descriptionCreator';
 
 const emailOpenTracking = async (emailId: string) => {
-    const {contactId} = await prismaClient.sentMail.update({
+    const {contactId, templateId} = await prismaClient.sentMail.update({
         where: {
             emailId
         },
@@ -10,11 +11,13 @@ const emailOpenTracking = async (emailId: string) => {
         }
     })
 
+    const activityDescription = await descriptionGenerator.generateDescriptionForEmailsActions(templateId)
+
     await prismaClient.contactsActions.create({
         data: {
             contactId,
             typeOfActivity: "EMAIL",
-            activityDescription: "Email was opened"
+            activityDescription
         }
     })
 }

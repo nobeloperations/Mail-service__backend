@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 
@@ -13,6 +14,7 @@ import ContactRouter from "./api/routes/contact.router";
 import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
 import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
 import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
+import UserActionsRouter from './user-actions-system/routes/userActions.router'
 
 
 import ContactsListsRouter from './api/routes/contacts-lists.route';
@@ -39,6 +41,7 @@ app.use('/api', ContactsListsRouter);
 app.use('/action', EmailOpenTrackingRouter)
 app.use('/action', EmailLinkTrackingRouter)
 app.use('/action', UnsubscribeRouter)
+app.use('/action', UserActionsRouter)
 
 
 app.get('/test', async (req, res, next) => {
@@ -47,7 +50,16 @@ app.get('/test', async (req, res, next) => {
 })
 
 app.use(prismaErrorHandler);
-app.use(errorHandler);
+// app.use(errorHandler);
+
+app.use((req, res) => {
+    res.status(404).json({ message: "Not found" });
+  });
+
+app.use((err, req: Request, res: Response, next: NextFunction) => {
+    const { status = 500 } = err;
+    res.status(status).json({ message: err.message });
+  });
 
 startCronJobs();
 
