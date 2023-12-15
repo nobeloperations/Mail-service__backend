@@ -6,26 +6,27 @@ import ScheduledMailsService from '../services/scheduled-mails.service';
 import MailSender from '../../infrustructure/services/mail/mail-sender.service';
 import MailComposer from '../../infrustructure/services/mail/mail-composer.service';
 import MailTimeCoordinator from '../../infrustructure/services/mail/mail-time-coordinator.service';
+import modifyEmailTextWithUniqueValues from '../../user-actions-system/helpers/uniqueEmailDecorator';
 
 
 const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
 
-    //TODO: Handle an error if it was not possible to send a mail
-    for (const processedSheduledMailData of pendingMails) {
+    pendingMails.forEach(async (processedSheduledMailData) => {
         
-        const { contactId, id, templateId, ...scheduledMailData } = processedSheduledMailData;
+        const { contactId, id, templateId, useContactTimezone, ...restOfFields } = processedSheduledMailData;
         const contactData = await ContactDataService.retrieveContactData(contactId);
-
-        if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData)) {
+        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) && 
+        if (contactData.isSubscribed) {
             const composedMail = await MailComposer.composeMail(contactData, templateId);
+            const composedIdentifiedMail = modifyEmailTextWithUniqueValues(composedMail, {contactId, emailId: id})
 
-            await MailSender.sentComposedMail(contactData.email, composedMail);
+            await MailSender.sentComposedMail(contactData.email, composedIdentifiedMail);
     
-            // await ScheduledMailsService.deletePendingMail(id);
-            await SendedMailsService.addSendedMail(processedSheduledMailData);
+            await ScheduledMailsService.deletePendingMail(id);
+            await SendedMailsService.addSendedMail({emailId: id, contactId, templateId, ...restOfFields});
         }        
-    }
+    })
 };
 
 export default sentPendingMails;

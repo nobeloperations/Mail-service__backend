@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
-import prismaClient from './database/prisma-client'
 
 import startCronJobs from './cron-jobs';
 
@@ -10,6 +10,12 @@ import MailTemplatesRouter from './api/routes/mail-templates.route';
 import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
 import AuthRouter from './api/routes/auth';
 import ContactRouter from './api/routes/contacts.router';
+
+import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
+import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
+import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
+import UserActionsRouter from './user-actions-system/routes/userActions.router'
+
 
 import ContactsListsRouter from './api/routes/contacts-lists.route';
 
@@ -45,35 +51,28 @@ app.use('/api', AuthRouter);
 app.use('/api', ContactRouter);
 app.use('/api', ContactsListsRouter);
 
+app.use('/action', EmailOpenTrackingRouter)
+app.use('/action', EmailLinkTrackingRouter)
+app.use('/action', UnsubscribeRouter)
+app.use('/action', UserActionsRouter)
+
+
 app.get('/test', async (req, res, next) => {
     const result = await sentPendingMails()
     res.json({result})
 })
 
-app.get('/tracking', (req, res) => {
-    const emailId = req.query.emailId;
-    console.log(`Email with ID ${emailId} was opened`);
-
-    prismaClient.sentMail.update({
-        where: {
-          id: "emailId",
-        },
-        data: {
-          emailStatus: 'OPENED',
-        },
-      })
-
-    const base64Image = 'R0lGODlhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=';
-    const imgBuffer = Buffer.from(base64Image, 'base64');
-    res.writeHead(200, {
-        'Content-Type': 'image/gif',
-        'Content-Length': imgBuffer.length,
-    });
-    res.end(imgBuffer);
-});
-
 app.use(prismaErrorHandler);
-app.use(errorHandler);
+// app.use(errorHandler);
+
+app.use((req, res) => {
+    res.status(404).json({ message: "Not found" });
+  });
+
+app.use((err, req: Request, res: Response, next: NextFunction) => {
+    const { status = 500 } = err;
+    res.status(status).json({ message: err.message });
+  });
 
 // startCronJobs();
 

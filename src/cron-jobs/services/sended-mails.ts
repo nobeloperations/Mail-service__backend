@@ -1,7 +1,7 @@
-import { ScheduledMail } from '@prisma/client';
+import { SentMail } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 
-const addSendedMail = async (mailData: ScheduledMail) => {
+const addSendedMail = async (mailData: Omit<SentMail, 'id' | "emailStatus">) => {
     const sendedmMail = await prismaClient.sentMail.create({
         data: {
             ...mailData
