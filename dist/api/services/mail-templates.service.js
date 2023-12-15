@@ -35,8 +35,8 @@ const deleteMailTemplateById = async (id) => {
     const databaseDeletingResult = await prisma_client_1.default.mailTemplate.delete({ where: { id } });
     return databaseDeletingResult;
 };
-const getMailTemplatesList = async (paginationOptions) => {
-    const { page, pageSize } = paginationOptions;
+const getMailTemplatesList = async (filteringParams) => {
+    const { page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
     const databaseResult = await prisma_client_1.default.mailTemplate.findMany({
         skip,

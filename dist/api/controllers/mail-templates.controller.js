@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_status_codes_1 = require("http-status-codes");
+const exception_interceptor_middleware_1 = __importDefault(require("../middlewares/exception-interceptor.middleware"));
 const mail_templates_service_1 = __importDefault(require("../services/mail-templates.service"));
 const getMailTemplateDataById = async (req, res) => {
     const id = req.params.id;
@@ -31,9 +32,9 @@ const createMailTemplates = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.CREATED).send(http_status_codes_1.ReasonPhrases.CREATED);
 };
 exports.default = {
-    createMailTemplates,
-    getMailTemplatesList,
-    deleteMailTemplateById,
-    getMailTemplateDataById,
+    createMailTemplates: (0, exception_interceptor_middleware_1.default)(createMailTemplates),
+    getMailTemplatesList: (0, exception_interceptor_middleware_1.default)(getMailTemplatesList),
+    deleteMailTemplateById: (0, exception_interceptor_middleware_1.default)(deleteMailTemplateById),
+    getMailTemplateDataById: (0, exception_interceptor_middleware_1.default)(getMailTemplateDataById),
 };
 //# sourceMappingURL=mail-templates.controller.js.map
