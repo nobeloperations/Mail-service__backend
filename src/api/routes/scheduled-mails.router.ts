@@ -3,7 +3,7 @@ import ScheduledMailsController from '../controllers/scheduled-mails.controller'
 import authenticate from '../middlewares/authenticate'
 import isValidId from '../middlewares/isValidId';
 import validateBody from '../middlewares/validateBody';
-import scheduledMailsSchema from '../schemas/scheduled-mails';
+import scheduledMailsSchema from '../request-schemas/scheduled-mails';
 
 const router = Router();
 

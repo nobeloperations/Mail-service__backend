@@ -3,7 +3,7 @@ import authenticate from '../middlewares/authenticate'
 
 import MailTemplatesController from '../controllers/mail-templates.controller';
 import isValidId from '../middlewares/isValidId';
-import mailTemplatesSchema from '../schemas/mail-templates'
+import mailTemplatesSchema from '../request-schemas/mail-templates'
 import validateBody from '../middlewares/validateBody';
 
 const router = Router();
