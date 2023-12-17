@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const mail_templates_route_1 = __importDefault(require("./api/routes/mail-templates.route"));
@@ -36,6 +37,7 @@ app.use('/action', openedEmails_router_1.default);
 app.use('/action', clickedLinks_router_1.default);
 app.use('/action', unsubscribe_router_1.default);
 app.use('/action', userActions_router_1.default);
+app.use((0, cors_1.default)());
 app.get('/test', async (req, res, next) => {
     const result = await (0, sent_pending_mails_1.default)();
     res.json({ result });

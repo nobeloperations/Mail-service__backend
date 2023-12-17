@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
@@ -56,6 +57,7 @@ app.use('/action', EmailLinkTrackingRouter)
 app.use('/action', UnsubscribeRouter)
 app.use('/action', UserActionsRouter)
 
+app.use(cors());
 
 app.get('/test', async (req, res, next) => {
     const result = await sentPendingMails()
