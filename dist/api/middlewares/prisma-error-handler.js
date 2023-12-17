@@ -7,11 +7,29 @@ const client_1 = require("@prisma/client");
 const custom_api_errors_1 = __importDefault(require("../../utils/errors/custom-api-errors"));
 const prismaErrorHandler = (error, req, res, next) => {
     if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-            next(custom_api_errors_1.default.NotFound(`The requested resource could not be found on the server\nCause: ${error.meta.cause}`));
+        switch (error.code) {
+            case 'P2002':
+                next(custom_api_errors_1.default.Conflict(`Unique constraint failed on the field: ${error.meta.target}`));
+                break;
+            case 'P2000':
+                next(custom_api_errors_1.default.BadRequest(`The provided value for the column is too long for the column's type. Column: ${error.meta.target}`));
+                break;
+            case 'P2025':
+                next(custom_api_errors_1.default.NotFound(`The requested resource could not be found on the server\nCause: ${error.meta.cause}`));
+                break;
+            case 'P2016':
+                next(custom_api_errors_1.default.NotFound(`Record not found in the where clause. Where: ${JSON.stringify(error.meta.where)}`));
+                break;
+            case 'P2014':
+                next(custom_api_errors_1.default.BadRequest(`The change you are trying to make would violate the required relation '${error.meta.relation_name}' between the '${error.meta.model_a_name}' and '${error.meta.model_b_name}' models`));
+                break;
+            default:
+                next(custom_api_errors_1.default.InternalServerError(`Prisma error: ${error.message}`));
         }
     }
-    next(error);
+    else {
+        next(error);
+    }
 };
 exports.default = prismaErrorHandler;
 //# sourceMappingURL=prisma-error-handler.js.map
