@@ -192,7 +192,7 @@ const retriveResourceList = {
             type: 'number',
         },
         {
-            name: 'pageSize',
+            name: 'search',
             in: 'path',
             description: 'Filter contacts by next fields: firstName, lastName, email',
             required: false,

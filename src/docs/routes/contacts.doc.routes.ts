@@ -208,7 +208,7 @@ const retriveResourceList = {
             type: 'number',
         },
         {
-            name: 'pageSize',
+            name: 'search',
             in: 'path',
             description: 'Filter contacts by next fields: firstName, lastName, email',
             required: false,
@@ -331,13 +331,13 @@ const bulkResourceDeleting = {
 };
 
 const routes = {
-    'api/contacts': {
+    '/api/contacts': {
         post: createResource,
         get: retriveResourceList,
         put: bulkResourceUpdating,
         delete: bulkResourceDeleting
     },
-    'api/contacts/:id': {
+    '/api/contacts/:id': {
         put: updateResource,
         get: retriveResourceById,
         delete: deleteResourceById,
