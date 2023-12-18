@@ -22,6 +22,7 @@ const sent_pending_mails_1 = __importDefault(require("./cron-jobs/jobs/sent-pend
 const prisma_error_handler_1 = __importDefault(require("./api/middlewares/prisma-error-handler"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({ origin: '*' }));
 app.use(body_parser_1.default.json());
 app.use((0, express_fileupload_1.default)({ limits: { fileSize: 50 * 1024 * 1024 } }));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
@@ -39,7 +40,6 @@ app.use('/action', openedEmails_router_1.default);
 app.use('/action', clickedLinks_router_1.default);
 app.use('/action', unsubscribe_router_1.default);
 app.use('/action', userActions_router_1.default);
-app.use((0, cors_1.default)({ origin: '*' }));
 app.get('/test', async (req, res, next) => {
     const result = await (0, sent_pending_mails_1.default)();
     res.json({ result });
