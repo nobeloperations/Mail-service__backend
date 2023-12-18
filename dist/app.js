@@ -16,6 +16,7 @@ const unsubscribe_router_1 = __importDefault(require("./user-actions-system/rout
 const openedEmails_router_1 = __importDefault(require("./user-actions-system/routes/openedEmails.router"));
 const clickedLinks_router_1 = __importDefault(require("./user-actions-system/routes/clickedLinks.router"));
 const userActions_router_1 = __importDefault(require("./user-actions-system/routes/userActions.router"));
+const mailing_automations_router_1 = __importDefault(require("./api/routes/mailing-automations.router"));
 const contacts_lists_route_1 = __importDefault(require("./api/routes/contacts-lists.route"));
 const sent_pending_mails_1 = __importDefault(require("./cron-jobs/jobs/sent-pending-mails"));
 const prisma_error_handler_1 = __importDefault(require("./api/middlewares/prisma-error-handler"));
@@ -33,11 +34,12 @@ app.use('/api', scheduled_mails_router_1.default);
 app.use('/api', auth_1.default);
 app.use('/api', contacts_router_1.default);
 app.use('/api', contacts_lists_route_1.default);
+app.use('/api', mailing_automations_router_1.default);
 app.use('/action', openedEmails_router_1.default);
 app.use('/action', clickedLinks_router_1.default);
 app.use('/action', unsubscribe_router_1.default);
 app.use('/action', userActions_router_1.default);
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ origin: '*' }));
 app.get('/test', async (req, res, next) => {
     const result = await (0, sent_pending_mails_1.default)();
     res.json({ result });
