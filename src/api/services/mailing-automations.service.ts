@@ -1,74 +1,107 @@
-// import { Prisma } from '@prisma/client';
-// import prismaClient from '../../database/prisma-client';
+import { Prisma } from '@prisma/client';
+import prismaClient from '../../database/prisma-client';
 
-// const createMailingAutomation = async (mailingAutomationData: Prisma.MailingAutomationCreateInput) => {
+import BaseApiError from '../../utils/errors/custom-api-errors'; 
 
-// };
 
-// const updateMailingAutomationById = async (id: string, mailingAutomationData: Prisma.MailingAutomationUpdateInput) => {
+const createMailingAutomation = async (mailingAutomationData: Prisma.MailingAutomationCreateInput) => {
+    const { automationScheduledMails, ...automationData } = mailingAutomationData;
+    const result = await prismaClient.mailingAutomation.create({ 
+        data: {
+            ...automationData,
+            automationScheduledMails: {
+                create: automationScheduledMails as Prisma.AutomationScheduledMailsCreateManyInput
+            }
+        }
+        
+    });
 
-// };
+    return result;
+};
 
-// const deleteMailingAutomationById = async (id: string) => {
+const updateMailingAutomationById = async (id: string, mailingAutomationData: Prisma.MailingAutomationUpdateInput) => {
+    const result = await prismaClient.mailingAutomation.update({
+        where: { id },
+        data: mailingAutomationData
+    });
 
-// };
+    return result;
+};
 
-// const getMailingAutomationById = async (id: string) => {
-// };
+const deleteMailingAutomationById = async (id: string) => {
+    const result = await prismaClient.mailingAutomation.delete({
+        where: { id }
+    });
 
-// const getMailingAutomationsList = async (filteringParams: ApiResourceFilteringParams) => {
-//     const { search, page, pageSize } = filteringParams;
-//     const skip = (page - 1) * pageSize;
+    return result;
+};
 
-//     const result = await prismaClient.mailingAutomation.findMany({
-//         skip,
-//         take: pageSize,
-//         where: {
-//             name: { contains: search }
-//         },
-//     });
+const getMailingAutomationById = async (id: string) => {
+    const result = prismaClient.mailingAutomation.findUnique({
+        where: { id },
+        include: { automationScheduledMails: true }
+    });
 
-//     return result;
-// };
+    if (!result) {
+        throw BaseApiError.NotFound(`The requested resource with id - ${id} could not be found on the server`);
+    }
 
-// const addContactToAutomation = async (contactIds: string[], mailingAutomationId: string) => {
-//     const targetAutomationDetails = await prismaClient.mailingAutomation.findUnique({ 
-//         where: { id: mailingAutomationId }, 
-//         include: { automationScheduledMails: true }
-//     });
+    return result;
+};
 
-//     const automationScheduledMails = targetAutomationDetails.automationScheduledMails;
+const getMailingAutomationsList = async (filteringParams: ApiResourceFilteringParams) => {
+    const { search, page, pageSize } = filteringParams;
+    const skip = (page - 1) * pageSize;
 
-//     for (const targetContactId of contactIds) {
-//         const scheduledMailsForContact = automationScheduledMails.map((scheduledMailData) => {
-//             return {
-//                 contactId: targetContactId,
-//                 ...scheduledMailData,
-//                 mailingAutomationId
-//             };
-//         });
+    const result = await prismaClient.mailingAutomation.findMany({
+        skip,
+        take: pageSize,
+        where: {
+            name: { contains: search }
+        },
+    });
 
-//         await prismaClient.scheduledMail.createMany({ data: scheduledMailsForContact });
-//     }
-// };
+    return result;
+};
 
-// const removeContactsFromAutomation = async (contactIds: string[], mailingAutomationId: string) => {
-//     const removingResult = await prismaClient.scheduledMail.deleteMany({ 
-//         where: { 
-//             contactId: { in: contactIds },
-//             mailingAutomationId: mailingAutomationId 
-//         }
-//     });
+const addContactsToAutomation = async (mailingAutomationId: string, contactIds: string[]) => {
+    const targetAutomationDetails = await prismaClient.mailingAutomation.findUnique({ 
+        where: { id: mailingAutomationId }, 
+        include: { automationScheduledMails: true }
+    });
 
-//     return removingResult;
-// };
+    const automationScheduledMails = targetAutomationDetails.automationScheduledMails;
 
-// export default {
-//     createMailingAutomation,
-//     updateMailingAutomationById,
-//     deleteMailingAutomationById,
-//     getMailingAutomationById,
-//     getMailingAutomationsList,
-//     addContactToAutomation,
-//     removeContactsFromAutomation
-// };
+    for (const targetContactId of contactIds) {
+        const scheduledMailsForContact = automationScheduledMails.map((scheduledMailData) => {
+            return {
+                contactId: targetContactId,
+                ...scheduledMailData,
+                mailingAutomationId
+            };
+        });
+
+        await prismaClient.scheduledMail.createMany({ data: scheduledMailsForContact });
+    }
+};
+
+const removeContactsFromAutomation = async (mailingAutomationId: string, contactIds: string[]) => {
+    const removingResult = await prismaClient.scheduledMail.deleteMany({ 
+        where: { 
+            contactId: { in: contactIds },
+            mailingAutomationId: mailingAutomationId 
+        }
+    });
+
+    return removingResult;
+};
+
+export default {
+    createMailingAutomation,
+    updateMailingAutomationById,
+    deleteMailingAutomationById,
+    getMailingAutomationById,
+    getMailingAutomationsList,
+    addContactsToAutomation,
+    removeContactsFromAutomation
+};

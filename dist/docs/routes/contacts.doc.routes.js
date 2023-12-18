@@ -304,13 +304,13 @@ const bulkResourceDeleting = {
     },
 };
 const routes = {
-    'api/contacts': {
+    '/api/contacts': {
         post: createResource,
         get: retriveResourceList,
         put: bulkResourceUpdating,
         delete: bulkResourceDeleting
     },
-    'api/contacts/:id': {
+    '/api/contacts/:id': {
         put: updateResource,
         get: retriveResourceById,
         delete: deleteResourceById,

@@ -16,6 +16,7 @@ import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
 import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
 import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
 import UserActionsRouter from './user-actions-system/routes/userActions.router'
+import MailingAutomationRouter from './api/routes/mailing-automations.router';
 
 
 import ContactsListsRouter from './api/routes/contacts-lists.route';
@@ -51,13 +52,14 @@ app.use('/api', ScheduledMailsRouter);
 app.use('/api', AuthRouter);
 app.use('/api', ContactRouter);
 app.use('/api', ContactsListsRouter);
+app.use('/api', MailingAutomationRouter);
 
 app.use('/action', EmailOpenTrackingRouter)
 app.use('/action', EmailLinkTrackingRouter)
 app.use('/action', UnsubscribeRouter)
 app.use('/action', UserActionsRouter)
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 
 app.get('/test', async (req, res, next) => {
     const result = await sentPendingMails()
