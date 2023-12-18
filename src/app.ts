@@ -30,6 +30,8 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors({ origin: '*' }));
+
 app.use(bodyParser.json());
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 
@@ -59,7 +61,7 @@ app.use('/action', EmailLinkTrackingRouter)
 app.use('/action', UnsubscribeRouter)
 app.use('/action', UserActionsRouter)
 
-app.use(cors({ origin: '*' }));
+
 
 app.get('/test', async (req, res, next) => {
     const result = await sentPendingMails()
