@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
 const createContact = async (contactData) => {
-    const result = await prisma_client_1.default.contact.createMany({ data: contactData });
+    const result = await prisma_client_1.default.contact.create({ data: contactData });
     return result;
 };
 const deleteContactById = async (id) => {

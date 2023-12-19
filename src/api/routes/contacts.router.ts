@@ -1,61 +1,55 @@
 import { Router } from 'express';
 
-import ContactController from '../controllers/contacts.controller'
-import authenticate from '../middlewares/authenticate';
 import isValidId from '../middlewares/isValidId';
 import validateBody from '../middlewares/validateBody';
-import contactsSchema from '../request-schemas/contacts.request-schemas'
+
+import contactsSchema from '../request-schemas/contacts.request-schemas';
+
+import ContactController from '../controllers/contacts.controller';
 
 
-const router=Router();
+const router = Router();
 
 router.get(
-    '/contacts',
-    authenticate,
+    '/',
     ContactController.getContactList
 );
 
-router.get(
-    '/contacts/:id',
-    authenticate,
-    isValidId,
-    ContactController.getContactById
+router.put(
+    '/',
+    validateBody(contactsSchema.bulkUpdatingResouces),
+    ContactController.batchUpdatingContacts
+);
+
+router.delete(
+    '/',
+    validateBody(contactsSchema.bulkDeletingResouces),
+    ContactController.batchDeletingContacts
 );
 
 router.post(
-    '/contacts',
-    authenticate,
+    '/',
     validateBody(contactsSchema.createResourse),
     ContactController.createContact
 );
 
+router.get(
+    '/:id',
+    isValidId,
+    ContactController.getContactById
+);
+
 router.put(
-    '/contacts/:id',
-    authenticate,
+    '/:id',
     isValidId,
     validateBody(contactsSchema.updateResource),
     ContactController.updateContactById
 );
 
 router.delete(
-    '/contacts/:id',
-    authenticate,
+    '/:id',
     isValidId,
     ContactController.deleteContactById
-);
-
-router.put(
-    '/contacts',
-    authenticate,
-    validateBody(contactsSchema.bulkUpdatingResouces),
-    ContactController.batchUpdatingContacts
-);
-
-router.delete(
-    '/contacts',
-    authenticate,
-    validateBody(contactsSchema.bulkDeletingResouces),
-    ContactController.batchDeletingContacts
 );
 
 export default router;

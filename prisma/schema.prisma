@@ -31,12 +31,11 @@ model Contact {
 
   createdAt DateTime @default(now()) @db.Date
 
-  sentMail       SentMail[]
-  scheduledMails ScheduledMail[]
-
   listIds           String[]            @db.ObjectId
   lists             ContactstList[]     @relation(fields: [listIds], references: [id])
   ContactsActions   ContactsActions[]
+  ScheduledMail     ScheduledMail[]
+  SentMail          SentMail[]
   UnsubscribedUsers UnsubscribedUsers[]
 }
 
@@ -54,7 +53,7 @@ model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id])
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   templateId String       @db.ObjectId
   template   MailTemplate @relation(fields: [templateId], references: [id])
@@ -63,15 +62,17 @@ model ScheduledMail {
   scheduledDate      DateTime @db.Date
   useContactTimezone Boolean
 
-  senderProfileId String        @db.ObjectId
-  senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
+  mailingAutomationId String?            @db.ObjectId
+  mailingAutomation   MailingAutomation? @relation(fields: [mailingAutomationId], references: [id])
+  SenderProfile       SenderProfile?     @relation(fields: [senderProfileId], references: [id])
+  senderProfileId     String?            @db.ObjectId
 }
 
 model SentMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id])
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   templateId String       @db.ObjectId
   template   MailTemplate @relation(fields: [templateId], references: [id])
@@ -79,12 +80,11 @@ model SentMail {
   timeZone      String
   scheduledDate DateTime @db.Date
 
-  senderProfileId String        @db.ObjectId
-  senderProfile   SenderProfile @relation(fields: [senderProfileId], references: [id])
-
   emailId String @unique
 
-  emailStatus EmailStatus? @default(PENDING)
+  emailStatus     EmailStatus?   @default(PENDING)
+  SenderProfile   SenderProfile? @relation(fields: [senderProfileId], references: [id])
+  senderProfileId String?        @db.ObjectId
 }
 
 model MailTemplate {
@@ -93,9 +93,10 @@ model MailTemplate {
   googleDriveFileId String
   createdAt         DateTime @default(now()) @db.Date
 
-  sentMails       SentMail[]
-  scheduledMails  ScheduledMail[]
-  ContactsActions ContactsActions[]
+  sentMails                SentMail[]
+  scheduledMails           ScheduledMail[]
+  ContactsActions          ContactsActions[]
+  AutomationScheduledMails AutomationScheduledMails[]
 }
 
 model SenderProfile {
@@ -144,6 +145,28 @@ model UnsubscribedUsers {
 
   activityDescription String
   createdAt           DateTime @default(now()) @db.Date
+}
+
+model MailingAutomation {
+  id                       String                     @id @default(auto()) @map("_id") @db.ObjectId
+  name                     String
+  automationScheduledMails AutomationScheduledMails[]
+
+  scheduledMails ScheduledMail[]
+}
+
+model AutomationScheduledMails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+
+  timeZone           String
+  useContactTimezone Boolean
+  scheduledDate      DateTime @db.Date
+
+  mailingAutomationId String            @db.ObjectId
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id])
 }
 
 enum EmailStatus {

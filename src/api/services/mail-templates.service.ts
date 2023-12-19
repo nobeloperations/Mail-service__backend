@@ -2,7 +2,7 @@ import { FileArray, UploadedFile } from 'express-fileupload';
 
 import prismaClient from '../../database/prisma-client';
 import BaseApiError from '../../utils/errors/custom-api-errors';
-import GoogleDriveMaiTemplatesService from '../../google-services/mail-templates.driver-service';
+import GoogleDriveMaiTemplatesService from '../../infrustructure/services/google-services/mail-templates.driver-service';
 
 
 const getMailTemplateDataById = async (id: string) => {

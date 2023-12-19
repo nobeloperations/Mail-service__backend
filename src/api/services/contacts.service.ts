@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 
-const createContact = async (contactData: Prisma.ContactCreateManyInput[]) => {
-    const result = await prismaClient.contact.createMany({ data: contactData });
+const createContact = async (contactData: Prisma.ContactCreateInput) => {
+    const result = await prismaClient.contact.create({ data: contactData });
     return result;
 };
 

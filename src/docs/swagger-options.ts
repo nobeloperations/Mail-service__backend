@@ -3,7 +3,7 @@ import ApiDocumentation from '.';
 export const swaggerOptions = {
     swaggerDefinition: {
         ...ApiDocumentation,
-        basePath: '/api',
+        basePath: '/',
     },
     apis: ['./src/api/**/*.ts'],
 };
