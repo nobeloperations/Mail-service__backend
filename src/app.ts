@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 
 import startCronJobs from './cron-jobs';
+
 
 import AuthRouter from './api/routes/auth';
 
@@ -49,8 +49,6 @@ app.use('/action', EmailOpenTrackingRouter)
 app.use('/action', EmailLinkTrackingRouter)
 app.use('/action', UnsubscribeRouter)
 app.use('/action', UserActionsRouter)
-
-
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);
