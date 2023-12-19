@@ -12,10 +12,7 @@ import AuthRouter from './api/routes/auth';
 import PublicApiRouter from './api/public-api.router';
 
 
-import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
-import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
-import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
-import UserActionsRouter from './user-actions-system/routes/userActions.router'
+import ContactActionsRouter from './user-actions-system/routes/contact-actions.router'
 
 import prismaErrorHandler from './api/middlewares/prisma-error-handler';
 
@@ -45,10 +42,7 @@ app.use(
 
 app.use('/api', AuthRouter);
 
-app.use('/action', EmailOpenTrackingRouter)
-app.use('/action', EmailLinkTrackingRouter)
-app.use('/action', UnsubscribeRouter)
-app.use('/action', UserActionsRouter)
+app.use('/action', ContactActionsRouter)
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);

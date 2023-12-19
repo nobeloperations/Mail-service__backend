@@ -16,14 +16,15 @@ const sentPendingMails = async () => {
         
         const { contactId, id, templateId, useContactTimezone, ...restOfFields } = processedSheduledMailData;
         const contactData = await ContactDataService.retrieveContactData(contactId);
-        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) && 
+        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) &&
         if (contactData.isSubscribed) {
             const composedMail = await MailComposer.composeMail(contactData, templateId);
             const composedIdentifiedMail = modifyEmailTextWithUniqueValues(composedMail, {contactId, emailId: id})
+            console.log(composedIdentifiedMail)
 
             await MailSender.sentComposedMail(contactData.email, composedIdentifiedMail);
     
-            await ScheduledMailsService.deletePendingMail(id);
+            // await ScheduledMailsService.deletePendingMail(id);
             await SendedMailsService.addSendedMail({emailId: id, contactId, templateId, ...restOfFields});
         }        
     })
