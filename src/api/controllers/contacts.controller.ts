@@ -62,6 +62,12 @@ const batchDeletingContacts = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).send(ReasonPhrases.OK);
 };
 
+const addTotheList = (req: Request, res: Response) => {
+    const contactData = req.body
+
+    
+}
+
 export default {
     createContact: ExceptionInterceptor(createContact),
     getContactById: ExceptionInterceptor(getContactById),

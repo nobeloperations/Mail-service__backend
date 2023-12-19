@@ -20,7 +20,7 @@ class DescriptionGenerator {
                 id: templateId
             }
         })
-        return `Link '${linkName} Website' was opened from the email ${name}`
+        return `Link '${linkName} Website' was clicked from the email ${name}`
     }
 
     generateDescriptionForUnsubscribeAction(email: string){

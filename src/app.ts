@@ -11,10 +11,7 @@ import ScheduledMailsRouter from './api/routes/scheduled-mails.router';
 import AuthRouter from './api/routes/auth';
 import ContactRouter from './api/routes/contacts.router';
 
-import UnsubscribeRouter from './user-actions-system/routes/unsubscribe.router'
-import EmailOpenTrackingRouter from './user-actions-system/routes/openedEmails.router'
-import EmailLinkTrackingRouter from './user-actions-system/routes/clickedLinks.router'
-import UserActionsRouter from './user-actions-system/routes/userActions.router'
+import ContactActionsRouter from './user-actions-system/routes/contact-actions.router'
 
 
 import ContactsListsRouter from './api/routes/contacts-lists.route';
@@ -51,10 +48,7 @@ app.use('/api', AuthRouter);
 app.use('/api', ContactRouter);
 app.use('/api', ContactsListsRouter);
 
-app.use('/action', EmailOpenTrackingRouter)
-app.use('/action', EmailLinkTrackingRouter)
-app.use('/action', UnsubscribeRouter)
-app.use('/action', UserActionsRouter)
+app.use('/action', ContactActionsRouter)
 
 
 app.get('/test', async (req, res, next) => {

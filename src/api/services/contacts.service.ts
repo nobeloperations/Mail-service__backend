@@ -25,19 +25,26 @@ const getContactList = async (filteringParams: ApiResourceFilteringParams) => {
     const { search, page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
 
-    const result = await prismaClient.contact.findMany({
+    const whereCondition = {
+        OR: [
+            { email: { contains: search } },
+            { firstName: { contains: search } },
+            { lastName: { contains: search } },
+        ],
+    };
+
+    const contacts = await prismaClient.contact.findMany({
         skip,
         take: pageSize,
-        where: {
-            OR: [
-                { email: { contains: search } },
-                { firstName: { contains: search } },
-                { lastName: { contains: search } },
-            ],
-        },
+        where: whereCondition,
     });
 
-    return result;
+    const contactsCount = await prismaClient.contact.count()
+
+    return {
+        contacts,
+        contactsCount
+    };
 };  
 
 const batchUpdatingContacts = async (updatingData: { contactIds: string[], updates: Prisma.ContactUpdateInput }) => {
@@ -67,6 +74,14 @@ const batchDeletingContacts = async (deletingData: { contactIds: string[] }) => 
 
     return result;
 };
+
+const addTotheList = async (contactData: Prisma.ContactCreateInput) => {
+    const { id, eduQuestSelectedDateTime } = await prismaClient.contact.create({
+        data: contactData
+    })
+
+    
+}
 
 export default{
     createContact,

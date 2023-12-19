@@ -23,8 +23,8 @@ model Contact {
   eduQuestDecision    String
   intershipMotivation String
 
-  birthDate                DateTime @db.Date
-  eduQuestSelectedDateTime DateTime @db.Date
+  birthDate                DateTime  @db.Date
+  eduQuestSelectedDateTime DateTime? @db.Date
 
   isSubscribed               Boolean @default(true)
   isEqParticipationConfirmed Boolean @default(false)
@@ -34,15 +34,17 @@ model Contact {
   sentMail       SentMail[]
   scheduledMails ScheduledMail[]
 
-  listIds String[]        @db.ObjectId
-  lists   ContactstList[] @relation(fields: [listIds], references: [id])
-  ContactsActions ContactsActions[]
+  listIds           String[]            @db.ObjectId
+  lists             ContactstList[]     @relation(fields: [listIds], references: [id])
+  ContactsActions   ContactsActions[]
+  UnsubscribedUsers UnsubscribedUsers[]
 }
 
 model ContactstList {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  createdAt DateTime @default(now()) @db.Date
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  eduQuestStartDate DateTime?
+  createdAt         DateTime  @default(now()) @db.Date
 
   contactIds String[]  @db.ObjectId
   contacts   Contact[] @relation(fields: [contactIds], references: [id])
@@ -82,7 +84,7 @@ model SentMail {
 
   emailId String @unique
 
-  emailStatus   EmailStatus?   @default(PENDING)
+  emailStatus EmailStatus? @default(PENDING)
 }
 
 model MailTemplate {
@@ -91,8 +93,9 @@ model MailTemplate {
   googleDriveFileId String
   createdAt         DateTime @default(now()) @db.Date
 
-  sentMails      SentMail[]
-  scheduledMails ScheduledMail[]
+  sentMails       SentMail[]
+  scheduledMails  ScheduledMail[]
+  ContactsActions ContactsActions[]
 }
 
 model SenderProfile {
@@ -124,9 +127,23 @@ model ContactsActions {
   contactId String  @db.ObjectId
   contact   Contact @relation(fields: [contactId], references: [id])
 
-  typeOfActivity      TypeOfActivity
+  typeOfActivity TypeOfActivity
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+
   activityDescription String
-  createdAt           DateTime       @default(now()) @db.Date
+  createdAt           DateTime @default(now()) @db.Date
+}
+
+model UnsubscribedUsers {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
+
+  activityDescription String
+  createdAt           DateTime @default(now()) @db.Date
 }
 
 enum EmailStatus {
@@ -137,5 +154,4 @@ enum EmailStatus {
 enum TypeOfActivity {
   EMAIL
   LINK
-  UNSUBSCRIBE
 }
