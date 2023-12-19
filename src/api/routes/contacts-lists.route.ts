@@ -1,38 +1,35 @@
 import { Router } from 'express';
 
-import ContactsListsController from '../controllers/contacts-lists.controller';
-import authenticate from '../middlewares/authenticate';
 import isValidId from '../middlewares/isValidId';
 import validateBody from '../middlewares/validateBody';
-import contactsListsSchema from '../request-schemas/contacts-lists'
+
+import contactsListsSchema from '../request-schemas/contacts-lists';
+
+import ContactsListsController from '../controllers/contacts-lists.controller';
 
 
 const router = Router();
 
 router.get(
-    '/contacts-lists',
-    authenticate,
+    '/',
     ContactsListsController.getListContactsLists 
 );
 
 router.post(
-    '/contacts-lists',
-    authenticate,
+    '/',
     validateBody(contactsListsSchema.createContactsListSchema),
     ContactsListsController.createContactsList 
 );
 
 router.put(
-    '/contacts-lists/:id', 
-    authenticate,
+    '/:id', 
     isValidId,
     validateBody(contactsListsSchema.updateContactsListSchema),
     ContactsListsController.updateContactListById
 );
 
 router.delete(
-    '/contacts-lists/:id',
-    authenticate,
+    '/:id',
     isValidId,
     ContactsListsController.deleteContactsListById 
 );
