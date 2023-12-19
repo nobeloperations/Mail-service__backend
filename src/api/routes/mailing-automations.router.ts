@@ -7,40 +7,40 @@ import MailingAutomationsController from '../controllers/mailing-automations.con
 const router = Router();
 
 router.get(
-    '/mailing-automations',
+    '/',
     MailingAutomationsController.getMailingAutomationsList
 );
 
 router.post(
-    '/mailing-automations',
+    '/',
     MailingAutomationsController.createMailingAutomation
 );
 
 router.get(
-    '/mailing-automations/:id',
+    '/:id',
     isValidId,
     MailingAutomationsController.getMailingAutomationById
 );
 
 router.put(
-    '/mailing-automations/:id',
+    '/:id',
     isValidId,
     MailingAutomationsController.updateMailingAutomationById
 );
 
 router.delete(
-    '/mailing-automations/:id',
+    '/:id',
     isValidId,
     MailingAutomationsController.deleteMailingAutomationById
 );
 
 router.post(
-    '/mailing-automations/:id/add-contacts',
+    '/:id/add-contacts',
     MailingAutomationsController.addContactsToAutomation
 );
 
 router.post(
-    '/mailing-automations/:id/remove-contacts',
+    '/:id/remove-contacts',
     MailingAutomationsController.removeContactsFromAutomation
 );
 

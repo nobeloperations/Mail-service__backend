@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import { Contact } from '@prisma/client';
 
 import prismaClient from '../../../database/prisma-client';
-import MailTemplatesGoogleDriveSerive from '../../../google-services/mail-templates.driver-service';
+import MailTemplatesGoogleDriveSerive from '../google-services/mail-templates.driver-service';
 
 
 const templateMailTextCache = new NodeCache({ stdTTL: 900 });
