@@ -49,7 +49,7 @@ const addContactsToAutomation = async (req: Request, res: Response) => {
     const id = req.params.id;
     const contactsData = req.body;
 
-    const addingResult = await MailingAutomationsService.addContactsToAutomation(id, contactsData);
+    const addingResult = await MailingAutomationsService.addContactsToAutomation(id, contactsData.contactIds);
 
     res.status(StatusCodes.OK).send(ReasonPhrases.OK);
 };
@@ -58,7 +58,7 @@ const removeContactsFromAutomation = async (req: Request, res: Response) => {
     const id = req.params.id;
     const contactsData = req.body;
 
-    const removingResult = await MailingAutomationsService.removeContactsFromAutomation(id, contactsData);
+    const removingResult = await MailingAutomationsService.removeContactsFromAutomation(id, contactsData.contactIds);
 
     res.status(StatusCodes.OK).send(ReasonPhrases.OK);
 };

@@ -14,14 +14,14 @@ model Contact {
 
   age                 Int
   city                String
-  email               String @unique
+  email               String            @unique
   gender              String
   country             String
   timezone            String
   occupation          String
-  sourceOfReferral    String
-  eduQuestDecision    String
+  sourceOfReferral    String //TODO: Define default sources
   intershipMotivation String
+  eduQuestDecision    EduQuestDecision?
 
   birthDate                DateTime  @db.Date
   eduQuestSelectedDateTime DateTime? @db.Date
@@ -31,87 +31,13 @@ model Contact {
 
   createdAt DateTime @default(now()) @db.Date
 
-  listIds           String[]            @db.ObjectId
-  lists             ContactstList[]     @relation(fields: [listIds], references: [id])
-  ContactsActions   ContactsActions[]
-  ScheduledMail     ScheduledMail[]
+  listIds String[]        @db.ObjectId
+  lists   ContactstList[] @relation(fields: [listIds], references: [id])
+
   SentMail          SentMail[]
+  ScheduledMail     ScheduledMail[]
+  ContactsActions   ContactsActions[]
   UnsubscribedUsers UnsubscribedUsers[]
-}
-
-model ContactstList {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  eduQuestStartDate DateTime?
-  createdAt         DateTime  @default(now()) @db.Date
-
-  contactIds String[]  @db.ObjectId
-  contacts   Contact[] @relation(fields: [contactIds], references: [id])
-}
-
-model ScheduledMail {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-  templateId String       @db.ObjectId
-  template   MailTemplate @relation(fields: [templateId], references: [id])
-
-  timeZone           String
-  scheduledDate      DateTime @db.Date
-  useContactTimezone Boolean
-
-  mailingAutomationId String?            @db.ObjectId
-  mailingAutomation   MailingAutomation? @relation(fields: [mailingAutomationId], references: [id])
-  SenderProfile       SenderProfile?     @relation(fields: [senderProfileId], references: [id])
-  senderProfileId     String?            @db.ObjectId
-}
-
-model SentMail {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-  templateId String       @db.ObjectId
-  template   MailTemplate @relation(fields: [templateId], references: [id])
-
-  timeZone      String
-  scheduledDate DateTime @db.Date
-
-  emailId String @unique
-
-  emailStatus     EmailStatus?   @default(PENDING)
-  SenderProfile   SenderProfile? @relation(fields: [senderProfileId], references: [id])
-  senderProfileId String?        @db.ObjectId
-}
-
-model MailTemplate {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  googleDriveFileId String
-  createdAt         DateTime @default(now()) @db.Date
-
-  sentMails                SentMail[]
-  scheduledMails           ScheduledMail[]
-  ContactsActions          ContactsActions[]
-  AutomationScheduledMails AutomationScheduledMails[]
-}
-
-model SenderProfile {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
-  email String @unique
-
-  scheduledMails ScheduledMail[]
-  sentMails      SentMail[]
-}
-
-model ContactDataPlacehodelr {
-  id               String @id @default(auto()) @map("_id") @db.ObjectId
-  contactFieldName String
-  placeholderTag   String
 }
 
 model Users {
@@ -122,53 +48,119 @@ model Users {
   token    String?
 }
 
+model ContactstList {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name              String
+  eduQuestStartDate DateTime?
+  createdAt         DateTime  @default(now()) @db.Date
+
+  contactIds String[]  @db.ObjectId
+  contacts   Contact[] @relation(fields: [contactIds], references: [id])
+}
+
 model ContactsActions {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  activityDescription String
+  typeOfActivity      TypeOfActivity
+  createdAt           DateTime       @default(now()) @db.Date
 
   contactId String  @db.ObjectId
   contact   Contact @relation(fields: [contactId], references: [id])
 
-  typeOfActivity TypeOfActivity
-
   templateId String       @db.ObjectId
   template   MailTemplate @relation(fields: [templateId], references: [id])
-
-  activityDescription String
-  createdAt           DateTime @default(now()) @db.Date
 }
 
 model UnsubscribedUsers {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id])
-
   activityDescription String
   createdAt           DateTime @default(now()) @db.Date
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
 }
 
-model MailingAutomation {
-  id                       String                     @id @default(auto()) @map("_id") @db.ObjectId
-  name                     String
-  automationScheduledMails AutomationScheduledMails[]
-
-  scheduledMails ScheduledMail[]
-}
-
-model AutomationScheduledMails {
+// MAILS
+model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  timeZone           String
+  scheduledDate      DateTime @db.Date
+  useContactTimezone Boolean  @default(false)
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   templateId String       @db.ObjectId
   template   MailTemplate @relation(fields: [templateId], references: [id])
+
+  mailingAutomationId String?            @db.ObjectId
+  mailingAutomation   MailingAutomation? @relation(fields: [mailingAutomationId], references: [id])
+}
+
+model SentMail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  emailId       String       @unique
+  timeZone      String
+  scheduledDate DateTime     @db.Date
+  emailStatus   EmailStatus? @default(PENDING)
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+}
+
+model MailTemplate {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name              String
+  googleDriveFileId String
+  createdAt         DateTime @default(now()) @db.Date
+
+  sentMails                SentMail[]
+  scheduledMails           ScheduledMail[]
+  ContactsActions          ContactsActions[]
+  AutomationScheduledMails AutomationScheduledMail[]
+}
+
+model ContactDataPlacehodelr {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactFieldName String
+  placeholderTag   String
+}
+
+// MAILING AUTOMATIONS 
+model MailingAutomation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+
+  scheduledMails           ScheduledMail[]
+  automationScheduledMails AutomationScheduledMail[]
+}
+
+model AutomationScheduledMail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   timeZone           String
   useContactTimezone Boolean
   scheduledDate      DateTime @db.Date
 
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+
   mailingAutomationId String            @db.ObjectId
-  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id])
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id], onDelete: Cascade)
 }
 
+// ENUMS
 enum EmailStatus {
   PENDING
   OPENED
@@ -177,4 +169,11 @@ enum EmailStatus {
 enum TypeOfActivity {
   EMAIL
   LINK
+}
+
+enum EduQuestDecision {
+  SELECTE
+  TRY_AGAIN
+  EGLISH_ISSUE
+  WE_MISSED_YOU
 }
