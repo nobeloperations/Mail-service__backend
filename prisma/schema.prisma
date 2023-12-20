@@ -157,7 +157,7 @@ model AutomationScheduledMail {
   template   MailTemplate @relation(fields: [templateId], references: [id])
 
   mailingAutomationId String            @db.ObjectId
-  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id])
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id], onDelete: Cascade)
 }
 
 // ENUMS
