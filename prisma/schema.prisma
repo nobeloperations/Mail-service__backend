@@ -24,7 +24,7 @@ model Contact {
   intershipMotivation String
 
   birthDate                DateTime  @db.Date
-  eduQuestSelectedDateTime DateTime? @db.Date
+  eduQuestSelectedDateTime DateTime?
 
   isSubscribed               Boolean @default(true)
   isEqParticipationConfirmed Boolean @default(false)
@@ -41,8 +41,8 @@ model Contact {
 
 model ContactstList {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  eduQuestStartDate DateTime?
+  name              String    @unique
+  eduQuestStartDate DateTime? @unique
   createdAt         DateTime  @default(now()) @db.Date
 
   contactIds String[]  @db.ObjectId

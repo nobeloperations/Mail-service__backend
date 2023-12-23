@@ -1,9 +1,17 @@
 import { Prisma } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
+import { subscribeToRelevantList } from '../helpers/contacts-list-subscription';
 
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
-    const result = await prismaClient.contact.create({ data: contactData });
-    return result;
+    const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
+
+    if(!isContactExist){
+        const contact = await prismaClient.contact.create({ data: contactData });
+        await subscribeToRelevantList(contact)
+    } else {
+        const updatedContact = await updateContactById(isContactExist.id, contactData)
+        await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
+    }
 };
 
 const deleteContactById=async(id:string)=>{
@@ -74,14 +82,6 @@ const batchDeletingContacts = async (deletingData: { contactIds: string[] }) => 
 
     return result;
 };
-
-const addTotheList = async (contactData: Prisma.ContactCreateInput) => {
-    const { id, eduQuestSelectedDateTime } = await prismaClient.contact.create({
-        data: contactData
-    })
-
-    
-}
 
 export default{
     createContact,

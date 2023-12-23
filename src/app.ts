@@ -6,11 +6,9 @@ import fileUpload from 'express-fileupload';
 
 import startCronJobs from './cron-jobs';
 
-
 import AuthRouter from './api/routes/auth';
 
 import PublicApiRouter from './api/public-api.router';
-
 
 import ContactActionsRouter from './user-actions-system/routes/contact-actions.router'
 
@@ -32,8 +30,6 @@ import errorHandler from './api/middlewares/error-handler.middleware';
 
 const specs = swaggerJsdoc(swaggerOptions);
 
-app.use('/api', PublicApiRouter);
-
 app.use(
   '/docs',
   swaggerUi.serve,
@@ -41,6 +37,8 @@ app.use(
 );
 
 app.use('/api', AuthRouter);
+
+app.use('/api', PublicApiRouter);
 
 app.use('/action', ContactActionsRouter)
 

@@ -13,8 +13,8 @@ const createResourse = Joi.object({
     sourceOfReferral: Joi.string().required(),    
     eduQuestDecision: Joi.string().required(),   
     intershipMotivation: Joi.string().required(),
-    birthDate: Joi.date().iso().required(),               
-    eduQuestSelectedDateTime: Joi.date().iso().required(), 
+    birthDate: Joi.date().iso().required(),    
+    eduQuestSelectedDateTime: Joi.date(),
 });
 
 const updateResource = Joi.object({
