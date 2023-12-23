@@ -1,4 +1,5 @@
 import ContactsRoutes from './routes/contacts.doc.routes';
+import ContactActionsRoute from './routes/contact-actions.doc.routes'
 
 const ApiDocumentation = {
     openapi: '3.0.1',
@@ -9,9 +10,11 @@ const ApiDocumentation = {
     servers: [],
     tags: [
         { name: 'Contacts'},
+        { name: 'ContactActions'},
     ],
     paths: {
-        ...ContactsRoutes
+        ...ContactsRoutes,
+        ...ContactActionsRoute
     }
 };
 

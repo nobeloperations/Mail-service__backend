@@ -8,7 +8,7 @@ import ExceptionInterceptor from '../middlewares/exception-interceptor.middlewar
 const createContact = async(req:Request,res: Response)=> {
     const contactData=req.body;
 
-    const createdContact = await ContactService.createContact(contactData);
+    await ContactService.createContact(contactData);
 
     res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
 };

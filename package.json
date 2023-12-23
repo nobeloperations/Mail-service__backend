@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "@types/express-fileupload": "^1.4.4",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -24,6 +25,7 @@
     "joi": "^17.11.0",
     "joi-to-swagger": "^6.2.0",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "mongodb": "^6.3.0",
     "node-cache": "^5.1.2",
