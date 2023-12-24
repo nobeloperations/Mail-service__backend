@@ -35,13 +35,13 @@ const getMailingAutomationsList = async (req, res) => {
 const addContactsToAutomation = async (req, res) => {
     const id = req.params.id;
     const contactsData = req.body;
-    const addingResult = await mailing_automations_service_1.default.addContactsToAutomation(id, contactsData);
+    const addingResult = await mailing_automations_service_1.default.addContactsToAutomation(id, contactsData.contactIds);
     res.status(http_status_codes_1.StatusCodes.OK).send(http_status_codes_1.ReasonPhrases.OK);
 };
 const removeContactsFromAutomation = async (req, res) => {
     const id = req.params.id;
     const contactsData = req.body;
-    const removingResult = await mailing_automations_service_1.default.removeContactsFromAutomation(id, contactsData);
+    const removingResult = await mailing_automations_service_1.default.removeContactsFromAutomation(id, contactsData.contactIds);
     res.status(http_status_codes_1.StatusCodes.OK).send(http_status_codes_1.ReasonPhrases.OK);
 };
 exports.default = {

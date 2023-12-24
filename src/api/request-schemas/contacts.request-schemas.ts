@@ -11,7 +11,6 @@ const createResourse = Joi.object({
     timezone: Joi.string().required(),            
     occupation: Joi.string().required(),          
     sourceOfReferral: Joi.string().required(),    
-    eduQuestDecision: Joi.string().required(),   
     intershipMotivation: Joi.string().required(),
     birthDate: Joi.date().iso().required(),    
     eduQuestSelectedDateTime: Joi.date(),

@@ -4,9 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
+const contacts_list_subscription_1 = require("../helpers/contacts-list-subscription");
 const createContact = async (contactData) => {
-    const result = await prisma_client_1.default.contact.create({ data: contactData });
-    return result;
+    const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
+    if (!isContactExist) {
+        const contact = await prisma_client_1.default.contact.create({ data: contactData });
+        await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
+    }
+    else {
+        const updatedContact = await updateContactById(isContactExist.id, contactData);
+        await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
+    }
 };
 const deleteContactById = async (id) => {
     const result = await prisma_client_1.default.contact.delete({ where: { id } });
@@ -23,18 +31,23 @@ const getContactById = async (id) => {
 const getContactList = async (filteringParams) => {
     const { search, page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
-    const result = await prisma_client_1.default.contact.findMany({
+    const whereCondition = {
+        OR: [
+            { email: { contains: search } },
+            { firstName: { contains: search } },
+            { lastName: { contains: search } },
+        ],
+    };
+    const contacts = await prisma_client_1.default.contact.findMany({
         skip,
         take: pageSize,
-        where: {
-            OR: [
-                { email: { contains: search } },
-                { firstName: { contains: search } },
-                { lastName: { contains: search } },
-            ],
-        },
+        where: whereCondition,
     });
-    return result;
+    const contactsCount = await prisma_client_1.default.contact.count();
+    return {
+        contacts,
+        contactsCount
+    };
 };
 const batchUpdatingContacts = async (updatingData) => {
     const { contactIds, updates } = updatingData;

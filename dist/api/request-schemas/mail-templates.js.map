@@ -1,1 +1,1 @@
-{"version":3,"file":"mail-templates.js","sourceRoot":"","sources":["../../../src/api/request-schemas/mail-templates.ts"],"names":[],"mappings":";;AAAA,MAAM,GAAG,GAAG,OAAO,CAAC,KAAK,CAAC,CAAC;AAE3B,MAAM,oBAAoB,GAAG,GAAG,CAAC,MAAM,CAAC;IACpC,IAAI,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;IAC7B,iBAAiB,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;CAC3C,CAAC,CAAC;AAEL,kBAAe;IACX,oBAAoB;CACrB,CAAA"}
+{"version":3,"file":"mail-templates.js","sourceRoot":"","sources":["../../../src/api/request-schemas/mail-templates.ts"],"names":[],"mappings":"AAAA,MAAM,GAAG,GAAG,OAAO,CAAC,KAAK,CAAC,CAAC"}

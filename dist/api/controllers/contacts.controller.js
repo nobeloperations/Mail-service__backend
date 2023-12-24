@@ -8,7 +8,7 @@ const contacts_service_1 = __importDefault(require("../services/contacts.service
 const exception_interceptor_middleware_1 = __importDefault(require("../middlewares/exception-interceptor.middleware"));
 const createContact = async (req, res) => {
     const contactData = req.body;
-    const createdContact = await contacts_service_1.default.createContact(contactData);
+    await contacts_service_1.default.createContact(contactData);
     res.status(http_status_codes_1.StatusCodes.CREATED).send(http_status_codes_1.ReasonPhrases.CREATED);
 };
 const getContactById = async (req, res) => {
@@ -41,6 +41,9 @@ const batchDeletingContacts = async (req, res) => {
     const deletingData = req.body;
     const deletingResult = await contacts_service_1.default.batchDeletingContacts(deletingData);
     res.status(http_status_codes_1.StatusCodes.OK).send(http_status_codes_1.ReasonPhrases.OK);
+};
+const addTotheList = (req, res) => {
+    const contactData = req.body;
 };
 exports.default = {
     createContact: (0, exception_interceptor_middleware_1.default)(createContact),

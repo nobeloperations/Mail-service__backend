@@ -32,7 +32,3 @@ const updateContactIds = async (identifier: string, contactId: string) => {
         });
     }
 };
-
-
-
-

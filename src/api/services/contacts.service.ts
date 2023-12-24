@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 import { subscribeToRelevantList } from '../helpers/contacts-list-subscription';
+import { create } from 'domain';
 
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
     const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
@@ -12,6 +13,7 @@ const createContact = async (contactData: Prisma.ContactCreateInput) => {
         const updatedContact = await updateContactById(isContactExist.id, contactData)
         await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
     }
+
 };
 
 const deleteContactById=async(id:string)=>{
