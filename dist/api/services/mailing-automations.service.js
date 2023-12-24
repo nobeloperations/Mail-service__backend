@@ -11,16 +11,29 @@ const createMailingAutomation = async (mailingAutomationData) => {
         data: {
             ...automationData,
             automationScheduledMails: {
-                create: automationScheduledMails
+                createMany: {
+                    data: automationScheduledMails
+                }
             }
         }
     });
     return result;
 };
 const updateMailingAutomationById = async (id, mailingAutomationData) => {
+    const { automationScheduledMails, ...automationData } = mailingAutomationData;
     const result = await prisma_client_1.default.mailingAutomation.update({
         where: { id },
-        data: mailingAutomationData
+        data: {
+            ...automationData,
+            automationScheduledMails: {
+                update: automationScheduledMails
+                    .filter(mail => mail.id)
+                    .map(({ id, ...restMailData }) => ({ where: { id }, data: restMailData })),
+                create: automationScheduledMails
+                    .filter(mail => !mail.id)
+                    .map(mailData => mailData),
+            },
+        },
     });
     return result;
 };

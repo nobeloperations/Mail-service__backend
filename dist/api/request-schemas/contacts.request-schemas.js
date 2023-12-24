@@ -15,10 +15,9 @@ const createResourse = joi_1.default.object({
     timezone: joi_1.default.string().required(),
     occupation: joi_1.default.string().required(),
     sourceOfReferral: joi_1.default.string().required(),
-    eduQuestDecision: joi_1.default.date().iso().required(),
     intershipMotivation: joi_1.default.string().required(),
     birthDate: joi_1.default.date().iso().required(),
-    eduQuestSelectedDateTime: joi_1.default.date().iso().required(),
+    eduQuestSelectedDateTime: joi_1.default.date(),
 });
 const updateResource = joi_1.default.object({
     firstName: joi_1.default.string(),
@@ -31,7 +30,7 @@ const updateResource = joi_1.default.object({
     timezone: joi_1.default.string(),
     occupation: joi_1.default.string(),
     sourceOfReferral: joi_1.default.string(),
-    eduQuestDecision: joi_1.default.date().iso(),
+    eduQuestDecision: joi_1.default.string(),
     intershipMotivation: joi_1.default.string(),
     birthDate: joi_1.default.date().iso(),
     eduQuestSelectedDateTime: joi_1.default.date().iso(),

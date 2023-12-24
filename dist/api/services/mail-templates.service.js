@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
 const custom_api_errors_1 = __importDefault(require("../../utils/errors/custom-api-errors"));
-const mail_templates_driver_service_1 = __importDefault(require("../../google-services/mail-templates.driver-service"));
+const mail_templates_driver_service_1 = __importDefault(require("../../infrustructure/services/google-services/mail-templates.driver-service"));
 const getMailTemplateDataById = async (id) => {
     const databaseResult = await prisma_client_1.default.mailTemplate.findUnique({ where: { id } });
     if (!databaseResult) {
