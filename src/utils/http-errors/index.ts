@@ -52,11 +52,11 @@ class HttpError extends Error {
         );
     };
 
-    static Unauthorized() {
+    static Unauthorized(description: string) {
         return this.createHttpErrorInstance(
             ReasonPhrases.UNAUTHORIZED, 
             DefaultHttpErrorsMessages.UNAUTHORIZED as string,
-            undefined,
+            description,
             StatusCodes.UNAUTHORIZED,  
             true
         );

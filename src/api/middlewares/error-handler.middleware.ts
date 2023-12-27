@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import HttpError from '../../utils/http-errors';
+import HttpErrors from '../../utils/http-errors';
 
 const errorHandler = (
     error: Error,
@@ -10,7 +10,7 @@ const errorHandler = (
 ) => {
     let errorResponse: HttpErrorResponse;
 
-    if (error instanceof HttpError) {
+    if (error instanceof HttpErrors) {
         errorResponse = {
             code: error.httpCode,
             name: error.name,
@@ -18,7 +18,7 @@ const errorHandler = (
             description: error.description,
         };
     } else {
-        const internalServerError = HttpError.InternalServerError();
+        const internalServerError = HttpErrors.InternalServerError();
         errorResponse = {
             code: internalServerError.httpCode,
             name: internalServerError.name,
