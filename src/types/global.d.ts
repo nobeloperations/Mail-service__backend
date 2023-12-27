@@ -8,6 +8,13 @@ declare global {
         pageSize?: number;
         search?: string;
     }
+
+    interface HttpErrorResponse {
+        code: number;
+        name: string;
+        message: string;
+        description?: string;
+    }
     interface Registration {
         name: string;
         password: string;
