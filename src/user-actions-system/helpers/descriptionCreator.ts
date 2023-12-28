@@ -22,10 +22,6 @@ class DescriptionGenerator {
         })
         return `Link '${linkName} Website' was clicked from the email ${name}`
     }
-
-    generateDescriptionForUnsubscribeAction(email: string){
-        return `User '${email}' has unsubscribed`
-    }
 }
 
 const descriptionGenerator = new DescriptionGenerator()

@@ -52,4 +52,10 @@ router.delete(
     ContactController.deleteContactById
 );
 
+router.get(
+    '/:id/actions',
+    isValidId,
+    ContactController.getContactActions
+);
+
 export default router;

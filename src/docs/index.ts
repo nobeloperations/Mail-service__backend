@@ -6,6 +6,7 @@ import ScheduledMailsRoutes from './routes/scheduled-mails.route';
 import MailTemplatesRoutes from './routes/mail-template.doc.route';
 import ContactsListsRoutes from './routes/contacts-lists.doc.route';
 import MailingAutomationsRoutes from './routes/mailing-automations.doc.route';
+import AuthRoute from './routes/auth.doc.routes'
 
 const ApiDocumentation = {
     openapi: '3.0.1',
@@ -15,13 +16,28 @@ const ApiDocumentation = {
     },
     servers: [],
     tags: [
+        { name: 'Authorization'},
         { name: 'Contacts'},
         { name: 'Contacts lists' },
         { name: 'Mail templates' },
         { name: 'Scheduled mails' },
-        { name: 'Mailing automations' }
+        { name: 'Mailing automations' },
+        { name: 'ContactActions'},
+    ],
+    components: {
+        securitySchemes: {
+            JWT: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+            },
+        },
+    },
+    security: [
+        { JWT: [] },
     ],
     paths: {
+        ...AuthRoute,
         ...ContactsRoutes,
         ...ScheduledMailsRoutes,
         ...MailTemplatesRoutes,

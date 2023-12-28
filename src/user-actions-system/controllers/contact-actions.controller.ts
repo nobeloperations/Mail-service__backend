@@ -50,20 +50,7 @@ const unsubscribedContact = async (req: Request, res: Response) => {
     res.status(200).json({user})
 }
 
-
-const contactActions = async (req: Request, res: Response) => {
-    const { id } = req.params
-    const typeOfActivity = typeof req.query.typeOfActivity === 'string' ? req.query.typeOfActivity : null;
-
-    const userActions = await ContactActionsService.contactActions(id, typeOfActivity)
-
-    res.status(200).json({
-        userActions
-    })
-}
-
 export default {
-    contactActions: ExceptionInterceptor(contactActions),
     unsubscribe: ExceptionInterceptor(unsubscribe),
     unsubscribedContactsList: ExceptionInterceptor(unsubscribedContactsList),
     unsubscribedContact: ExceptionInterceptor(unsubscribedContact),

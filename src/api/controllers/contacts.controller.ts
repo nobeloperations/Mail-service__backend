@@ -21,7 +21,7 @@ const getContactById =async (req:Request,res:Response)=>{
     res.status(StatusCodes.OK).json(retrivedContactData);
 };
 
-const deleteContactById = async (req:Request,res:Response)  =>{
+const deleteContactById = async (req:Request,res:Response) => {
     const id= req.params.id;
 
     const deletedContact= await ContactService.deleteContactById(id);
@@ -66,10 +66,15 @@ const batchDeletingContacts = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).send(ReasonPhrases.OK);
 };
 
-const addTotheList = (req: Request, res: Response) => {
-    const contactData = req.body
+const getContactActions = async(req: Request, res: Response) => {
+    const { id } = req.params
+    const typeOfActivity = typeof req.query.typeOfActivity === 'string' ? req.query.typeOfActivity : null;
 
-    
+    const userActions = await ContactService.getContactActions(id, typeOfActivity)
+
+    res.status(200).json({
+        userActions
+    })
 }
 
 export default {
@@ -79,5 +84,6 @@ export default {
     deleteContactById: ExceptionInterceptor(deleteContactById),
     updateContactById: ExceptionInterceptor(updateContactById),
     batchUpdatingContacts: ExceptionInterceptor(batchUpdatingContacts),
-    batchDeletingContacts: ExceptionInterceptor(batchDeletingContacts)
+    batchDeletingContacts: ExceptionInterceptor(batchDeletingContacts),
+    getContactActions: ExceptionInterceptor(getContactActions)
 };
