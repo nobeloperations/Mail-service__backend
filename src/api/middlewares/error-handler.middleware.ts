@@ -1,25 +1,32 @@
-import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 
-import BaseApiError from '../../utils/errors/custom-api-errors';
-
+import HttpErrors from '../../utils/http-errors';
 
 const errorHandler = (
-    error: BaseApiError,
+    error: Error,
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const statusCode = error instanceof BaseApiError 
-        ? error.httpCode 
-        : StatusCodes.INTERNAL_SERVER_ERROR;
-    
-    res.status(statusCode).json({
-        name: error.name,
-        msg: error instanceof BaseApiError 
-            ? error.message 
-            : 'Internal server error',
-    });
+    let errorResponse: HttpErrorResponse;
+
+    if (error instanceof HttpErrors) {
+        errorResponse = {
+            code: error.httpCode,
+            name: error.name,
+            message: error.message,
+            description: error.description,
+        };
+    } else {
+        const internalServerError = HttpErrors.InternalServerError();
+        errorResponse = {
+            code: internalServerError.httpCode,
+            name: internalServerError.name,
+            message: internalServerError.message,
+        };
+    }
+
+    return res.json({ error: errorResponse });
 };
 
 export default errorHandler;

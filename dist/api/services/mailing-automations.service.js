@@ -4,23 +4,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
-const custom_api_errors_1 = __importDefault(require("../../utils/errors/custom-api-errors"));
+const http_errors_1 = __importDefault(require("../../utils/http-errors"));
 const createMailingAutomation = async (mailingAutomationData) => {
     const { automationScheduledMails, ...automationData } = mailingAutomationData;
     const result = await prisma_client_1.default.mailingAutomation.create({
         data: {
             ...automationData,
             automationScheduledMails: {
-                create: automationScheduledMails
+                createMany: {
+                    data: automationScheduledMails
+                }
             }
         }
     });
     return result;
 };
 const updateMailingAutomationById = async (id, mailingAutomationData) => {
+    const { automationScheduledMails, ...automationData } = mailingAutomationData;
     const result = await prisma_client_1.default.mailingAutomation.update({
         where: { id },
-        data: mailingAutomationData
+        data: {
+            ...automationData,
+            automationScheduledMails: {
+                update: automationScheduledMails
+                    .filter(mail => mail.id)
+                    .map(({ id, ...restMailData }) => ({ where: { id }, data: restMailData })),
+                create: automationScheduledMails
+                    .filter(mail => !mail.id)
+                    .map(mailData => mailData),
+            },
+        },
     });
     return result;
 };
@@ -36,7 +49,7 @@ const getMailingAutomationById = async (id) => {
         include: { automationScheduledMails: true }
     });
     if (!result) {
-        throw custom_api_errors_1.default.NotFound(`The requested resource with id - ${id} could not be found on the server`);
+        throw http_errors_1.default.NotFound(`The requested resource with id - ${id} could not be found on the server`);
     }
     return result;
 };

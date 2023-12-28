@@ -1,9 +1,7 @@
 import Router from 'express';
 
-import isValidId from '../middlewares/isValidId';
-import validateBody from '../middlewares/validateBody';
-
-import mailTemplatesSchema from '../request-schemas/mail-templates';
+import isValidId from '../middlewares/request-id-validator.middleware';
+import validateBody from '../middlewares/request-body-validator';
 
 import MailTemplatesController from '../controllers/mail-templates.controller';
 
@@ -17,7 +15,6 @@ router.get(
 
 router.post(
     '/',
-    validateBody(mailTemplatesSchema.createTemplateSchema),
     MailTemplatesController.createMailTemplates
 );
 

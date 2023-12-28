@@ -1,5 +1,11 @@
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
 import ContactsRoutes from './routes/contacts.doc.routes';
-import ContactActionsRoute from './routes/contact-actions.doc.routes'
+import ScheduledMailsRoutes from './routes/scheduled-mails.route';
+import MailTemplatesRoutes from './routes/mail-template.doc.route';
+import ContactsListsRoutes from './routes/contacts-lists.doc.route';
+import MailingAutomationsRoutes from './routes/mailing-automations.doc.route';
 import AuthRoute from './routes/auth.doc.routes'
 
 const ApiDocumentation = {
@@ -12,7 +18,23 @@ const ApiDocumentation = {
     tags: [
         { name: 'Authorization'},
         { name: 'Contacts'},
+        { name: 'Contacts lists' },
+        { name: 'Mail templates' },
+        { name: 'Scheduled mails' },
+        { name: 'Mailing automations' },
         { name: 'ContactActions'},
+    ],
+    components: {
+        securitySchemes: {
+            JWT: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+            },
+        },
+    },
+    security: [
+        { JWT: [] },
     ],
     components: {
         securitySchemes: {
@@ -29,8 +51,25 @@ const ApiDocumentation = {
     paths: {
         ...AuthRoute,
         ...ContactsRoutes,
-        ...ContactActionsRoute,
-    }
+        ...ScheduledMailsRoutes,
+        ...MailTemplatesRoutes,
+        ...ContactsListsRoutes,
+        ...MailingAutomationsRoutes
+    },
 };
 
-export default ApiDocumentation
+const specs = swaggerJsdoc({
+    swaggerDefinition: {
+        ...ApiDocumentation,
+        basePath: '/',,
+    },
+    apis: ['./src/docs/routes/*.ts'],
+});
+
+const swaggerSetup = {
+    serve: swaggerUi.serve,
+    setup: swaggerUi.setup(specs),
+    documentation: ApiDocumentation,
+};
+
+export default swaggerSetup;

@@ -39,9 +39,13 @@ const updateContactById= async(req:Request,res:Response)=>{
 };
 
 const getContactList = async (req: Request, res: Response) => {
-    const { search = '', page = 1, pageSize = 10 } = req.query as ApiResourceFilteringParams;
+    const { search, page, pageSize } = req.query as ApiResourceFilteringParams;
 
-    const result = await ContactService.getContactList({ page, pageSize, search });
+    const result = await ContactService.getContactList({ 
+        search: search || '',
+        page: Number(page) || 1, 
+        pageSize: Number(pageSize) || 10,
+    });
 
     res.status(StatusCodes.OK).json(result);
 };

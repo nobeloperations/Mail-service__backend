@@ -14,12 +14,13 @@ const sentPendingMails = async () => {
     pendingMails.forEach(async (processedSheduledMailData) => {
         const { contactId, id, templateId, useContactTimezone, ...restOfFields } = processedSheduledMailData;
         const contactData = await contactData_1.default.retrieveContactData(contactId);
-        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) && 
+        //MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) &&
         if (contactData.isSubscribed) {
             const composedMail = await mail_composer_service_1.default.composeMail(contactData, templateId);
             const composedIdentifiedMail = (0, uniqueEmailDecorator_1.default)(composedMail, { contactId, emailId: id });
+            console.log(composedIdentifiedMail);
             await mail_sender_service_1.default.sentComposedMail(contactData.email, composedIdentifiedMail);
-            await scheduled_mails_service_1.default.deletePendingMail(id);
+            // await ScheduledMailsService.deletePendingMail(id);
             await sended_mails_1.default.addSendedMail({ emailId: id, contactId, templateId, ...restOfFields });
         }
     });

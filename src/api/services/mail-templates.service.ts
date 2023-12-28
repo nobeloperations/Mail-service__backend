@@ -1,7 +1,7 @@
 import { FileArray, UploadedFile } from 'express-fileupload';
 
 import prismaClient from '../../database/prisma-client';
-import BaseApiError from '../../utils/errors/custom-api-errors';
+import BaseApiError from '../../utils/http-errors';
 import GoogleDriveMaiTemplatesService from '../../infrustructure/services/google-services/mail-templates.driver-service';
 
 

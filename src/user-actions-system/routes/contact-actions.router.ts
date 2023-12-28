@@ -1,6 +1,6 @@
 import Router from 'express';
-import authenticate from '../../api/middlewares/authenticate';
-import isValidId from '../../api/middlewares/isValidId';
+import authenticate from '../../api/middlewares/auth-handler.middleware';
+import requestIdValidator from '../../api/middlewares/request-id-validator.middleware';
 import ContactActionsController from '../controllers/contact-actions.controller'
 
 const router = Router();
@@ -13,6 +13,7 @@ router.put("/unsubscribe", ContactActionsController.unsubscribe)
 
 router.get("/unsubscribe/contacts", authenticate, ContactActionsController.unsubscribedContactsList)
 
-router.get("/unsubscribe/contacts/:id", authenticate, isValidId, ContactActionsController.unsubscribedContact)
+router.get("/unsubscribe/contacts/:id", authenticate, requestIdValidator, ContactActionsController.unsubscribedContact)
+
 
 export default router
