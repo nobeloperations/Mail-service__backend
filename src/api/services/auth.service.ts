@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-import BaseApiError from '../../utils/errors/custom-api-errors';
+import BaseApiError from '../../utils/http-errors';
 import prismaClient from '../../database/prisma-client';
 const { SECRET_KEY } = process.env;
 
@@ -31,12 +31,12 @@ const login = async (loginData: Login) => {
 
   const user = await prismaClient.users.findUnique({ where: { email }});
   if (!user) {
-    throw BaseApiError.Unauthorized("Email invalid");
+    throw BaseApiError.Unauthorized('asd');
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    throw BaseApiError.Unauthorized("Password invalid");
+    throw BaseApiError.Unauthorized('asdf');
   }
 
   const payload = {

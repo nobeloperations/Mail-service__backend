@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import isValidId from '../middlewares/isValidId';
-import validateBody from '../middlewares/validateBody';
+import isValidId from '../middlewares/request-id-validator.middleware';
+import validateBody from '../middlewares/request-body-validator';
 
 import contactsSchema from '../request-schemas/contacts.request-schemas';
 

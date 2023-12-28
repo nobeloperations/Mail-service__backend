@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 
-import BaseApiError from '../../utils/errors/custom-api-errors'; 
+import BaseApiError from '../../utils/http-errors'; 
 
 
 const createMailingAutomation = async (mailingAutomationData: Prisma.MailingAutomationCreateInput) => {

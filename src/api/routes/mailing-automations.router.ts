@@ -1,6 +1,6 @@
 import Router from 'express';
 
-import isValidId from '../middlewares/isValidId';
+import isValidId from '../middlewares/request-id-validator.middleware';
 import MailingAutomationsController from '../controllers/mailing-automations.controller';
 
 
