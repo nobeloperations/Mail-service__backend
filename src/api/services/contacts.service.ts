@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 import { subscribeToRelevantList } from '../helpers/contacts-list-subscription';
+import { ContactsActions } from "@prisma/client";
 
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
     const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
@@ -83,6 +84,14 @@ const batchDeletingContacts = async (deletingData: { contactIds: string[] }) => 
     return result;
 };
 
+const getContactActions = async (contactId: string, typeOfActivity: string | null) => {
+    const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity as ContactsActions["typeOfActivity"] } } : { contactId };
+
+    return await prismaClient.contactsActions.findMany({
+        where: objectQuery
+    })
+}
+
 export default{
     createContact,
     getContactById,
@@ -91,4 +100,5 @@ export default{
     updateContactById,
     batchUpdatingContacts,
     batchDeletingContacts,
+    getContactActions
 };

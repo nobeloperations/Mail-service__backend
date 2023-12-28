@@ -42,6 +42,12 @@ app.use('/api', PublicApiRouter);
 
 app.use('/action', ContactActionsRouter)
 
+app.use('/test', async (req,res) => {
+  startCronJobs()
+  
+  res.json({message: "good"})
+})
+
 app.use(prismaErrorHandler);
 app.use(errorHandler);
 

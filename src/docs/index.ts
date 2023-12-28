@@ -1,5 +1,6 @@
 import ContactsRoutes from './routes/contacts.doc.routes';
 import ContactActionsRoute from './routes/contact-actions.doc.routes'
+import AuthRoute from './routes/auth.doc.routes'
 
 const ApiDocumentation = {
     openapi: '3.0.1',
@@ -9,12 +10,26 @@ const ApiDocumentation = {
     },
     servers: [],
     tags: [
+        { name: 'Authorization'},
         { name: 'Contacts'},
         { name: 'ContactActions'},
     ],
+    components: {
+        securitySchemes: {
+            JWT: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+            },
+        },
+    },
+    security: [
+        { JWT: [] },
+    ],
     paths: {
+        ...AuthRoute,
         ...ContactsRoutes,
-        ...ContactActionsRoute
+        ...ContactActionsRoute,
     }
 };
 

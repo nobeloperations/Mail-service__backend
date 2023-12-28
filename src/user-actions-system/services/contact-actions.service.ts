@@ -43,21 +43,19 @@ const emailLinkTracking = async (emailId: string, linkName: string) => {
 }
 
 const unsubscribe = async (id: string) => {
-    const { email } = await prismaClient.contact.update({ 
+    await prismaClient.contact.update({ 
         where: {
             id
-        }, 
+        },
         data: {
             isSubscribed: false
         }
     })
 
-    const activityDescription = descriptionGenerator.generateDescriptionForUnsubscribeAction(email)
-
     await prismaClient.unsubscribedUsers.create({
         data: {
             contactId: id,
-            activityDescription
+            activityDescription: 'User has unsubscribed'
         }
     })
 }
@@ -75,18 +73,9 @@ const unsubscribedContact = async (id: string) => {
     })
 }
 
-const contactActions = async (contactId: string, typeOfActivity: string | null) => {
-    const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity as ContactsActions["typeOfActivity"] } } : { contactId };
-
-    return await prismaClient.contactsActions.findMany({
-        where: objectQuery
-    })
-}
-
 export default {
     emailLinkTracking,
     emailOpenTracking,
-    contactActions,
     unsubscribe,
     unsubscribedContact,
     unsubscribedContactsList
