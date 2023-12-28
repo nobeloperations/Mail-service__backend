@@ -17,7 +17,7 @@ const generateRandomContact = async () => {
         timezone: faker_1.faker.location.timeZone(),
         occupation: faker_1.faker.person.jobTitle(),
         sourceOfReferral: faker_1.faker.lorem.word(),
-        eduQuestDecision: faker_1.faker.helpers.arrayElement(['Selected', 'Pending', 'English issue', 'We missed you']),
+        eduQuestDecision: faker_1.faker.helpers.arrayElement(['SELECTE', 'TRY_AGAIN', 'EGLISH_ISSUE', 'WE_MISSED_YOU',]),
         intershipMotivation: faker_1.faker.lorem.word(),
         birthDate: faker_1.faker.date.between({ from: '2023-11-19', to: '2023-12-19' }).toISOString(),
         eduQuestSelectedDateTime: faker_1.faker.date.future().toISOString(),

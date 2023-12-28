@@ -1,21 +1,24 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Joi = require("joi");
-const createMailSchema = Joi.object({
-    contactId: Joi.string().min(23).required(),
-    templateId: Joi.string().min(23).required(),
-    timeZone: Joi.string().required(),
-    scheduledDate: Joi.date().required(),
-    useContactTimezone: Joi.boolean().required(),
-    senderProfileId: Joi.string().min(23).required(),
+const joi_1 = __importDefault(require("joi"));
+const createMailSchema = joi_1.default.object({
+    contactId: joi_1.default.string().min(23).required(),
+    templateId: joi_1.default.string().min(23).required(),
+    timeZone: joi_1.default.string().required(),
+    scheduledDate: joi_1.default.date().required(),
+    useContactTimezone: joi_1.default.boolean().required(),
+    senderProfileId: joi_1.default.string().min(23).required(),
 });
-const updateMailSchema = Joi.object({
-    contactId: Joi.string().min(23),
-    templateId: Joi.string().min(23),
-    timeZone: Joi.string(),
-    scheduledDate: Joi.date(),
-    useContactTimezone: Joi.boolean(),
-    senderProfileId: Joi.string().min(23),
+const updateMailSchema = joi_1.default.object({
+    contactId: joi_1.default.string().min(23),
+    templateId: joi_1.default.string().min(23),
+    timeZone: joi_1.default.string(),
+    scheduledDate: joi_1.default.date(),
+    useContactTimezone: joi_1.default.boolean(),
+    senderProfileId: joi_1.default.string().min(23),
 });
 exports.default = {
     createMailSchema,

@@ -1,1 +1,0 @@
-{"version":3,"file":"swagger-options.js","sourceRoot":"","sources":["../../src/docs/swagger-options.ts"],"names":[],"mappings":";;;;;;AAAA,yCAAiC;AAEpB,QAAA,cAAc,GAAG;IAC1B,iBAAiB,EAAE;QACf,GAAG,UAAgB;QACnB,QAAQ,EAAE,GAAG;KAChB;IACD,IAAI,EAAE,CAAC,mBAAmB,CAAC;CAC9B,CAAC;AAGF,kBAAe,sBAAc,CAAC"}

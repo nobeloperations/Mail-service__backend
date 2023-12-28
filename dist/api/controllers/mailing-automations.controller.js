@@ -28,8 +28,12 @@ const getMailingAutomationById = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json(retrievedMailingAutomationData);
 };
 const getMailingAutomationsList = async (req, res) => {
-    const { search = '', page = 1, pageSize = 10 } = req.query;
-    const mailingAutomationsList = await mailing_automations_service_1.default.getMailingAutomationsList({ page, pageSize, search });
+    const { search, page, pageSize } = req.query;
+    const mailingAutomationsList = await mailing_automations_service_1.default.getMailingAutomationsList({
+        search: search || '',
+        page: Number(page) || 1,
+        pageSize: Number(pageSize) || 10,
+    });
     res.status(http_status_codes_1.StatusCodes.OK).json(mailingAutomationsList);
 };
 const addContactsToAutomation = async (req, res) => {
