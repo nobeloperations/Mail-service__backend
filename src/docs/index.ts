@@ -36,18 +36,6 @@ const ApiDocumentation = {
     security: [
         { JWT: [] },
     ],
-    components: {
-        securitySchemes: {
-            JWT: {
-                type: 'apiKey',
-                name: 'Authorization',
-                in: 'header',
-            },
-        },
-    },
-    security: [
-        { JWT: [] },
-    ],
     paths: {
         ...AuthRoute,
         ...ContactsRoutes,
@@ -61,7 +49,7 @@ const ApiDocumentation = {
 const specs = swaggerJsdoc({
     swaggerDefinition: {
         ...ApiDocumentation,
-        basePath: '/',,
+        basePath: '/',
     },
     apis: ['./src/docs/routes/*.ts'],
 });
