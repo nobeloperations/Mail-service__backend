@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
-import BaseApiError from '../../utils/errors/custom-api-errors';
+import BaseApiError from '../../utils/http-errors';
 
 const prismaErrorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -22,7 +22,7 @@ const prismaErrorHandler = (error: Error, req: Request, res: Response, next: Nex
                 next(BaseApiError.BadRequest(`The change you are trying to make would violate the required relation '${error.meta.relation_name}' between the '${error.meta.model_a_name}' and '${error.meta.model_b_name}' models`));
                 break;
             default:
-                next(BaseApiError.InternalServerError(`Prisma error: ${error.message}`));
+                next(BaseApiError.InternalServerError());
         }
     } else {
         next(error);

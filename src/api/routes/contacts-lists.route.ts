@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import isValidId from '../middlewares/isValidId';
-import validateBody from '../middlewares/validateBody';
+import isValidId from '../middlewares/request-id-validator.middleware';
+import validateBody from '../middlewares/request-body-validator';
 
-import contactsListsSchema from '../request-schemas/contacts-lists';
+import contactsListsSchema from '../request-schemas/contacts-lists.request-schemas';
 
 import ContactsListsController from '../controllers/contacts-lists.controller';
 
@@ -17,14 +17,14 @@ router.get(
 
 router.post(
     '/',
-    validateBody(contactsListsSchema.createContactsListSchema),
+    validateBody(contactsListsSchema.createResourseSchema),
     ContactsListsController.createContactsList 
 );
 
 router.put(
     '/:id', 
     isValidId,
-    validateBody(contactsListsSchema.updateContactsListSchema),
+    validateBody(contactsListsSchema.updateResourseSchema),
     ContactsListsController.updateContactListById
 );
 
