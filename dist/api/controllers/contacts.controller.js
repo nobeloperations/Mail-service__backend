@@ -28,8 +28,12 @@ const updateContactById = async (req, res) => {
     res.status(http_status_codes_1.StatusCodes.OK).json(updatedContactData);
 };
 const getContactList = async (req, res) => {
-    const { search = '', page = 1, pageSize = 10 } = req.query;
-    const result = await contacts_service_1.default.getContactList({ page, pageSize, search });
+    const { search, page, pageSize } = req.query;
+    const result = await contacts_service_1.default.getContactList({
+        search: search || '',
+        page: Number(page) || 1,
+        pageSize: Number(pageSize) || 10,
+    });
     res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
 const batchUpdatingContacts = async (req, res) => {
