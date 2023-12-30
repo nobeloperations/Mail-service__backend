@@ -16,5 +16,6 @@ router.post('/', (0, request_body_validator_1.default)(contacts_request_schemas_
 router.get('/:id', request_id_validator_middleware_1.default, contacts_controller_1.default.getContactById);
 router.put('/:id', request_id_validator_middleware_1.default, (0, request_body_validator_1.default)(contacts_request_schemas_1.default.updateResource), contacts_controller_1.default.updateContactById);
 router.delete('/:id', request_id_validator_middleware_1.default, contacts_controller_1.default.deleteContactById);
+router.get('/:id/actions', request_id_validator_middleware_1.default, contacts_controller_1.default.getContactActions);
 exports.default = router;
 //# sourceMappingURL=contacts.router.js.map
