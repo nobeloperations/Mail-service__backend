@@ -1,5 +1,6 @@
 import j2s from 'joi-to-swagger';
 
+import DocumentHttpErrors from '../http-error-responses/index';
 import ContactsRequestShemas from '../../api/request-schemas/contacts.request-schemas';
 
 
@@ -162,7 +163,7 @@ const deleteResourceById = {
                             id: { type: 'string', example: 'test-id' },
                             firstName: { type: 'string', example: 'John' },
                             lastName: { type: 'string', example: 'Doe' },
-                          
+                        
                             age: { type: 'number', example: 25 },
                             city: { type: 'string', example: 'Test City' },
                             email: { type: 'string', example: 'johndoe@example.com' },
@@ -173,13 +174,13 @@ const deleteResourceById = {
                             sourceOfReferral: { type: 'string', example: 'Social Media' },
                             eduQuestDecision: { type: 'string', example: 'Accepted' },
                             intershipMotivation: { type: 'string', example: 'Test Motivation' },
-                          
+                        
                             birthDate: { type: 'string', example: '1998-01-01T00:00:00Z' },
                             eduQuestSelectedDateTime: { type: 'string', example: '2023-10-03T14:30:00Z' },
-                          
+                        
                             isSubscribed: { type: 'boolean', example: true },
                             isEqParticipationConfirmed: { type: 'boolean', example: false },
-                          
+                        
                             createdAt: { type: 'string', example: '2023-01-01T12:00:00Z' },
                         }
                     }
@@ -330,6 +331,64 @@ const bulkResourceDeleting = {
     },
 };
 
+const retriveResourceActionsById = {
+    tags: ['Contacts'],
+    operationId: 'get-contact-actions',
+    parameters: [
+        {
+            name: 'id',
+            in: 'path',
+            description: 'Contact id',
+            required: true,
+            type: 'number',
+        },
+        {
+            name: 'typeOfActivity',
+            in: 'path',
+            description: 'Type of activity',
+            required: false,
+            type: 'string',
+        },
+        {
+            in: 'header',
+            name: "Authorization",
+            description: "Bearer token",
+            required: true,
+            type: "string",
+        }
+    ],
+    responses: {
+        '200': {
+            description: 'Contact actions retrived successfully!',
+            content: {
+                'application/json': {
+                        example: [
+                        {
+                            id: { type: 'string', example: 'test-id' },
+                            contactId: { type: 'string', example: 'test-id' },
+                            typeOfActivity: { type: 'string', example: 'LINK' },
+                            templateId: { type: 'string', example: 'test-id' },
+                            activityDescription: { type: 'string', example: "Link 'EQ Website' was clicked from the email 'Test Email'" },
+                            createdAt: { type: 'string', example: '2023-01-01T12:00:00Z' },
+                        },
+                        {
+                            id: { type: 'string', example: 'test-id' },
+                            contactId: { type: 'string', example: 'test-id' },
+                            typeOfActivity: { type: 'string', example: 'EMAIL' },
+                            templateId: { type: 'string', example: 'test-id' },
+                            activityDescription: { type: 'string', example: "Email 'Test Email' was opened" },
+                            createdAt: { type: 'string', example: '2023-01-01T12:00:00Z' },
+                        },
+                        ]
+                },
+            },
+        },
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.internalServerError
+    },
+};
+
 const routes = {
     '/api/contacts': {
         post: createResource,
@@ -341,6 +400,9 @@ const routes = {
         put: updateResource,
         get: retriveResourceById,
         delete: deleteResourceById,
+    },
+    '/api/contacts/:id/actions': {
+        get: retriveResourceActionsById
     },
 };
 

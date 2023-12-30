@@ -1,5 +1,6 @@
 import j2s from 'joi-to-swagger';
 
+import DocumentHttpErrors from '../http-error-responses'
 import AuthSchema from '../../api/request-schemas/auth';
 
 const registerUser = {
@@ -32,7 +33,9 @@ const registerUser = {
                         }
                     }
                 },
-            }
+            },
+            ...DocumentHttpErrors.badRequestResponse,
+            ...DocumentHttpErrors.internalServerError
         }
     }
 
@@ -67,7 +70,9 @@ const loginUser = {
                         }
                 },
             }
-        }
+        },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -94,7 +99,9 @@ const logoutUser = {
                     }
                 }
             }
-        }
+        },
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -129,7 +136,9 @@ const currentCheck = {
                         }
                     }
                 },
-        }
+        },
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 

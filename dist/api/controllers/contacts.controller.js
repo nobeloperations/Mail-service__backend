@@ -46,8 +46,13 @@ const batchDeletingContacts = async (req, res) => {
     const deletingResult = await contacts_service_1.default.batchDeletingContacts(deletingData);
     res.status(http_status_codes_1.StatusCodes.OK).send(http_status_codes_1.ReasonPhrases.OK);
 };
-const addTotheList = (req, res) => {
-    const contactData = req.body;
+const getContactActions = async (req, res) => {
+    const { id } = req.params;
+    const typeOfActivity = typeof req.query.typeOfActivity === 'string' ? req.query.typeOfActivity : null;
+    const userActions = await contacts_service_1.default.getContactActions(id, typeOfActivity);
+    res.status(200).json({
+        userActions
+    });
 };
 exports.default = {
     createContact: (0, exception_interceptor_middleware_1.default)(createContact),
@@ -56,6 +61,7 @@ exports.default = {
     deleteContactById: (0, exception_interceptor_middleware_1.default)(deleteContactById),
     updateContactById: (0, exception_interceptor_middleware_1.default)(updateContactById),
     batchUpdatingContacts: (0, exception_interceptor_middleware_1.default)(batchUpdatingContacts),
-    batchDeletingContacts: (0, exception_interceptor_middleware_1.default)(batchDeletingContacts)
+    batchDeletingContacts: (0, exception_interceptor_middleware_1.default)(batchDeletingContacts),
+    getContactActions: (0, exception_interceptor_middleware_1.default)(getContactActions)
 };
 //# sourceMappingURL=contacts.controller.js.map

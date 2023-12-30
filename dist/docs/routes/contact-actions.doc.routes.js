@@ -1,5 +1,5 @@
-import DocumentHttpErrors from '../http-error-responses'
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const retriveUnsubscribedContsctsList = {
     tags: ['ContactActions'],
     parameters: [
@@ -34,11 +34,8 @@ const retriveUnsubscribedContsctsList = {
                 },
             },
         },
-        ...DocumentHttpErrors.unauthorizedResponse,
-        ...DocumentHttpErrors.internalServerError
     },
 };
-
 const unsubscribeContact = {
     tags: ['ContactActions'],
     operationId: 'unsubscribe-contact',
@@ -62,12 +59,9 @@ const unsubscribeContact = {
                     }
                 }
             }
-        },
-        ...DocumentHttpErrors.badRequestResponse,
-        ...DocumentHttpErrors.internalServerError
+        }
     },
-}
-
+};
 const routes = {
     '/action/unsubscribe/contacts': {
         get: retriveUnsubscribedContsctsList,
@@ -76,5 +70,5 @@ const routes = {
         put: unsubscribeContact,
     },
 };
-
-export default routes;
+exports.default = routes;
+//# sourceMappingURL=contact-actions.doc.routes.js.map

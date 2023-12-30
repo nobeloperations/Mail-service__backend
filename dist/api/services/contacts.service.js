@@ -71,6 +71,12 @@ const batchDeletingContacts = async (deletingData) => {
     });
     return result;
 };
+const getContactActions = async (contactId, typeOfActivity) => {
+    const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity } } : { contactId };
+    return await prisma_client_1.default.contactsActions.findMany({
+        where: objectQuery
+    });
+};
 exports.default = {
     createContact,
     getContactById,
@@ -79,5 +85,6 @@ exports.default = {
     updateContactById,
     batchUpdatingContacts,
     batchDeletingContacts,
+    getContactActions
 };
 //# sourceMappingURL=contacts.service.js.map
