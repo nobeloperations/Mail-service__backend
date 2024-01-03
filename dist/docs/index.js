@@ -45,7 +45,8 @@ const ApiDocumentation = {
         ...scheduled_mails_route_1.default,
         ...mail_template_doc_route_1.default,
         ...contacts_lists_doc_route_1.default,
-        ...mailing_automations_doc_route_1.default
+        ...mailing_automations_doc_route_1.default,
+        ...contact_actions_doc_routes_1.default
     },
 };
 const specs = (0, swagger_jsdoc_1.default)({

@@ -7,6 +7,7 @@ import MailTemplatesRoutes from './routes/mail-template.doc.route';
 import ContactsListsRoutes from './routes/contacts-lists.doc.route';
 import MailingAutomationsRoutes from './routes/mailing-automations.doc.route';
 import AuthRoute from './routes/auth.doc.routes'
+import ContactActions from './routes/contact-actions.doc.routes'
 
 const ApiDocumentation = {
     openapi: '3.0.1',
@@ -42,7 +43,8 @@ const ApiDocumentation = {
         ...ScheduledMailsRoutes,
         ...MailTemplatesRoutes,
         ...ContactsListsRoutes,
-        ...MailingAutomationsRoutes
+        ...MailingAutomationsRoutes,
+        ...ContactActions
     },
 };
 

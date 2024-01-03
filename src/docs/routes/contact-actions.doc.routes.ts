@@ -1,57 +1,4 @@
-const retriveContactActionsById = {
-    tags: ['ContactActions'],
-    operationId: 'get-contact-actions',
-    parameters: [
-        {
-            name: 'id',
-            in: 'path',
-            description: 'Contact id',
-            required: true,
-            type: 'number',
-        },
-        {
-            name: 'typeOfActivity',
-            in: 'path',
-            description: 'Type of activity',
-            required: false,
-            type: 'string',
-        },
-        {
-            in: 'header',
-            name: "Authorization",
-            description: "Bearer token",
-            required: true,
-            type: "string",
-        }
-    ],
-    responses: {
-        '200': {
-            description: 'Contact actions retrived successfully!',
-            content: {
-                'application/json': {
-                        example: [
-                        {
-                            id: { type: 'string', example: 'test-id' },
-                            contactId: { type: 'string', example: 'test-id' },
-                            typeOfActivity: { type: 'string', example: 'LINK' },
-                            templateId: { type: 'string', example: 'test-id' },
-                            activityDescription: { type: 'string', example: "Link 'EQ Website' was clicked from the email 'Test Email'" },
-                            createdAt: { type: 'string', example: '2023-01-01T12:00:00Z' },
-                        },
-                        {
-                            id: { type: 'string', example: 'test-id' },
-                            contactId: { type: 'string', example: 'test-id' },
-                            typeOfActivity: { type: 'string', example: 'EMAIL' },
-                            templateId: { type: 'string', example: 'test-id' },
-                            activityDescription: { type: 'string', example: "Email 'Test Email' was opened" },
-                            createdAt: { type: 'string', example: '2023-01-01T12:00:00Z' },
-                        },
-                        ]
-                },
-            },
-        },
-    },
-};
+import DocumentHttpErrors from '../http-error-responses'
 
 const retriveUnsubscribedContsctsList = {
     tags: ['ContactActions'],
@@ -87,6 +34,8 @@ const retriveUnsubscribedContsctsList = {
                 },
             },
         },
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -113,14 +62,13 @@ const unsubscribeContact = {
                     }
                 }
             }
-        }
+        },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 }
 
 const routes = {
-    '/action/:id': {
-        get: retriveContactActionsById,
-    },
     '/action/unsubscribe/contacts': {
         get: retriveUnsubscribedContsctsList,
     },
