@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_to_swagger_1 = __importDefault(require("joi-to-swagger"));
+const index_1 = __importDefault(require("../http-error-responses/index"));
 const contacts_request_schemas_1 = __importDefault(require("../../api/request-schemas/contacts.request-schemas"));
 const createResource = {
     tags: ['Contacts'],
@@ -355,6 +356,9 @@ const retriveResourceActionsById = {
                 },
             },
         },
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.internalServerError
     },
 };
 const routes = {
