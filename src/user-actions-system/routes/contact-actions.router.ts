@@ -9,7 +9,7 @@ router.get("/email-open-tracking", ContactActionsController.emailOpenTracking)
 
 router.get("/email-link-tracking", ContactActionsController.emailLinkTracking)
 
-router.put("/unsubscribe/:id", ContactActionsController.unsubscribe)
+router.put("/unsubscribe/:id", requestIdValidator, ContactActionsController.unsubscribe)
 
 router.get("/unsubscribe/contacts", authenticate, ContactActionsController.unsubscribedContactsList)
 
