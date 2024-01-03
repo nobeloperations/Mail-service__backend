@@ -13,7 +13,6 @@ const createContact = async (contactData: Prisma.ContactCreateInput) => {
         const updatedContact = await updateContactById(isContactExist.id, contactData)
         await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
     }
-
 };
 
 const deleteContactById=async(id:string)=>{

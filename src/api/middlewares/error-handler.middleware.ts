@@ -9,7 +9,7 @@ const errorHandler = (
     next: NextFunction
 ) => {
     let errorResponse: HttpErrorResponse;
-
+console.log(error)
     if (error instanceof HttpErrors) {
         errorResponse = {
             code: error.httpCode,

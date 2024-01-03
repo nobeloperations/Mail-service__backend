@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { StatusCodes, ReasonPhrases } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
 import ScheduleMailService from '../services/scheduled-mails.service';
 
 const createMails = async (req: Request, res: Response) => {
     const mailsData = req.body;
-    const createdMails = await ScheduleMailService.createMails(mailsData);
+    const createdMail = await ScheduleMailService.createMails(mailsData);
     
-    res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
+    res.status(StatusCodes.CREATED).json(createdMail);
 };
 
 const getMailById = async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ const deleteMailById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const deletedMailData = await ScheduleMailService.deleteMailById(id);
 
-    res.status(StatusCodes.NO_CONTENT).json(deletedMailData);
+    res.status(StatusCodes.OK).json(deletedMailData);
 };
 
 const updateMailById = async (req: Request, res: Response) => {

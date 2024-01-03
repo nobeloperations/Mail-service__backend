@@ -4,7 +4,7 @@ import prismaClient from '../../database/prisma-client';
 import BaseApiError from '../../utils/http-errors'; 
 
 const createMails = async (mailsData: Prisma.ScheduledMailCreateManyInput) => {
-    const result = await prismaClient.scheduledMail.createMany({ data: mailsData });
+    const result = await prismaClient.scheduledMail.create({ data: mailsData });
     return result;
 };
 
