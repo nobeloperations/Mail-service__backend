@@ -98,8 +98,6 @@ const subscribeContact = {
 }
 
 
-
-
 const routes = {
     '/action/unsubscribe/contacts': {
         get: retriveUnsubscribedContsctsList,
