@@ -37,16 +37,7 @@ const unsubscribedContact = async (req, res) => {
     const user = await contact_actions_service_1.default.unsubscribedContact(id);
     res.status(200).json({ user });
 };
-const contactActions = async (req, res) => {
-    const { id } = req.params;
-    const typeOfActivity = typeof req.query.typeOfActivity === 'string' ? req.query.typeOfActivity : null;
-    const userActions = await contact_actions_service_1.default.contactActions(id, typeOfActivity);
-    res.status(200).json({
-        userActions
-    });
-};
 exports.default = {
-    contactActions: (0, exception_interceptor_middleware_1.default)(contactActions),
     unsubscribe: (0, exception_interceptor_middleware_1.default)(unsubscribe),
     unsubscribedContactsList: (0, exception_interceptor_middleware_1.default)(unsubscribedContactsList),
     unsubscribedContact: (0, exception_interceptor_middleware_1.default)(unsubscribedContact),

@@ -10,6 +10,7 @@ const scheduled_mails_route_1 = __importDefault(require("./routes/scheduled-mail
 const mail_template_doc_route_1 = __importDefault(require("./routes/mail-template.doc.route"));
 const contacts_lists_doc_route_1 = __importDefault(require("./routes/contacts-lists.doc.route"));
 const mailing_automations_doc_route_1 = __importDefault(require("./routes/mailing-automations.doc.route"));
+const auth_doc_routes_1 = __importDefault(require("./routes/auth.doc.routes"));
 const ApiDocumentation = {
     openapi: '3.0.1',
     info: {
@@ -18,13 +19,28 @@ const ApiDocumentation = {
     },
     servers: [],
     tags: [
+        { name: 'Authorization' },
         { name: 'Contacts' },
         { name: 'Contacts lists' },
         { name: 'Mail templates' },
         { name: 'Scheduled mails' },
-        { name: 'Mailing automations' }
+        { name: 'Mailing automations' },
+        { name: 'ContactActions' },
+    ],
+    components: {
+        securitySchemes: {
+            JWT: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+            },
+        },
+    },
+    security: [
+        { JWT: [] },
     ],
     paths: {
+        ...auth_doc_routes_1.default,
         ...contacts_doc_routes_1.default,
         ...scheduled_mails_route_1.default,
         ...mail_template_doc_route_1.default,

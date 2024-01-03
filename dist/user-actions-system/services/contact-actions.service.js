@@ -41,7 +41,7 @@ const emailLinkTracking = async (emailId, linkName) => {
     });
 };
 const unsubscribe = async (id) => {
-    const { email } = await prisma_client_1.default.contact.update({
+    await prisma_client_1.default.contact.update({
         where: {
             id
         },
@@ -49,11 +49,10 @@ const unsubscribe = async (id) => {
             isSubscribed: false
         }
     });
-    const activityDescription = descriptionCreator_1.default.generateDescriptionForUnsubscribeAction(email);
     await prisma_client_1.default.unsubscribedUsers.create({
         data: {
             contactId: id,
-            activityDescription
+            activityDescription: 'User has unsubscribed'
         }
     });
 };
@@ -67,16 +66,9 @@ const unsubscribedContact = async (id) => {
         }
     });
 };
-const contactActions = async (contactId, typeOfActivity) => {
-    const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity } } : { contactId };
-    return await prisma_client_1.default.contactsActions.findMany({
-        where: objectQuery
-    });
-};
 exports.default = {
     emailLinkTracking,
     emailOpenTracking,
-    contactActions,
     unsubscribe,
     unsubscribedContact,
     unsubscribedContactsList

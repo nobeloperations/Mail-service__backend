@@ -36,6 +36,17 @@ const getMailTemplateFileDataById = async (fileId) => {
         //TODO: Handle error while reading file
     });
 };
+const updateMailTemplateFileById = async (fileId, data) => {
+    const updatedFile = await googleDriveClient.files.update({
+        fileId: fileId,
+        media: {
+            mimeType: 'text/html',
+            body: data
+        }
+    });
+    console.log(updatedFile);
+    return updatedFile;
+};
 const deleteMailTemplateFileById = async (fileId) => {
     const deletedFile = await googleDriveClient.files.delete({
         fileId: fileId,
@@ -44,6 +55,7 @@ const deleteMailTemplateFileById = async (fileId) => {
 };
 exports.default = {
     createNewMailTemplateFile,
+    updateMailTemplateFileById,
     deleteMailTemplateFileById,
     getMailTemplateFileDataById,
 };
