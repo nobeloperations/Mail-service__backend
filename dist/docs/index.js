@@ -11,6 +11,7 @@ const mail_template_doc_route_1 = __importDefault(require("./routes/mail-templat
 const contacts_lists_doc_route_1 = __importDefault(require("./routes/contacts-lists.doc.route"));
 const mailing_automations_doc_route_1 = __importDefault(require("./routes/mailing-automations.doc.route"));
 const auth_doc_routes_1 = __importDefault(require("./routes/auth.doc.routes"));
+const contact_actions_doc_routes_1 = __importDefault(require("./routes/contact-actions.doc.routes"));
 const ApiDocumentation = {
     openapi: '3.0.1',
     info: {

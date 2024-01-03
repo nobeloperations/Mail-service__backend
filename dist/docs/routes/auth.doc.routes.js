@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_to_swagger_1 = __importDefault(require("joi-to-swagger"));
+const http_error_responses_1 = __importDefault(require("../http-error-responses"));
 const auth_1 = __importDefault(require("../../api/request-schemas/auth"));
 const registerUser = {
     tags: ['Authorization'],
@@ -35,7 +36,9 @@ const registerUser = {
                     }
                 }
             },
-        }
+        },
+        ...http_error_responses_1.default.badRequestResponse,
+        ...http_error_responses_1.default.internalServerError
     }
 };
 const loginUser = {
@@ -69,7 +72,9 @@ const loginUser = {
                     }
                 },
             }
-        }
+        },
+        ...http_error_responses_1.default.badRequestResponse,
+        ...http_error_responses_1.default.internalServerError
     },
 };
 const logoutUser = {
@@ -95,7 +100,9 @@ const logoutUser = {
                     }
                 }
             }
-        }
+        },
+        ...http_error_responses_1.default.unauthorizedResponse,
+        ...http_error_responses_1.default.internalServerError
     },
 };
 const currentCheck = {
@@ -129,7 +136,9 @@ const currentCheck = {
                     }
                 }
             },
-        }
+        },
+        ...http_error_responses_1.default.unauthorizedResponse,
+        ...http_error_responses_1.default.internalServerError
     },
 };
 const routes = {
