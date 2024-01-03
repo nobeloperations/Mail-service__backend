@@ -1,7 +1,6 @@
 import Router from 'express';
 
-import isValidId from '../middlewares/request-id-validator.middleware';
-import validateBody from '../middlewares/request-body-validator';
+import idValidator from '../middlewares/request-id-validator.middleware';
 
 import MailTemplatesController from '../controllers/mail-templates.controller';
 
@@ -20,13 +19,19 @@ router.post(
 
 router.get(
     '/:id', 
-    isValidId,
+    idValidator,
     MailTemplatesController.getMailTemplateDataById
+);
+
+router.put(
+    '/:id',
+    idValidator,
+    MailTemplatesController.updateMailTemplateDataById
 );
 
 router.delete(
     '/:id',
-    isValidId,
+    idValidator,
     MailTemplatesController.deleteMailTemplateById
 );
 
