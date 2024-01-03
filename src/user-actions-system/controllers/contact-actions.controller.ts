@@ -29,7 +29,7 @@ const emailLinkTracking = async (req: Request, res: Response) => {
 }
 
 const unsubscribe = async (req: Request, res: Response) => {
-    const id = req.query.contactId as string
+    const { id } = req.params
 
     await ContactActionsService.unsubscribe(id)
 
@@ -42,18 +42,17 @@ const unsubscribedContactsList = async (req: Request, res: Response) => {
     res.status(200).json({users})
 }
 
-const unsubscribedContact = async (req: Request, res: Response) => {
-    const id = req.params.id as string
+const subscribe = async (req: Request, res: Response) => {
+    const { id } = req.params 
+    await ContactActionsService.subscribe(id)
 
-    const user = await ContactActionsService.unsubscribedContact(id)
-
-    res.status(200).json({user})
+    res.status(200).json({message: "Subscribed success"})
 }
 
 export default {
     unsubscribe: ExceptionInterceptor(unsubscribe),
     unsubscribedContactsList: ExceptionInterceptor(unsubscribedContactsList),
-    unsubscribedContact: ExceptionInterceptor(unsubscribedContact),
     emailOpenTracking: ExceptionInterceptor(emailOpenTracking),
-    emailLinkTracking: ExceptionInterceptor(emailLinkTracking)
+    emailLinkTracking: ExceptionInterceptor(emailLinkTracking),
+    subscribe: ExceptionInterceptor(subscribe)
 }
