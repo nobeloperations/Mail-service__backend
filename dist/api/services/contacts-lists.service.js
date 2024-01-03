@@ -11,7 +11,13 @@ const createContactsList = async (contactListData) => {
 const updateContactListById = async (id, contactsListData) => {
     const result = await prisma_client_1.default.contactstList.update({
         where: { id },
-        data: contactsListData
+        data: contactsListData,
+        select: {
+            id: true,
+            name: true,
+            eduQuestStartDate: true,
+            createdAt: true
+        }
     });
     return result;
 };
@@ -31,8 +37,9 @@ const getListContactsLists = async (filteringParams) => {
     });
     return (await listOfContactsLists).map(list => ({
         ...list,
-        contacts: undefined,
-        contactsCount: list.contacts.length
+        contactsCount: list.contactIds.length,
+        contactIds: undefined,
+        contacts: undefined
     }));
 };
 exports.default = {

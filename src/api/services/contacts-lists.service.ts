@@ -10,8 +10,14 @@ const createContactsList = async (contactListData: Prisma.ContactstListCreateInp
 const updateContactListById = async (id: string, contactsListData: Prisma.ContactstListUpdateInput) => {
     const result = await prismaClient.contactstList.update({
         where: { id },
-        data: contactsListData
-    });
+        data: contactsListData,
+        select: {
+            id: true,
+            name: true,
+            eduQuestStartDate: true,
+            createdAt: true
+        }
+    },);
 
     return result;
 };
@@ -35,8 +41,9 @@ const getListContactsLists = async (filteringParams: ApiResourceFilteringParams)
 
     return (await listOfContactsLists).map(list => ({
         ...list,
-        contacts: undefined,
-        contactsCount: list.contacts.length
+        contactsCount: list.contactIds.length,
+        contactIds: undefined,
+        contacts: undefined
     }));
 };
 

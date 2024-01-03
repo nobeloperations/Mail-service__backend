@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
 const createResourseSchema = joi_1.default.object({
     name: joi_1.default.string().required(),
-    eduQuestStartDate: joi_1.default.date(),
+    eduQuestStartDate: joi_1.default.date().iso(),
 });
 const updateResourseSchema = joi_1.default.object({
     name: joi_1.default.string(),
-    eduQuestStartDate: joi_1.default.date(),
+    eduQuestStartDate: joi_1.default.date().iso(),
 });
 exports.default = {
     createResourseSchema,

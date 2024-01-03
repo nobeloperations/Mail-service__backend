@@ -32,7 +32,7 @@ const deleteMailTemplateById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const result = await MailTemplatesService.deleteMailTemplateById(id);
 
-    res.status(StatusCodes.NO_CONTENT).json(result);
+    res.status(StatusCodes.OK).json(result);
 };
 
 const getMailTemplatesList = async (req: Request, res: Response) => {

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_errors_1 = __importDefault(require("../../utils/http-errors"));
 const errorHandler = (error, req, res, next) => {
     let errorResponse;
+    console.log(error);
     if (error instanceof http_errors_1.default) {
         errorResponse = {
             code: error.httpCode,

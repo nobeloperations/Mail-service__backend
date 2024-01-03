@@ -8,9 +8,8 @@ const createMailSchema = joi_1.default.object({
     contactId: joi_1.default.string().min(23).required(),
     templateId: joi_1.default.string().min(23).required(),
     timeZone: joi_1.default.string().required(),
-    scheduledDate: joi_1.default.date().required(),
+    scheduledDate: joi_1.default.date().iso().required(),
     useContactTimezone: joi_1.default.boolean().required(),
-    senderProfileId: joi_1.default.string().min(23).required(),
 });
 const updateMailSchema = joi_1.default.object({
     contactId: joi_1.default.string().min(23),
@@ -18,7 +17,6 @@ const updateMailSchema = joi_1.default.object({
     timeZone: joi_1.default.string(),
     scheduledDate: joi_1.default.date(),
     useContactTimezone: joi_1.default.boolean(),
-    senderProfileId: joi_1.default.string().min(23),
 });
 exports.default = {
     createMailSchema,
