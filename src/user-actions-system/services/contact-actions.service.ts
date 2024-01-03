@@ -64,11 +64,19 @@ const unsubscribedContactsList = async () => {
     return await prismaClient.unsubscribedUsers.findMany({})
 }
 
-const unsubscribedContact = async (id: string) => {
-
-    return await prismaClient.unsubscribedUsers.findUnique({
+const subscribe = async (id: string) => {
+    await prismaClient.contact.update({
         where: {
             id
+        },
+        data: {
+            isSubscribed: true
+        }
+    })
+
+    await prismaClient.unsubscribedUsers.delete({
+        where: {
+            contactId: id
         }
     })
 }
@@ -77,6 +85,6 @@ export default {
     emailLinkTracking,
     emailOpenTracking,
     unsubscribe,
-    unsubscribedContact,
-    unsubscribedContactsList
+    unsubscribedContactsList,
+    subscribe
 }
