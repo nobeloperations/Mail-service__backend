@@ -35,6 +35,11 @@ const deleteMailTemplateById = async (id) => {
     const databaseDeletingResult = await prisma_client_1.default.mailTemplate.delete({ where: { id } });
     return databaseDeletingResult;
 };
+const updateMailTemplateDataById = async (id, data) => {
+    const { googleDriveFileId } = await prisma_client_1.default.mailTemplate.findUnique({ where: { id } });
+    const updatedFileData = await mail_templates_driver_service_1.default.updateMailTemplateFileById(googleDriveFileId, data);
+    return updatedFileData;
+};
 const getMailTemplatesList = async (filteringParams) => {
     const { page, pageSize } = filteringParams;
     const skip = (page - 1) * pageSize;
@@ -49,5 +54,6 @@ exports.default = {
     getMailTemplatesList,
     deleteMailTemplateById,
     getMailTemplateDataById,
+    updateMailTemplateDataById
 };
 //# sourceMappingURL=mail-templates.service.js.map
