@@ -22,7 +22,7 @@ const getMailTemplatesList = async (req, res) => {
 const deleteMailTemplateById = async (req, res) => {
     const id = req.params.id;
     const result = await mail_templates_service_1.default.deleteMailTemplateById(id);
-    res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json(result);
+    res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
 const createMailTemplates = async (req, res) => {
     if (!req.files) {

@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const http_error_responses_1 = __importDefault(require("../http-error-responses"));
 const retriveUnsubscribedContsctsList = {
     tags: ['ContactActions'],
     parameters: [
@@ -34,6 +38,8 @@ const retriveUnsubscribedContsctsList = {
                 },
             },
         },
+        ...http_error_responses_1.default.unauthorizedResponse,
+        ...http_error_responses_1.default.internalServerError
     },
 };
 const unsubscribeContact = {
@@ -59,7 +65,9 @@ const unsubscribeContact = {
                     }
                 }
             }
-        }
+        },
+        ...http_error_responses_1.default.badRequestResponse,
+        ...http_error_responses_1.default.internalServerError
     },
 };
 const routes = {

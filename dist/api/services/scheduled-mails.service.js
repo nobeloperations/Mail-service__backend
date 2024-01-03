@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
 const http_errors_1 = __importDefault(require("../../utils/http-errors"));
 const createMails = async (mailsData) => {
-    const result = await prisma_client_1.default.scheduledMail.createMany({ data: mailsData });
+    const result = await prisma_client_1.default.scheduledMail.create({ data: mailsData });
     return result;
 };
 const getMailById = async (id) => {

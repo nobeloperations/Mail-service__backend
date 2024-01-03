@@ -8,8 +8,8 @@ const exception_interceptor_middleware_1 = __importDefault(require("../middlewar
 const scheduled_mails_service_1 = __importDefault(require("../services/scheduled-mails.service"));
 const createMails = async (req, res) => {
     const mailsData = req.body;
-    const createdMails = await scheduled_mails_service_1.default.createMails(mailsData);
-    res.status(http_status_codes_1.StatusCodes.CREATED).send(http_status_codes_1.ReasonPhrases.CREATED);
+    const createdMail = await scheduled_mails_service_1.default.createMails(mailsData);
+    res.status(http_status_codes_1.StatusCodes.CREATED).json(createdMail);
 };
 const getMailById = async (req, res) => {
     const id = req.params.id;
@@ -19,7 +19,7 @@ const getMailById = async (req, res) => {
 const deleteMailById = async (req, res) => {
     const id = req.params.id;
     const deletedMailData = await scheduled_mails_service_1.default.deleteMailById(id);
-    res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json(deletedMailData);
+    res.status(http_status_codes_1.StatusCodes.OK).json(deletedMailData);
 };
 const updateMailById = async (req, res) => {
     const id = req.params.id;
