@@ -21,11 +21,13 @@ model Contact {
   occupation          String
   sourceOfReferral    String //TODO: Define default sources
   intershipMotivation String
+  
+  eduQuestEventTimestamp String?
+  eduQuestSelectedDateTime DateTime?
   eduQuestDecision    EduQuestDecision?
 
   birthDate                DateTime  @db.Date
-  eduQuestSelectedDateTime DateTime?
-
+  
   isSubscribed               Boolean @default(true)
   isEqParticipationConfirmed Boolean @default(false)
 
