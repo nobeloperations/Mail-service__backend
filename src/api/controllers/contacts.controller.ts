@@ -3,14 +3,27 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 
 import ContactService from '../services/contacts.service';
 import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
+import { fetchLocation } from '../../user-actions-system/services/contactLocation.service';
 
+export const createContact = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const contactData = req.body;
+    const contactIP = req.ip;
+    const locationData = await fetchLocation(contactIP);
 
-const createContact = async(req:Request,res: Response)=> {
-    const contactData=req.body;
+    
+    if (locationData && (locationData.country === 'RUSSIA' || locationData.country === 'BELARUS')) {
+      res.status(StatusCodes.FORBIDDEN).json({ error: 'Access restricted for contacts from Russia or Belarus' });
+      return;
+    }
 
+    
     await ContactService.createContact(contactData);
-
     res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
+  } catch (error) {
+    console.error('Error in createContact controller:', error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+  }
 };
 
 const getContactById =async (req:Request,res:Response)=>{
