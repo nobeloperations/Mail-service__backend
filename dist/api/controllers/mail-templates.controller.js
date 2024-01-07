@@ -27,7 +27,7 @@ const updateMailTemplateDataById = async (req, res) => {
 const deleteMailTemplateById = async (req, res) => {
     const id = req.params.id;
     const result = await mail_templates_service_1.default.deleteMailTemplateById(id);
-    res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json(result);
+    res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
 const getMailTemplatesList = async (req, res) => {
     const { page, pageSize } = req.query;
@@ -37,20 +37,6 @@ const getMailTemplatesList = async (req, res) => {
     });
     res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
-
-const deleteMailTemplateById = async (req, res) => {
-    const id = req.params.id;
-    const result = await mail_templates_service_1.default.deleteMailTemplateById(id);
-    res.status(http_status_codes_1.StatusCodes.OK).json(result);
-};
-const createMailTemplates = async (req, res) => {
-    if (!req.files) {
-        return res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).send(http_status_codes_1.ReasonPhrases.BAD_REQUEST);
-    }
-    await mail_templates_service_1.default.createMailTemplates(req.files);
-    res.status(http_status_codes_1.StatusCodes.CREATED).send(http_status_codes_1.ReasonPhrases.CREATED);
-};
-
 exports.default = {
     createMailTemplates: (0, exception_interceptor_middleware_1.default)(createMailTemplates),
     getMailTemplatesList: (0, exception_interceptor_middleware_1.default)(getMailTemplatesList),

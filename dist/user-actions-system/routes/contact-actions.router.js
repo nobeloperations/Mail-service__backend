@@ -10,8 +10,8 @@ const contact_actions_controller_1 = __importDefault(require("../controllers/con
 const router = (0, express_1.default)();
 router.get("/email-open-tracking", contact_actions_controller_1.default.emailOpenTracking);
 router.get("/email-link-tracking", contact_actions_controller_1.default.emailLinkTracking);
-router.put("/unsubscribe", contact_actions_controller_1.default.unsubscribe);
+router.put("/unsubscribe/:id", request_id_validator_middleware_1.default, contact_actions_controller_1.default.unsubscribe);
 router.get("/unsubscribe/contacts", auth_handler_middleware_1.default, contact_actions_controller_1.default.unsubscribedContactsList);
-router.get("/unsubscribe/contacts/:id", auth_handler_middleware_1.default, request_id_validator_middleware_1.default, contact_actions_controller_1.default.unsubscribedContact);
+router.put("/subscribe/:id", auth_handler_middleware_1.default, request_id_validator_middleware_1.default, contact_actions_controller_1.default.subscribe);
 exports.default = router;
 //# sourceMappingURL=contact-actions.router.js.map
