@@ -8,13 +8,13 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const cron_jobs_1 = __importDefault(require("./cron-jobs"));
 const docs_1 = __importDefault(require("./docs"));
 const auth_1 = __importDefault(require("./api/routes/auth"));
 const public_api_router_1 = __importDefault(require("./api/public-api.router"));
 const contact_actions_router_1 = __importDefault(require("./user-actions-system/routes/contact-actions.router"));
 const error_handler_middleware_1 = __importDefault(require("./api/middlewares/error-handler.middleware"));
 const prisma_error_handler_1 = __importDefault(require("./api/middlewares/prisma-error-handler"));
-const contactLocation_service_1 = require("./user-actions-system/services/contactLocation.service");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
@@ -25,10 +25,8 @@ app.use('/api', auth_1.default);
 app.use('/api', public_api_router_1.default);
 app.use('/action', contact_actions_router_1.default);
 app.use('/test', async (req, res) => {
-    // startCronJobs()
-    const result = await (0, contactLocation_service_1.fetchLocation)("188.163.88.91");
-    console.log(result);
-    // res.json({message: "good"})
+    (0, cron_jobs_1.default)();
+    res.json({ massage: "good" });
 });
 app.use(prisma_error_handler_1.default);
 app.use(error_handler_middleware_1.default);
