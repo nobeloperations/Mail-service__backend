@@ -10,10 +10,12 @@ const createContact = async (contactData) => {
     if (!isContactExist) {
         const contact = await prisma_client_1.default.contact.create({ data: contactData });
         await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
+        return contact;
     }
     else {
         const updatedContact = await updateContactById(isContactExist.id, contactData);
         await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
+        return updatedContact;
     }
 };
 const deleteContactById = async (id) => {

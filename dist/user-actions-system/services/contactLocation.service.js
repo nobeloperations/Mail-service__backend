@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchLocation = void 0;
-async function fetchLocation(ip) {
+exports.getLocationByIpAddress = void 0;
+const API_KEY = process.env.LOCATION_API_KEY;
+const getLocationByIpAddress = async (ip) => {
+    if (!ip)
+        return undefined;
     try {
-        const apiUrl = `http://api.positionstack.com/v1/reverse?access_key=b69247c6cee0ac2d9ace48a04d8f6618&query=${ip}`;
-        const locationResponse = await fetch(apiUrl);
-        const [locationData] = await locationResponse.json();
+        const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=${API_KEY}&ip=${Array.isArray(ip) ? ip[0] : ip}`);
+        const { city, country_name, time_zone } = await response.json();
         return {
-            ip,
-            city: locationData.region,
-            country: locationData.country,
-            timezone: locationData.timezone,
+            city,
+            country: country_name,
+            timezone: time_zone.name
         };
     }
-    catch (error) {
-        console.error('Error fetching location:', error);
-        throw error;
+    catch {
+        return undefined;
     }
-}
-exports.fetchLocation = fetchLocation;
+};
+exports.getLocationByIpAddress = getLocationByIpAddress;
 //# sourceMappingURL=contactLocation.service.js.map
