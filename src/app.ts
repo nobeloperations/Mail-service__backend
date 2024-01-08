@@ -15,6 +15,7 @@ import ContactActionsRouter from './user-actions-system/routes/contact-actions.r
 
 import errorHandler from './api/middlewares/error-handler.middleware';
 import prismaErrorHandler from './api/middlewares/prisma-error-handler';
+import { getLocationByIpAddress } from './user-actions-system/services/contactLocation.service';
 
 dotenv.config();
 
@@ -33,7 +34,7 @@ app.use('/action', ContactActionsRouter)
 app.use('/test', async (req,res) => {
   startCronJobs()
   
-  res.json({message: "good"})
+  res.json({massage: "good"})
 })
 
 

@@ -9,9 +9,11 @@ const createContact = async (contactData: Prisma.ContactCreateInput) => {
     if(!isContactExist){
         const contact = await prismaClient.contact.create({ data: contactData });
         await subscribeToRelevantList(contact)
+        return contact
     } else {
         const updatedContact = await updateContactById(isContactExist.id, contactData)
         await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
+        return updatedContact
     }
 };
 

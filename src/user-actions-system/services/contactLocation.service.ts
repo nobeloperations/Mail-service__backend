@@ -1,26 +1,18 @@
-interface LocationData {
-  ip: string
-  region: string;
-  country: string;
-  timezone: string;
-}
+const API_KEY = process.env.LOCATION_API_KEY
 
-export async function fetchLocation(ip: string): Promise<LocationData | undefined> {
-  try {
-    
-    const apiUrl = `http://api.positionstack.com/v1/reverse?access_key=b69247c6cee0ac2d9ace48a04d8f6618&query=${ip}`;
-    const locationResponse = await fetch(apiUrl);
-    const [locationData] = await locationResponse.json();
+export const getLocationByIpAddress = async (ip: string | string[] | undefined) => {
+    if (!ip) return undefined;
 
-    return {
-      ip,
-      region: locationData.region,
-      country: locationData.country,
-      timezone: locationData.timezone,
-      
-    };
-  } catch (error) {
-    console.error('Error fetching location:', error);
-    throw error;
-  }
-}
+    try {
+        const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=${API_KEY}&ip=${Array.isArray(ip) ? ip[0] : ip}`);
+        const {city, country_name, time_zone} = await response.json();
+
+        return {
+          city,
+          country: country_name,
+          timezone: time_zone.name
+        }
+    } catch {
+        return undefined;
+    }
+};
