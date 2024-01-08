@@ -11,15 +11,13 @@ const contactLocation_service_1 = require("../../user-actions-system/services/co
 const createContact = async (req, res) => {
     try {
         const contactData = req.body;
-        const clientIP = req.ip;
-        const locationData = await (0, contactLocation_service_1.fetchLocation)(clientIP);
-        // location is from Russia or Belarus
-        if (locationData && (locationData.country === 'RU' || locationData.country === 'BY')) {
+        const contactIP = req.ip;
+        const locationData = await (0, contactLocation_service_1.fetchLocation)(contactIP);
+        if (locationData && (locationData.country === 'RUSSIA' || locationData.country === 'BELARUS')) {
             res.status(http_status_codes_1.StatusCodes.FORBIDDEN).json({ error: 'Access restricted for contacts from Russia or Belarus' });
             return;
         }
-        // Create contact if not from Russia or Belarus
-        await contacts_service_1.default.createContact(contactData);
+        await contacts_service_1.default.createContact({ ...contactData, ...locationData });
         res.status(http_status_codes_1.StatusCodes.CREATED).send(http_status_codes_1.ReasonPhrases.CREATED);
     }
     catch (error) {
