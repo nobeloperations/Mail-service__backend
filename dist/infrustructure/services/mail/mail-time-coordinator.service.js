@@ -4,13 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
-const isTimeToSendMail = (scheduledMailData, contactData) => {
-    const { timeZone, scheduledDate, useContactTimezone } = scheduledMailData;
-    const scheduledUtcDate = useContactTimezone
-        ? moment_timezone_1.default.utc(scheduledDate).tz(contactData.timezone)
-        : moment_timezone_1.default.utc(scheduledDate).tz(timeZone);
-    const currentUtcTime = moment_timezone_1.default.utc();
-    return currentUtcTime.isSameOrAfter(scheduledUtcDate);
+const isTimeToSendMail = (scheduledMailData) => {
+    const { scheduledDate } = scheduledMailData;
+    return moment_timezone_1.default.utc().isSameOrAfter(scheduledDate);
 };
 exports.default = {
     isTimeToSendMail

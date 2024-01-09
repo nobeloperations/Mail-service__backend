@@ -46,7 +46,13 @@ const deleteMailingAutomationById = async (id) => {
 const getMailingAutomationById = async (id) => {
     const result = prisma_client_1.default.mailingAutomation.findUnique({
         where: { id },
-        include: { automationScheduledMails: true }
+        include: {
+            automationScheduledMails: {
+                include: {
+                    template: true
+                }
+            }
+        }
     });
     if (!result) {
         throw http_errors_1.default.NotFound(`The requested resource with id - ${id} could not be found on the server`);
@@ -60,8 +66,17 @@ const getMailingAutomationsList = async (filteringParams) => {
         skip,
         take: pageSize,
         where: {
-            name: { contains: search }
+            name: {
+                contains: search
+            }
         },
+        include: {
+            automationScheduledMails: {
+                include: {
+                    template: true
+                }
+            }
+        }
     });
     return result;
 };

@@ -21,11 +21,13 @@ model Contact {
   occupation          String
   sourceOfReferral    String //TODO: Define default sources
   intershipMotivation String
+  
+  eduQuestEventTimestamp String?
+  eduQuestSelectedDateTime DateTime?
   eduQuestDecision    EduQuestDecision?
 
   birthDate                DateTime  @db.Date
-  eduQuestSelectedDateTime DateTime?
-
+  
   isSubscribed               Boolean @default(true)
   isEqParticipationConfirmed Boolean @default(false)
 
@@ -86,7 +88,6 @@ model UnsubscribedUsers {
 model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  timeZone           String
   scheduledDate      DateTime @db.Date
   useContactTimezone Boolean  @default(false)
 
@@ -104,7 +105,6 @@ model SentMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   emailId       String       @unique
-  timeZone      String
   scheduledDate DateTime     @db.Date
   emailStatus   EmailStatus? @default(PENDING)
 
@@ -147,8 +147,7 @@ model MailingAutomation {
 
 model AutomationScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  timeZone           String
+  
   useContactTimezone Boolean
   scheduledDate      DateTime @db.Date
 
