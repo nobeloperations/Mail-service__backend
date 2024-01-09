@@ -28,14 +28,13 @@ app.use('/docs', swaggerSetup.serve, swaggerSetup.setup);
 
 app.use('/api', AuthRouter);
 app.use('/api', PublicApiRouter);
-app.use('/action', ContactActionsRouter)
+app.use('/action', ContactActionsRouter);
 
 app.use('/test', async (req,res) => {
-  startCronJobs()
-  
   res.json({message: "good"})
-})
+});
 
+startCronJobs();
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);
