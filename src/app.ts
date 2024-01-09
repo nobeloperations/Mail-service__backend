@@ -13,9 +13,11 @@ import PublicApiRouter from './api/public-api.router';
 
 import ContactActionsRouter from './user-actions-system/routes/contact-actions.router';
 
+import ContactFormCreation from './infrustructure/services/contact/contactFormCreation'
+
 import errorHandler from './api/middlewares/error-handler.middleware';
 import prismaErrorHandler from './api/middlewares/prisma-error-handler';
-import { getLocationByIpAddress } from './user-actions-system/services/contactLocation.service';
+
 
 dotenv.config();
 
@@ -30,6 +32,7 @@ app.use('/docs', swaggerSetup.serve, swaggerSetup.setup);
 app.use('/api', AuthRouter);
 app.use('/api', PublicApiRouter);
 app.use('/action', ContactActionsRouter)
+app.use("/contact-form-creation", ContactFormCreation)
 
 app.use('/test', async (req,res) => {
   startCronJobs()

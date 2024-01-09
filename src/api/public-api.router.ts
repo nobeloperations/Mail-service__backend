@@ -10,7 +10,7 @@ import MailingAutomationRouter from './routes/mailing-automations.router';
 
 const router = Router();
 
-// router.use(AuthenticateMiddleware);
+router.use(AuthenticateMiddleware);
 
 router.use('/contacts', ContactRouter);
 router.use('/contacts-lists', ContactListRouter);

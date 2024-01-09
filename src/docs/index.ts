@@ -8,6 +8,7 @@ import ContactsListsRoutes from './routes/contacts-lists.doc.route';
 import MailingAutomationsRoutes from './routes/mailing-automations.doc.route';
 import AuthRoute from './routes/auth.doc.routes'
 import ContactActions from './routes/contact-actions.doc.routes'
+import ContactFormCreation from './routes/contact-form-creation'
 
 const ApiDocumentation = {
     openapi: '3.0.1',
@@ -19,6 +20,7 @@ const ApiDocumentation = {
     tags: [
         { name: 'Authorization'},
         { name: 'Contacts'},
+        { name: 'Contact Form Creation'},
         { name: 'Contacts lists' },
         { name: 'Mail templates' },
         { name: 'Scheduled mails' },
@@ -44,7 +46,8 @@ const ApiDocumentation = {
         ...MailTemplatesRoutes,
         ...ContactsListsRoutes,
         ...MailingAutomationsRoutes,
-        ...ContactActions
+        ...ContactActions,
+        ...ContactFormCreation
     },
 };
 

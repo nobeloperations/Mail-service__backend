@@ -4,7 +4,7 @@ import prismaClient from '../../database/prisma-client';
 import createContactsList from '../services/contacts-lists.service'
 
 
-export const  subscribeToRelevantList = async (contact) => {
+export const subscribeToRelevantList = async (contact) => {
     if(contact.eduQuestSelectedDateTime) {
         const isListExist = await prismaClient.contactstList.findUnique({ where: { eduQuestStartDate: contact.eduQuestSelectedDateTime } });
 
@@ -18,6 +18,8 @@ export const  subscribeToRelevantList = async (contact) => {
     } else {
         await updateContactIds('Future List', contact.id)
     }
+
+    return await prismaClient.contact.findUnique({ where: { id: contact.id }})
 }
 
 const updateContactIds = async (identifier: string, contactId: string) => {
@@ -28,7 +30,11 @@ const updateContactIds = async (identifier: string, contactId: string) => {
     if (!contactIds.includes(contactId)) {
         await prismaClient.contactstList.update({
             where: { id },
-            data: { contactIds: [...contactIds, contactId] },
-        });
+            data: {
+              contacts: {
+                connect: [{ id: contactId }],
+              },
+            },
+          });
     }
 };

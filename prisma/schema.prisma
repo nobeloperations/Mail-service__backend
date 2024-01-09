@@ -25,6 +25,7 @@ model Contact {
 
   birthDate                DateTime  @db.Date
   eduQuestSelectedDateTime DateTime?
+  eduQuestEventTimestamp   String?
 
   isSubscribed               Boolean @default(true)
   isEqParticipationConfirmed Boolean @default(false)
@@ -79,7 +80,7 @@ model UnsubscribedUsers {
   createdAt           DateTime @default(now()) @db.Date
 
   contactId String  @unique @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id])
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
 
 // MAILS
