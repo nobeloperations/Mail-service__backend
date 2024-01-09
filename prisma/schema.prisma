@@ -81,14 +81,13 @@ model UnsubscribedUsers {
   createdAt           DateTime @default(now()) @db.Date
 
   contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id])
+  contact   Contact @relation(fields: [contactId], references: [id]) 
 }
 
 // MAILS
 model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  timeZone           String
   scheduledDate      DateTime @db.Date
   useContactTimezone Boolean  @default(false)
 
@@ -106,7 +105,6 @@ model SentMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   emailId       String       @unique
-  timeZone      String
   scheduledDate DateTime     @db.Date
   emailStatus   EmailStatus? @default(PENDING)
 
@@ -149,8 +147,7 @@ model MailingAutomation {
 
 model AutomationScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  timeZone           String
+  
   useContactTimezone Boolean
   scheduledDate      DateTime @db.Date
 
