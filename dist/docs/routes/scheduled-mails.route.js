@@ -27,7 +27,6 @@ const createResource = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },
@@ -72,7 +71,6 @@ const updateResource = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },
@@ -110,7 +108,6 @@ const retriveResourceById = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },
@@ -148,7 +145,6 @@ const deleteResourceById = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },
@@ -192,7 +188,6 @@ const retriveResourceList = {
                     example: [
                         {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },
@@ -201,7 +196,6 @@ const retriveResourceList = {
                         },
                         {
                             id: { type: 'string', example: 'record_id' },
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
                             contactId: { type: 'string', example: 'contact_record_id' },

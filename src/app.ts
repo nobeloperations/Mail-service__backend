@@ -33,13 +33,14 @@ app.use('/api', AuthRouter);
 app.use('/api', PublicApiRouter);
 app.use('/action', ContactActionsRouter)
 app.use("/contact-form-creation", ContactFormCreation)
+app.use('/action', ContactActionsRouter);
+
 
 app.use('/test', async (req,res) => {
-  startCronJobs()
-  
-  res.json({massage: "good"})
-})
+  res.json({message: "good"})
+});
 
+startCronJobs();
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);

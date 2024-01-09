@@ -26,7 +26,6 @@ const createResource = {
                         properties: {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
@@ -74,7 +73,6 @@ const updateResource = {
                         properties: {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
@@ -116,7 +114,6 @@ const retriveResourceById = {
                         properties: {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
@@ -158,7 +155,6 @@ const deleteResourceById = {
                         properties: {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
@@ -205,7 +201,6 @@ const retriveResourceList = {
                         {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
@@ -216,7 +211,6 @@ const retriveResourceList = {
                         {
                             id: { type: 'string', example: 'record_id' },
 
-                            timeZone: { type: 'string', example: 'Asia/Pekin' },
                             scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
                             useContactTimezone: { type: 'boolean', example: true },
 
