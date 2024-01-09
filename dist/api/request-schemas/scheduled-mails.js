@@ -7,14 +7,12 @@ const joi_1 = __importDefault(require("joi"));
 const createMailSchema = joi_1.default.object({
     contactId: joi_1.default.string().min(23).required(),
     templateId: joi_1.default.string().min(23).required(),
-    timeZone: joi_1.default.string().required(),
-    scheduledDate: joi_1.default.date().iso().required(),
+    scheduledDate: joi_1.default.date().required(),
     useContactTimezone: joi_1.default.boolean().required(),
 });
 const updateMailSchema = joi_1.default.object({
     contactId: joi_1.default.string().min(23),
     templateId: joi_1.default.string().min(23),
-    timeZone: joi_1.default.string(),
     scheduledDate: joi_1.default.date(),
     useContactTimezone: joi_1.default.boolean(),
 });

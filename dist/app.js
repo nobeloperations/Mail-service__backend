@@ -25,9 +25,9 @@ app.use('/api', auth_1.default);
 app.use('/api', public_api_router_1.default);
 app.use('/action', contact_actions_router_1.default);
 app.use('/test', async (req, res) => {
-    (0, cron_jobs_1.default)();
     res.json({ message: "good" });
 });
+(0, cron_jobs_1.default)();
 app.use(prisma_error_handler_1.default);
 app.use(error_handler_middleware_1.default);
 exports.default = app;
