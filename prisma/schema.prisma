@@ -80,8 +80,8 @@ model UnsubscribedUsers {
   activityDescription String
   createdAt           DateTime @default(now()) @db.Date
 
-  contactId String  @db.ObjectId
-  contact   Contact @relation(fields: [contactId], references: [id]) 
+  contactId String  @unique @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
 }
 
 // MAILS

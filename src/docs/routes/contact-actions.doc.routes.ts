@@ -44,7 +44,7 @@ const unsubscribeContact = {
     operationId: 'unsubscribe-contact',
     parameters: [
         {
-            name: 'contactId',
+            name: 'id',
             in: 'path',
             description: 'Contact id',
             required: true,
@@ -53,7 +53,7 @@ const unsubscribeContact = {
     ],
     responses: {
         '200': {
-            description: 'Contact was unsubscribed successfully!',
+            description: 'Contact unsubscribed successfully!',
             content: {
                 'text/plain': {
                     schema: {
@@ -68,12 +68,45 @@ const unsubscribeContact = {
     },
 }
 
+const subscribeContact = {
+    tags: ['ContactActions'],
+    operationId: 'subscribe-contact',
+    parameters: [
+        {
+            name: 'id',
+            in: 'path',
+            description: 'Contact id',
+            required: true,
+            type: 'string',
+        },
+    ],
+    responses: {
+        '200': {
+            description: 'Contact subscribed successfully!',
+            content: {
+                'text/plain': {
+                    schema: {
+                        type: 'string',
+                        example: 'Subscribed success'
+                    }
+                }
+            }
+        },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.internalServerError
+    },
+}
+
+
 const routes = {
     '/action/unsubscribe/contacts': {
         get: retriveUnsubscribedContsctsList,
     },
-    '/action/unsubscribe': {
+    '/action/unsubscribe/:id': {
         put: unsubscribeContact,
+    },
+    '/action/subscribe/:id': {
+        put: subscribeContact,
     },
 };
 

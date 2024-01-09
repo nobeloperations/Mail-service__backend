@@ -24,7 +24,7 @@ const emailLinkTracking = async (req, res) => {
     res.redirect(redirectLink);
 };
 const unsubscribe = async (req, res) => {
-    const id = req.query.contactId;
+    const { id } = req.params;
     await contact_actions_service_1.default.unsubscribe(id);
     res.status(200).json({ message: "Unsubscribed success" });
 };
@@ -32,16 +32,16 @@ const unsubscribedContactsList = async (req, res) => {
     const users = await contact_actions_service_1.default.unsubscribedContactsList();
     res.status(200).json({ users });
 };
-const unsubscribedContact = async (req, res) => {
-    const id = req.params.id;
-    const user = await contact_actions_service_1.default.unsubscribedContact(id);
-    res.status(200).json({ user });
+const subscribe = async (req, res) => {
+    const { id } = req.params;
+    await contact_actions_service_1.default.subscribe(id);
+    res.status(200).json({ message: "Subscribed success" });
 };
 exports.default = {
     unsubscribe: (0, exception_interceptor_middleware_1.default)(unsubscribe),
     unsubscribedContactsList: (0, exception_interceptor_middleware_1.default)(unsubscribedContactsList),
-    unsubscribedContact: (0, exception_interceptor_middleware_1.default)(unsubscribedContact),
     emailOpenTracking: (0, exception_interceptor_middleware_1.default)(emailOpenTracking),
-    emailLinkTracking: (0, exception_interceptor_middleware_1.default)(emailLinkTracking)
+    emailLinkTracking: (0, exception_interceptor_middleware_1.default)(emailLinkTracking),
+    subscribe: (0, exception_interceptor_middleware_1.default)(subscribe)
 };
 //# sourceMappingURL=contact-actions.controller.js.map

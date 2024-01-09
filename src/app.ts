@@ -15,6 +15,7 @@ import ContactActionsRouter from './user-actions-system/routes/contact-actions.r
 
 import errorHandler from './api/middlewares/error-handler.middleware';
 import prismaErrorHandler from './api/middlewares/prisma-error-handler';
+import { getLocationByIpAddress } from './user-actions-system/services/contactLocation.service';
 
 dotenv.config();
 
