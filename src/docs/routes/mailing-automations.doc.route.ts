@@ -18,40 +18,76 @@ const createResource = {
     },
     responses: {
         '201': {
-            description: 'Record created successfully',
-            properties: {
-                id: { type: 'string', example: 'record_id' },
-                name: { type: 'string', example: 'test mailing automatio' },
-                automationScheduledMails: [
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
+            description: 'Successfully deleted',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string', example: 'record_id' },
+                            name: { type: 'string', example: 'test mailing automatio' },
+                            automationScheduledMails: {
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    }
+                                ]
+                            }
+                        },
                     }
-                ]
-            }
+                },
+            },
         },
         ...DocumentHttpErrors.unauthorizedResponse,
         ...DocumentHttpErrors.badRequestResponse,
         ...DocumentHttpErrors.internalServerError
     },
 };
+
+
 
 const updateResource = {
     tags: [ROUTE_TAG],
@@ -76,33 +112,67 @@ const updateResource = {
     responses: {
         '200': {
             description: 'Record updated successfully',
-            properties: {
-                id: { type: 'string', example: 'record_id' },
-                name: { type: 'string', example: 'test mailing automatio' },
-                automationScheduledMails: [
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string', example: 'record_id' },
+                            name: { type: 'string', example: 'test mailing automatio' },
+                            automationScheduledMails: {
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    }
+                                ]
+                            }
+                        },
                     }
-                ]
-            }
+                },
+            },
         },
         ...DocumentHttpErrors.badRequestResponse,
         ...DocumentHttpErrors.unauthorizedResponse,
@@ -126,34 +196,68 @@ const retriveResourceById = {
     ],
     responses: {
         '200': {
-            description: 'Record retrived successfully',
-            properties: {
-                id: { type: 'string', example: 'record_id' },
-                name: { type: 'string', example: 'test mailing automatio' },
-                automationScheduledMails: [
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
-                    },
-                    {
-                        id: { type: 'string', example: 'record_id' },
-                        timeZone: { type: 'string', example: 'Asia/Pekin' },
-                        useContactTimezone: { type: 'boolean', example: true },
-                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                        templateId: { type: 'string', example: 'template_record_id' },
+            description: 'Successfully deleted',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string', example: 'record_id' },
+                            name: { type: 'string', example: 'test mailing automatio' },
+                            automationScheduledMails: { 
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'template_name' },
+                                                googleDriveFileId: { type: 'string', example: 'google_drive_id' },
+                                                createdAt: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                            }
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'template_name' },
+                                                googleDriveFileId: { type: 'string', example: 'google_drive_id' },
+                                                createdAt: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                            }
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'template_name' },
+                                                googleDriveFileId: { type: 'string', example: 'google_drive_id' },
+                                                createdAt: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                            }
+                                        },
+                                    }
+                                ] 
+                            } 
+                        },
                     }
-                ]
-            }
+                },
+            },
         },
         ...DocumentHttpErrors.badRequestResponse,
         ...DocumentHttpErrors.unauthorizedResponse,
@@ -176,8 +280,8 @@ const deleteResourceById = {
         },
     ],
     responses: {
-        '204': {
-            description: 'Contact deleted successfully!',
+        '200': {
+            description: 'Successfully deleted',
             content: {
                 'application/json': {
                     schema: {
@@ -185,31 +289,57 @@ const deleteResourceById = {
                         properties: {
                             id: { type: 'string', example: 'record_id' },
                             name: { type: 'string', example: 'test mailing automatio' },
-                            automationScheduledMails: [
-                                {
-                                    id: { type: 'string', example: 'record_id' },
-                                    timeZone: { type: 'string', example: 'Asia/Pekin' },
-                                    useContactTimezone: { type: 'boolean', example: true },
-                                    scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                                    templateId: { type: 'string', example: 'template_record_id' },
-                                },
-                                {
-                                    id: { type: 'string', example: 'record_id' },
-                                    timeZone: { type: 'string', example: 'Asia/Pekin' },
-                                    useContactTimezone: { type: 'boolean', example: true },
-                                    scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                                    templateId: { type: 'string', example: 'template_record_id' },
-                                },
-                                {
-                                    id: { type: 'string', example: 'record_id' },
-                                    timeZone: { type: 'string', example: 'Asia/Pekin' },
-                                    useContactTimezone: { type: 'boolean', example: true },
-                                    scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
-                                    templateId: { type: 'string', example: 'template_record_id' },
-                                }
-                            ]
-                              
-                        }
+                            automationScheduledMails: {
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    }
+                                ]
+                            }
+                        },
                     }
                 },
             },
@@ -254,12 +384,112 @@ const retriveResourceList = {
                 'application/json': {
                     example: [
                         {
-                            id: '658010712f25aeac7387d6fd',
-                            name: 'test-mailing Automation'
+                            id: { type: 'string', example: 'record_id' },
+                            name: { type: 'string', example: 'test mailing automatio' },
+                            automationScheduledMails: {
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    }
+                                ]
+                            }
                         },
                         {
-                            id: '6582bc0a74419374de8fb247',
-                            name: 'test-mailing Automatio2'
+                            id: { type: 'string', example: 'record_id' },
+                            name: { type: 'string', example: 'test mailing automatio' },
+                            automationScheduledMails: {
+                                type: 'array', 
+                                example: [
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    },
+                                    {
+                                        id: { type: 'string', example: 'record_id' },
+                                        timeZone: { type: 'string', example: 'Asia/Pekin' },
+                                        useContactTimezone: { type: 'boolean', example: true },
+                                        scheduledDate: { type: 'date', example: '2024-12-29T22:00:00.000+00:00' },
+                                        template: { 
+                                            type: 'object', 
+                                            example: {
+                                                id: { type: 'string', example: 'record_id' },
+                                                name: { type: 'string', example: 'eminder EQ' },
+                                                googleDriveFileId: { type: 'string', example: '1IoAMmXq5OGzU58NmSVCv17UfZRD9cuaS' },
+                                                createdAt: { type: 'date', example: '2023-11-02T22:00:00.000Z' }
+                                            } 
+                                        },
+                                    }
+                                ]
+                            }
                         }
                     ]
                 },
@@ -367,15 +597,15 @@ const routes = {
         post: createResource,
         get: retriveResourceList,
     },
-    '/api/mailing-automations/:id': {
+    '/api/mailing-automations/{id}': {
         put: updateResource,
         get: retriveResourceById,
         delete: deleteResourceById,
     },
-    '/api/mailing-automations/:id/add-contacts': {
+    '/api/mailing-automations/{id}/add-contacts': {
         post: addContactsToResource,
     },
-    '/api/mailing-automations/:id/remove-contacts': {
+    '/api/mailing-automations/{id}/remove-contacts': {
         post: removeContactsFromResouce,
     },
 };
