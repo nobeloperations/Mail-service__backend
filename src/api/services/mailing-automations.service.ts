@@ -53,7 +53,13 @@ const deleteMailingAutomationById = async (id: string) => {
 const getMailingAutomationById = async (id: string) => {
     const result = prismaClient.mailingAutomation.findUnique({
         where: { id },
-        include: { automationScheduledMails: true }
+        include: { 
+            automationScheduledMails: {
+                include: {
+                    template: true
+                }
+            }
+        }
     });
 
     if (!result) {
@@ -71,8 +77,17 @@ const getMailingAutomationsList = async (filteringParams: ApiResourceFilteringPa
         skip,
         take: pageSize,
         where: {
-            name: { contains: search }
+            name: { 
+                contains: search 
+            }
         },
+        include: {
+            automationScheduledMails: {
+                include: {
+                    template: true
+                }
+            }
+        }
     });
 
     return result;

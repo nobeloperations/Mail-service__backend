@@ -13,11 +13,10 @@ const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
 
     pendingMails.forEach(async (processedSheduledMailData) => {
-        
         const { contactId, id, templateId, useContactTimezone, mailingAutomationId,  ...restOfFields } = processedSheduledMailData;
         const contactData = await ContactDataService.retrieveContactData(contactId);
 
-        if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData, contactData) && contactData.isSubscribed) {
+        if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData) && contactData.isSubscribed) {
             const composedMail = await MailComposer.composeMail(contactData, templateId);
             const composedIdentifiedMail = modifyEmailTextWithUniqueValues(composedMail, {contactId, emailId: id})
 

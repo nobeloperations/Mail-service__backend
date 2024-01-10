@@ -1,16 +1,18 @@
+import moment from 'moment';
 import prismaClient from '../../database/prisma-client';
 
 const retrievePendingMails = async () => {
-    const currentDateTime = new Date();
-    const mails = await prismaClient.scheduledMail.findMany({
+    const currentDateTimeUTC = moment.utc().toDate();
+    
+    const pendingMails = await prismaClient.scheduledMail.findMany({
         where: {
             scheduledDate: {
-                lte: currentDateTime
+                lt: currentDateTimeUTC
             }
         }
     });
 
-    return mails;
+    return pendingMails;
 };
 
 const deletePendingMail = async (id: string) => {
@@ -22,7 +24,8 @@ const deletePendingMail = async (id: string) => {
 
       return mail
 }
+
 export default {
     retrievePendingMails,
     deletePendingMail
-}
+};

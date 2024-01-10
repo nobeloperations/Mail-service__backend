@@ -15,7 +15,7 @@ const sentPendingMails = async () => {
     pendingMails.forEach(async (processedSheduledMailData) => {
         const { contactId, id, templateId, useContactTimezone, mailingAutomationId, ...restOfFields } = processedSheduledMailData;
         const contactData = await contactData_1.default.retrieveContactData(contactId);
-        if (mail_time_coordinator_service_1.default.isTimeToSendMail(processedSheduledMailData, contactData) && contactData.isSubscribed) {
+        if (mail_time_coordinator_service_1.default.isTimeToSendMail(processedSheduledMailData) && contactData.isSubscribed) {
             const composedMail = await mail_composer_service_1.default.composeMail(contactData, templateId);
             const composedIdentifiedMail = (0, uniqueEmailDecorator_1.default)(composedMail, { contactId, emailId: id });
             await mail_sender_service_1.default.sentComposedMail(contactData.email, composedIdentifiedMail);
