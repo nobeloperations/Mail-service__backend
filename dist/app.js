@@ -13,6 +13,7 @@ const docs_1 = __importDefault(require("./docs"));
 const auth_1 = __importDefault(require("./api/routes/auth"));
 const public_api_router_1 = __importDefault(require("./api/public-api.router"));
 const contact_actions_router_1 = __importDefault(require("./user-actions-system/routes/contact-actions.router"));
+const contactFormCreation_1 = __importDefault(require("./infrustructure/services/contact/contactFormCreation"));
 const error_handler_middleware_1 = __importDefault(require("./api/middlewares/error-handler.middleware"));
 const prisma_error_handler_1 = __importDefault(require("./api/middlewares/prisma-error-handler"));
 dotenv_1.default.config();
@@ -23,6 +24,8 @@ app.use((0, express_fileupload_1.default)({ limits: { fileSize: 50 * 1024 * 1024
 app.use('/docs', docs_1.default.serve, docs_1.default.setup);
 app.use('/api', auth_1.default);
 app.use('/api', public_api_router_1.default);
+app.use('/action', contact_actions_router_1.default);
+app.use("/contact-form-creation", contactFormCreation_1.default);
 app.use('/action', contact_actions_router_1.default);
 app.use('/test', async (req, res) => {
     res.json({ message: "good" });
