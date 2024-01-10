@@ -16,9 +16,9 @@ const createContact = async (contactData: Prisma.ContactCreateInput) => {
     } else {
         const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
         const updatedContact = await updateContactById(isContactExist.id, {...contactData, eduQuestEventTimestamp})
-        await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
+        const subscriptionResult = await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
 
-        return updatedContact
+        return subscriptionResult
     }
 };
 
@@ -82,6 +82,26 @@ const getContactList = async (filteringParams: ApiResourceFilteringParams) => {
 
 const batchUpdatingContacts = async (updatingData: { contactIds: string[], updates: Prisma.ContactUpdateInput }) => {
     const { contactIds, updates } = updatingData;
+
+    if(updates.eduQuestSelectedDateTime){
+        const existingContacts = await prismaClient.contact.findMany({
+            where: {
+                id: {
+                    in: contactIds,
+                },
+            },
+        });
+    
+        const updatedContacts = await Promise.all(existingContacts.map(async (contact) => {
+            const eduQuestEventTimestamp = generateTimestampField(contact.timezone, updates.eduQuestSelectedDateTime)
+    
+            const updatedContact = await updateContactById(contact.id, {...updates, eduQuestEventTimestamp })
+    
+            return updatedContact;
+        }));
+    
+        return updatedContacts;
+    }
 
     const result = await prismaClient.contact.updateMany({
         where: {
