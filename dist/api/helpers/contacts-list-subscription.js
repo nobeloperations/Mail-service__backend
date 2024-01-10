@@ -22,6 +22,7 @@ const subscribeToRelevantList = async (contact) => {
     else {
         await updateContactIds('Future List', contact.id);
     }
+    return await prisma_client_1.default.contact.findUnique({ where: { id: contact.id } });
 };
 exports.subscribeToRelevantList = subscribeToRelevantList;
 const updateContactIds = async (identifier, contactId) => {
@@ -31,7 +32,11 @@ const updateContactIds = async (identifier, contactId) => {
     if (!contactIds.includes(contactId)) {
         await prisma_client_1.default.contactstList.update({
             where: { id },
-            data: { contactIds: [...contactIds, contactId] },
+            data: {
+                contacts: {
+                    connect: [{ id: contactId }],
+                },
+            },
         });
     }
 };

@@ -22,8 +22,8 @@ const authenticate = async (req, res, next) => {
         req.user = user;
         next();
     }
-    catch {
-        return next(http_errors_1.default.InternalServerError());
+    catch (error) {
+        return next(http_errors_1.default.Unauthorized(error.message));
     }
 };
 exports.default = authenticate;

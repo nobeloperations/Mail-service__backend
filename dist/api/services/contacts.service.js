@@ -5,21 +5,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
 const contacts_list_subscription_1 = require("../helpers/contacts-list-subscription");
+const generate_timestamp_1 = require("../helpers/generate-timestamp");
 const createContact = async (contactData) => {
     const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
     if (!isContactExist) {
-        const contact = await prisma_client_1.default.contact.create({ data: contactData });
-        await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
-        return contact;
+        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+        const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
+        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
+        return subscriptionResult;
     }
     else {
-        const updatedContact = await updateContactById(isContactExist.id, contactData);
-        await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
-        return updatedContact;
+        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+        const updatedContact = await updateContactById(isContactExist.id, { ...contactData, eduQuestEventTimestamp });
+        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
+        return subscriptionResult;
     }
 };
 const deleteContactById = async (id) => {
-    const result = await prisma_client_1.default.contact.delete({ where: { id } });
+    const contact = await prisma_client_1.default.contact.findUnique({
+        where: { id: id },
+        include: { lists: true }
+    });
+    console.log(contact.listIds[0]);
+    const updateListsPromises = contact.listIds.map(list => prisma_client_1.default.contactstList.update({
+        where: { id: list },
+        data: { contacts: { disconnect: { id: id } } }
+    }));
+    await Promise.all(updateListsPromises);
+    const result = await prisma_client_1.default.contact.delete({
+        where: { id: id }
+    });
     return result;
 };
 const updateContactById = async (id, contactData) => {
@@ -53,6 +68,21 @@ const getContactList = async (filteringParams) => {
 };
 const batchUpdatingContacts = async (updatingData) => {
     const { contactIds, updates } = updatingData;
+    if (updates.eduQuestSelectedDateTime) {
+        const existingContacts = await prisma_client_1.default.contact.findMany({
+            where: {
+                id: {
+                    in: contactIds,
+                },
+            },
+        });
+        const updatedContacts = await Promise.all(existingContacts.map(async (contact) => {
+            const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contact.timezone, updates.eduQuestSelectedDateTime);
+            const updatedContact = await updateContactById(contact.id, { ...updates, eduQuestEventTimestamp });
+            return updatedContact;
+        }));
+        return updatedContacts;
+    }
     const result = await prisma_client_1.default.contact.updateMany({
         where: {
             id: {

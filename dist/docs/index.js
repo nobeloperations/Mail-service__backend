@@ -12,6 +12,7 @@ const contacts_lists_doc_route_1 = __importDefault(require("./routes/contacts-li
 const mailing_automations_doc_route_1 = __importDefault(require("./routes/mailing-automations.doc.route"));
 const auth_doc_routes_1 = __importDefault(require("./routes/auth.doc.routes"));
 const contact_actions_doc_routes_1 = __importDefault(require("./routes/contact-actions.doc.routes"));
+const contact_form_creation_1 = __importDefault(require("./routes/contact-form-creation"));
 const ApiDocumentation = {
     openapi: '3.0.1',
     info: {
@@ -22,6 +23,7 @@ const ApiDocumentation = {
     tags: [
         { name: 'Authorization' },
         { name: 'Contacts' },
+        { name: 'Contact Form Creation' },
         { name: 'Contacts lists' },
         { name: 'Mail templates' },
         { name: 'Scheduled mails' },
@@ -47,7 +49,8 @@ const ApiDocumentation = {
         ...mail_template_doc_route_1.default,
         ...contacts_lists_doc_route_1.default,
         ...mailing_automations_doc_route_1.default,
-        ...contact_actions_doc_routes_1.default
+        ...contact_actions_doc_routes_1.default,
+        ...contact_form_creation_1.default
     },
 };
 const specs = (0, swagger_jsdoc_1.default)({
