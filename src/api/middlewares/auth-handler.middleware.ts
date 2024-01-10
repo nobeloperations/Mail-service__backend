@@ -26,8 +26,8 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
     req.user = user;
 
     next();
-  } catch {
-    return next(HttpErrors.InternalServerError());
+  } catch (error){
+    return next(HttpErrors.Unauthorized(error.message));
   }
 };
 

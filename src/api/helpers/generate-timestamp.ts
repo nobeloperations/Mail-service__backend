@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
 
-export function generateTimestampField(timezone: string, eduQuestSelectedDateTime: string | Date) {
+export function generateTimestampField(timezone: string, eduQuestSelectedDateTime: any ) {
     if(eduQuestSelectedDateTime){
         const dateTime = moment(eduQuestSelectedDateTime);
 
