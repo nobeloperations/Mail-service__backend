@@ -12,7 +12,7 @@ const createResource = {
     requestBody: {
         content: {
             'application/json': {
-                schema: (0, joi_to_swagger_1.default)(contacts_request_schemas_1.default.createResourse).swagger,
+                schema: (0, joi_to_swagger_1.default)(contacts_request_schemas_1.default.createResourseFormSubmitionForm).swagger,
             },
         },
         required: true,
