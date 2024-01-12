@@ -10,7 +10,7 @@ const createResource = {
     requestBody: {
         content: {
             'application/json': {
-                schema: j2s(ContactsRequestShemas.createResourse).swagger,
+                schema: j2s(ContactsRequestShemas.createResourseFormSubmitionForm).swagger,
             },
         },
         required: true,
