@@ -52,6 +52,7 @@ const createResource = {
             },
         },
         ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
         ...DocumentHttpErrors.internalServerError
     },
 };
@@ -111,6 +112,9 @@ const updateResource = {
                 },
             },
         },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -162,6 +166,9 @@ const retriveResourceById = {
                 },
             },
         },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -213,6 +220,9 @@ const deleteResourceById = {
                 },
             },
         },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -300,6 +310,8 @@ const retriveResourceList = {
                 },
             },
         },
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -327,6 +339,9 @@ const bulkResourceUpdating = {
                 }
             }
         },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
@@ -354,6 +369,9 @@ const bulkResourceDeleting = {
                 }
             }
         },
+        ...DocumentHttpErrors.badRequestResponse,
+        ...DocumentHttpErrors.unauthorizedResponse,
+        ...DocumentHttpErrors.internalServerError
     },
 };
 
