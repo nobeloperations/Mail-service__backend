@@ -50,6 +50,7 @@ const createResource = {
             },
         },
         ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
         ...index_1.default.internalServerError
     },
 };
@@ -104,6 +105,9 @@ const updateResource = {
                 },
             },
         },
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const retriveResourceById = {
@@ -149,6 +153,9 @@ const retriveResourceById = {
                 },
             },
         },
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const deleteResourceById = {
@@ -194,6 +201,9 @@ const deleteResourceById = {
                 },
             },
         },
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const retriveResourceList = {
@@ -272,6 +282,8 @@ const retriveResourceList = {
                 },
             },
         },
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const bulkResourceUpdating = {
@@ -298,6 +310,9 @@ const bulkResourceUpdating = {
                 }
             }
         },
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const bulkResourceDeleting = {
@@ -324,6 +339,9 @@ const bulkResourceDeleting = {
                 }
             }
         },
+        ...index_1.default.badRequestResponse,
+        ...index_1.default.unauthorizedResponse,
+        ...index_1.default.internalServerError
     },
 };
 const retriveResourceActionsById = {

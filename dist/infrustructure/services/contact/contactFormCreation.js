@@ -10,7 +10,7 @@ const contacts_request_schemas_1 = __importDefault(require("../../../api/request
 const contactLocation_service_1 = require("../../../user-actions-system/services/contactLocation.service");
 const http_status_codes_1 = require("http-status-codes");
 const router = (0, express_1.Router)();
-router.post("/", (0, request_body_validator_1.default)(contacts_request_schemas_1.default.createResourse), async (req, res) => {
+router.post("/", (0, request_body_validator_1.default)(contacts_request_schemas_1.default.createResourseFormSubmitionForm), async (req, res) => {
     try {
         const contactData = req.body;
         const userIpAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
