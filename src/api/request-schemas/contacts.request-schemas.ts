@@ -33,6 +33,20 @@ const updateResource = Joi.object({
     eduQuestSelectedDateTime: Joi.date().iso(),
 });
 
+const createResourseFormSubmitionForm = Joi.object({
+    firstName: Joi.string().required(), 
+    lastName: Joi.string().required(),   
+    age: Joi.number().required(),                                  
+    email: Joi.string().required().email(),               
+    gender: Joi.string().required(),              
+    country: Joi.string(),                        
+    occupation: Joi.string().required(),          
+    sourceOfReferral: Joi.string().required(),    
+    intershipMotivation: Joi.string().required(),
+    birthDate: Joi.date().iso().required(),    
+    eduQuestSelectedDateTime: Joi.date(),
+});
+
 const bulkUpdatingResouces = Joi.object({
     contactIds: Joi.array().items(Joi.string()).required(),
     updates: updateResource
@@ -46,6 +60,7 @@ export default {
     createResourse,
     updateResource,
     bulkUpdatingResouces,
-    bulkDeletingResouces
+    bulkDeletingResouces,
+    createResourseFormSubmitionForm
 };
 

@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 
 const router = Router()
 
-router.post("/", validateBody(contactsSchema.createResourse), async (req: Request, res: Response) => {
+router.post("/", validateBody(contactsSchema.createResourseFormSubmitionForm), async (req: Request, res: Response) => {
     try {
         const contactData = req.body;
         const userIpAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
