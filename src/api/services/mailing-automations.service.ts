@@ -102,7 +102,7 @@ const addContactsToAutomation = async (mailingAutomationId: string, contactIds: 
     const automationScheduledMails = targetAutomationDetails.automationScheduledMails;
 
     for (const targetContactId of contactIds) {
-        const scheduledMailsForContact = automationScheduledMails.map((scheduledMailData) => {
+        const scheduledMailsForContact = automationScheduledMails.map(({id, ...scheduledMailData}) => {
             return {
                 contactId: targetContactId,
                 ...scheduledMailData,
@@ -111,6 +111,12 @@ const addContactsToAutomation = async (mailingAutomationId: string, contactIds: 
         });
 
         await prismaClient.scheduledMail.createMany({ data: scheduledMailsForContact });
+        await prismaClient.contactMailingAutomation.create({
+            data: {
+                contact: { connect: { id: targetContactId} },
+                mailingAutomation: { connect: { id: mailingAutomationId } }
+            }
+        });
     }
 };
 
