@@ -14,31 +14,32 @@ model Contact {
 
   age                 Int
   city                String
-  email               String            @unique
+  email               String @unique
   gender              String
   country             String
   timezone            String
   occupation          String
   sourceOfReferral    String //TODO: Define default sources
   intershipMotivation String
-  
-  eduQuestEventTimestamp String?
-  eduQuestSelectedDateTime DateTime?
-  eduQuestDecision    EduQuestDecision?
 
-  birthDate                DateTime  @db.Date
-  isSubscribed               Boolean @default(true)
-  isEqParticipationConfirmed Boolean @default(false)
+  eduQuestEventTimestamp   String?
+  eduQuestSelectedDateTime DateTime?
+  eduQuestDecision         EduQuestDecision?
+
+  birthDate                  DateTime @db.Date
+  isSubscribed               Boolean  @default(true)
+  isEqParticipationConfirmed Boolean  @default(false)
 
   createdAt DateTime @default(now()) @db.Date
 
   listIds String[]        @db.ObjectId
   lists   ContactstList[] @relation(fields: [listIds], references: [id])
 
-  SentMail          SentMail[]
-  ScheduledMail     ScheduledMail[]
-  ContactsActions   ContactsActions[]
-  UnsubscribedUsers UnsubscribedUsers[]
+  SentMail           SentMail[]
+  ScheduledMail      ScheduledMail[]
+  ContactsActions    ContactsActions[]
+  UnsubscribedUsers  UnsubscribedUsers[]
+  mailingAutomations ContactMailingAutomation[]
 }
 
 model Users {
@@ -57,6 +58,18 @@ model ContactstList {
 
   contactIds String[]  @db.ObjectId
   contacts   Contact[] @relation(fields: [contactIds], references: [id])
+}
+
+model ContactMailingAutomation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mailingAutomationId String            @db.ObjectId
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id])
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
+
+  addedAt DateTime @default(now())
 }
 
 model ContactsActions {
@@ -142,11 +155,12 @@ model MailingAutomation {
 
   scheduledMails           ScheduledMail[]
   automationScheduledMails AutomationScheduledMail[]
+  contacts                 ContactMailingAutomation[]
 }
 
 model AutomationScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  
+
   useContactTimezone Boolean
   scheduledDate      DateTime @db.Date
 
