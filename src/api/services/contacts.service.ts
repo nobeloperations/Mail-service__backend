@@ -4,6 +4,10 @@ import { subscribeToRelevantList } from '../helpers/contacts-list-subscription';
 import { ContactsActions } from "@prisma/client";
 import { generateTimestampField } from '../helpers/generate-timestamp';
 
+interface ContactsFilteringParams extends ApiResourceFilteringParams {
+    listIds?: string[]
+}
+
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
     const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
 
@@ -54,22 +58,27 @@ const getContactById = async (id:string)=>{
     return result;
 };
 
-const getContactList = async (filteringParams: ApiResourceFilteringParams) => {
-    const { search, page, pageSize } = filteringParams;
+const getContactList = async (filteringParams: ContactsFilteringParams) => {
+    const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
 
     const whereCondition = {
-        OR: [
-            { email: { contains: search } },
-            { firstName: { contains: search } },
-            { lastName: { contains: search } },
-        ],
+        AND: [
+            {
+                OR: [
+                    { email: { contains: search } },
+                    { firstName: { contains: search } },
+                    { lastName: { contains: search } },
+                ]
+            },
+            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
+        ]
     };
 
     const contacts = await prismaClient.contact.findMany({
         skip,
         take: pageSize,
-        where: whereCondition,
+        where: whereCondition
     });
 
     const contactsCount = await prismaClient.contact.count()

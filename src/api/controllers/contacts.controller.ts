@@ -4,6 +4,7 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import ContactService from '../services/contacts.service';
 import ExceptionInterceptor from '../middlewares/exception-interceptor.middleware';
 
+
 export const createContact = async (req: Request, res: Response) => {
   try {
     const contactData = req.body;
@@ -41,12 +42,13 @@ const updateContactById= async(req:Request,res:Response)=>{
 };
 
 const getContactList = async (req: Request, res: Response) => {
-    const { search, page, pageSize } = req.query as ApiResourceFilteringParams;
+    const { search, page, pageSize, listIds } = req.query;
 
     const result = await ContactService.getContactList({ 
-        search: search || '',
+        search: search as string || '',
         page: Number(page) || 1, 
         pageSize: Number(pageSize) || 10,
+        listIds: Array.isArray(listIds) ? listIds as string[] : (typeof listIds === 'string' ? [listIds] : [])
     });
 
     res.status(StatusCodes.OK).json(result);
