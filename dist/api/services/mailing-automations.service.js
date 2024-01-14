@@ -87,7 +87,7 @@ const addContactsToAutomation = async (mailingAutomationId, contactIds) => {
     });
     const automationScheduledMails = targetAutomationDetails.automationScheduledMails;
     for (const targetContactId of contactIds) {
-        const scheduledMailsForContact = automationScheduledMails.map((scheduledMailData) => {
+        const scheduledMailsForContact = automationScheduledMails.map(({ id, ...scheduledMailData }) => {
             return {
                 contactId: targetContactId,
                 ...scheduledMailData,
@@ -95,6 +95,12 @@ const addContactsToAutomation = async (mailingAutomationId, contactIds) => {
             };
         });
         await prisma_client_1.default.scheduledMail.createMany({ data: scheduledMailsForContact });
+        await prisma_client_1.default.contactMailingAutomation.create({
+            data: {
+                contact: { connect: { id: targetContactId } },
+                mailingAutomation: { connect: { id: mailingAutomationId } }
+            }
+        });
     }
 };
 const removeContactsFromAutomation = async (mailingAutomationId, contactIds) => {
