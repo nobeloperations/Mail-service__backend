@@ -46,19 +46,24 @@ const getContactById = async (id) => {
     return result;
 };
 const getContactList = async (filteringParams) => {
-    const { search, page, pageSize } = filteringParams;
+    const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
     const whereCondition = {
-        OR: [
-            { email: { contains: search } },
-            { firstName: { contains: search } },
-            { lastName: { contains: search } },
-        ],
+        AND: [
+            {
+                OR: [
+                    { email: { contains: search } },
+                    { firstName: { contains: search } },
+                    { lastName: { contains: search } },
+                ]
+            },
+            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
+        ]
     };
     const contacts = await prisma_client_1.default.contact.findMany({
         skip,
         take: pageSize,
-        where: whereCondition,
+        where: whereCondition
     });
     const contactsCount = await prisma_client_1.default.contact.count();
     return {
