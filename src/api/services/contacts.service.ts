@@ -32,8 +32,6 @@ const contact = await prismaClient.contact.findUnique({
     include: { lists: true }
   });
 
-  console.log(contact.listIds[0])
-
   const updateListsPromises = contact.listIds.map(list =>
     prismaClient.contactstList.update({
       where: { id: list},
