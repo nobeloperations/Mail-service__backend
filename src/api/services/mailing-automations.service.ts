@@ -22,19 +22,29 @@ const createMailingAutomation = async (mailingAutomationData: Prisma.MailingAuto
 };
 
 const updateMailingAutomationById = async (id: string, mailingAutomationData: Prisma.MailingAutomationUpdateInput) => {
-    const { automationScheduledMails, ...automationData } = mailingAutomationData;
+    const { automationScheduledMails: recivedAutomationScheduledMails, ...recivedAutomationData } = mailingAutomationData;
+
+    const targetAutomationScheduledMails = await prismaClient.automationScheduledMail.findMany({ where: { mailingAutomationId: id } });
+
+    const automationScheduledMailsToCreate = (recivedAutomationScheduledMails as any[]).filter(mail => !mail.id);
+    const automationScheduledMailsToUpdate = (recivedAutomationScheduledMails as any[]).filter(mail => mail.id);
+    const automationScheduledMailsToDelete = targetAutomationScheduledMails
+        .filter(targetMail => !(recivedAutomationScheduledMails as any[]).some(mail => targetMail.id === mail.id));
 
     const result = await prismaClient.mailingAutomation.update({
         where: { id },
         data: {
-            ...automationData,
+            ...recivedAutomationData,
             automationScheduledMails: {
-            update: (automationScheduledMails as any[])
-                .filter(mail => mail.id)
-                .map(({ id, ...restMailData }) => ({ where: { id }, data: restMailData })),
-            create: (automationScheduledMails as Prisma.AutomationScheduledMailCreateInput[])
-                .filter(mail => !mail.id)
-                .map(mailData => mailData),
+                create: automationScheduledMailsToCreate,
+                update: automationScheduledMailsToUpdate.map(({ id, templateId, mailingAutomationId, ...data }) => ({
+                    where: { id },
+                    data: {
+                      ...data,
+                      template: { connect: { id: templateId } },
+                    },
+                  })),
+                delete: automationScheduledMailsToDelete.map(({ id }) => ({ id: id })),
             },
         },
     });
