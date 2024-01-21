@@ -53,12 +53,8 @@ const deleteMailingAutomationById = async (id: string) => {
 const getMailingAutomationById = async (id: string) => {
     const result = prismaClient.mailingAutomation.findUnique({
         where: { id },
-        include: { 
-            automationScheduledMails: {
-                include: {
-                    template: true
-                }
-            }
+        include: {
+            automationScheduledMails: true
         }
     });
 
