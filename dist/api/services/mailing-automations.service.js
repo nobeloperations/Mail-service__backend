@@ -20,18 +20,26 @@ const createMailingAutomation = async (mailingAutomationData) => {
     return result;
 };
 const updateMailingAutomationById = async (id, mailingAutomationData) => {
-    const { automationScheduledMails, ...automationData } = mailingAutomationData;
+    const { automationScheduledMails: recivedAutomationScheduledMails, ...recivedAutomationData } = mailingAutomationData;
+    const targetAutomationScheduledMails = await prisma_client_1.default.automationScheduledMail.findMany({ where: { mailingAutomationId: id } });
+    const automationScheduledMailsToCreate = recivedAutomationScheduledMails.filter(mail => !mail.id);
+    const automationScheduledMailsToUpdate = recivedAutomationScheduledMails.filter(mail => mail.id);
+    const automationScheduledMailsToDelete = targetAutomationScheduledMails
+        .filter(targetMail => !recivedAutomationScheduledMails.some(mail => targetMail.id === mail.id));
     const result = await prisma_client_1.default.mailingAutomation.update({
         where: { id },
         data: {
-            ...automationData,
+            ...recivedAutomationData,
             automationScheduledMails: {
-                update: automationScheduledMails
-                    .filter(mail => mail.id)
-                    .map(({ id, ...restMailData }) => ({ where: { id }, data: restMailData })),
-                create: automationScheduledMails
-                    .filter(mail => !mail.id)
-                    .map(mailData => mailData),
+                create: automationScheduledMailsToCreate,
+                update: automationScheduledMailsToUpdate.map(({ id, templateId, mailingAutomationId, ...data }) => ({
+                    where: { id },
+                    data: {
+                        ...data,
+                        template: { connect: { id: templateId } },
+                    },
+                })),
+                delete: automationScheduledMailsToDelete.map(({ id }) => ({ id: id })),
             },
         },
     });
@@ -47,11 +55,7 @@ const getMailingAutomationById = async (id) => {
     const result = prisma_client_1.default.mailingAutomation.findUnique({
         where: { id },
         include: {
-            automationScheduledMails: {
-                include: {
-                    template: true
-                }
-            }
+            automationScheduledMails: true
         }
     });
     if (!result) {
