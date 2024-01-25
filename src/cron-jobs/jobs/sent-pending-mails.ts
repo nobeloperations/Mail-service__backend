@@ -11,6 +11,7 @@ import modifyEmailTextWithUniqueValues from '../../user-actions-system/helpers/u
 
 const sentPendingMails = async () => {
     const pendingMails = await ScheduledMailsService.retrievePendingMails();
+    console.log(pendingMails)
 
     pendingMails.forEach(async (processedSheduledMailData) => {
         const { contactId, id, templateId, useContactTimezone, mailingAutomationId,  ...restOfFields } = processedSheduledMailData;

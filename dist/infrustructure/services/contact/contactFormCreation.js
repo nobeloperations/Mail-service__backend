@@ -21,7 +21,8 @@ router.post("/", (0, request_body_validator_1.default)(contacts_request_schemas_
         const contact = await contacts_service_1.default.createContact({ ...contactData, ...userLocation });
         res.status(http_status_codes_1.StatusCodes.CREATED).json({ contact });
     }
-    catch {
+    catch (error) {
+        console.log(error);
         res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 });

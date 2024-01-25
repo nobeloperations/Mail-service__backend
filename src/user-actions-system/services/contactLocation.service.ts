@@ -2,7 +2,7 @@ const API_KEY = process.env.LOCATION_API_KEY
 
 export const getLocationByIpAddress = async (ip: string | string[] | undefined) => {
     if (!ip) return undefined;
-
+    console.log(`User ip is: ${ip}`);
     try {
         const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=${API_KEY}&ip=${Array.isArray(ip) ? ip[0] : ip}`);
         const {city, country_name, time_zone} = await response.json();
@@ -12,7 +12,8 @@ export const getLocationByIpAddress = async (ip: string | string[] | undefined) 
           country: country_name,
           timezone: time_zone.name
         }
-    } catch {
+    } catch(error) {
+        console.log(error);
         return undefined;
     }
 };

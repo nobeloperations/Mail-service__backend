@@ -7,13 +7,12 @@ const {
 } = process.env;
 
 const transportOptions = {
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
-        type: 'OAuth2',
-        user: 'nikita.k@nobelcoaching.com',
-        clientId: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        refreshToken: GOOGLE_CLIENT_REFRESH_TOKEN,
+        user: 'internships@nobelcoaching.com',
+        pass: 'Nobel!2021'
     }
 };
 

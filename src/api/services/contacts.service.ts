@@ -9,20 +9,24 @@ interface ContactsFilteringParams extends ApiResourceFilteringParams {
 }
 
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
-    const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
+    try {
+        const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
+        console.log(isContactExist)
+        if(!isContactExist){
+            const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
+            const contact = await prismaClient.contact.create({ data: {...contactData, eduQuestEventTimestamp} });
+            const subscriptionResult = await subscribeToRelevantList(contact)
 
-    if(!isContactExist){
-        const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
-        const contact = await prismaClient.contact.create({ data: {...contactData, eduQuestEventTimestamp} });
-        const subscriptionResult = await subscribeToRelevantList(contact)
+            return subscriptionResult
+        } else {
+            const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
+            const updatedContact = await updateContactById(isContactExist.id, {...contactData, eduQuestEventTimestamp})
+            const subscriptionResult = await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
 
-        return subscriptionResult
-    } else {
-        const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
-        const updatedContact = await updateContactById(isContactExist.id, {...contactData, eduQuestEventTimestamp})
-        const subscriptionResult = await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
-
-        return subscriptionResult
+            return subscriptionResult
+        }
+    } catch(error) {
+        console.log(error)
     }
 };
 

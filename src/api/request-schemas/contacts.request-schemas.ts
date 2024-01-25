@@ -44,7 +44,7 @@ const createResourseFormSubmitionForm = Joi.object({
     sourceOfReferral: Joi.string().required(),    
     intershipMotivation: Joi.string().required(),
     birthDate: Joi.date().iso().required(),    
-    eduQuestSelectedDateTime: Joi.date(),
+    eduQuestSelectedDateTime: Joi.date().allow(null),
 });
 
 const bulkUpdatingResouces = Joi.object({

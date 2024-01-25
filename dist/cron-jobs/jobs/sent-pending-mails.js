@@ -12,6 +12,7 @@ const mail_time_coordinator_service_1 = __importDefault(require("../../infrustru
 const uniqueEmailDecorator_1 = __importDefault(require("../../user-actions-system/helpers/uniqueEmailDecorator"));
 const sentPendingMails = async () => {
     const pendingMails = await scheduled_mails_service_1.default.retrievePendingMails();
+    console.log(pendingMails);
     pendingMails.forEach(async (processedSheduledMailData) => {
         const { contactId, id, templateId, useContactTimezone, mailingAutomationId, ...restOfFields } = processedSheduledMailData;
         const contactData = await contactData_1.default.retrieveContactData(contactId);

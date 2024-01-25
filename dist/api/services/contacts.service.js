@@ -7,18 +7,24 @@ const prisma_client_1 = __importDefault(require("../../database/prisma-client"))
 const contacts_list_subscription_1 = require("../helpers/contacts-list-subscription");
 const generate_timestamp_1 = require("../helpers/generate-timestamp");
 const createContact = async (contactData) => {
-    const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
-    if (!isContactExist) {
-        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
-        const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
-        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
-        return subscriptionResult;
+    try {
+        const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
+        console.log(isContactExist);
+        if (!isContactExist) {
+            const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+            const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
+            const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
+            return subscriptionResult;
+        }
+        else {
+            const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+            const updatedContact = await updateContactById(isContactExist.id, { ...contactData, eduQuestEventTimestamp });
+            const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
+            return subscriptionResult;
+        }
     }
-    else {
-        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
-        const updatedContact = await updateContactById(isContactExist.id, { ...contactData, eduQuestEventTimestamp });
-        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
-        return subscriptionResult;
+    catch (error) {
+        console.log(error);
     }
 };
 const deleteContactById = async (id) => {

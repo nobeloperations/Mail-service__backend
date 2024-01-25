@@ -1,24 +1,16 @@
-import moment from "moment"
+import moment from 'moment';
 
 const createNameForContactsList = (eduQuestDate: Date) => {
-    const dayOfWeek = moment(eduQuestDate).day()
+    const momentDate = moment(eduQuestDate);
+    const dayOfWeek = momentDate.day();
     
-    const options: Intl.DateTimeFormatOptions = {
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit'
-    };
-
-    const date = new Date(eduQuestDate);
-    const formattedDate = date.toLocaleDateString('en-US', options);
+    const formattedDate = momentDate.format('MMMM D, YYYY, hh:mm A');
 
     if(dayOfWeek === 6 || dayOfWeek === 0) {
-        return `Internship Weekend: ${formattedDate}`
+        return `Internship Weekend: ${formattedDate}`;
     }
 
-    return `Internship Weekday: ${formattedDate}`
+    return `Internship Weekday: ${formattedDate}`;
 }
 
-export default createNameForContactsList
+export default createNameForContactsList;

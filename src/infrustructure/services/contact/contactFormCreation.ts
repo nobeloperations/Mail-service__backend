@@ -17,10 +17,11 @@ router.post("/", validateBody(contactsSchema.createResourseFormSubmitionForm), a
         if (userLocation && (userLocation.country === 'Russia' || userLocation.country === 'Belarus')) {
             return res.status(StatusCodes.FORBIDDEN).json('It is not possible to create a contact from Russia or Belarus').end();
         }
-    
+
         const contact = await ContactService.createContact({...contactData, ...userLocation });
         res.status(StatusCodes.CREATED).json({contact});
-    } catch {
+    } catch(error) {
+        console.log(error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 })

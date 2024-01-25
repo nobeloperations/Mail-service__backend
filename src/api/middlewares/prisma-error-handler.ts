@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import BaseApiError from '../../utils/http-errors';
 
 const prismaErrorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
         switch (error.code) {
             case 'P2002':
