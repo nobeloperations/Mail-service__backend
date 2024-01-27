@@ -11,7 +11,7 @@ interface ContactsFilteringParams extends ApiResourceFilteringParams {
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
     try {
         const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
-        console.log(isContactExist)
+
         if(!isContactExist){
             const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
             const contact = await prismaClient.contact.create({ data: {...contactData, eduQuestEventTimestamp} });
@@ -35,8 +35,6 @@ const contact = await prismaClient.contact.findUnique({
     where: { id: id },
     include: { lists: true }
   });
-
-  console.log(contact.listIds[0])
 
   const updateListsPromises = contact.listIds.map(list =>
     prismaClient.contactstList.update({
@@ -66,26 +64,35 @@ const getContactList = async (filteringParams: ContactsFilteringParams) => {
     const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
 
+    const conditions = [];
+
+    if (search) {
+        conditions.push({
+            OR: [
+                { email: { contains: search } },
+                { firstName: { contains: search } },
+                { lastName: { contains: search } },
+            ],
+        });
+    }
+
+    if (listIds && listIds.length > 0) {
+        conditions.push({ listIds: { hasSome: listIds } });
+    }
+
     const whereCondition = {
-        AND: [
-            {
-                OR: [
-                    { email: { contains: search } },
-                    { firstName: { contains: search } },
-                    { lastName: { contains: search } },
-                ]
-            },
-            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
-        ]
+        AND: conditions,
     };
+
+    console.log(whereCondition);
 
     const contacts = await prismaClient.contact.findMany({
         skip,
         take: pageSize,
-        where: whereCondition
+        where: whereCondition,
     });
 
-    const contactsCount = await prismaClient.contact.count()
+    const contactsCount = contacts.length;
 
     return {
         contacts,

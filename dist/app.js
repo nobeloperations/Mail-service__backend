@@ -8,7 +8,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
-const cron_jobs_1 = __importDefault(require("./cron-jobs"));
 const docs_1 = __importDefault(require("./docs"));
 const auth_1 = __importDefault(require("./api/routes/auth"));
 const public_api_router_1 = __importDefault(require("./api/public-api.router"));
@@ -30,7 +29,34 @@ app.use('/action', contact_actions_router_1.default);
 app.use('/test', async (req, res) => {
     res.json({ message: "good" });
 });
-(0, cron_jobs_1.default)();
+const prisma_client_1 = __importDefault(require("./database/prisma-client"));
+app.use('/test-nikita', async (req, res) => {
+    const contact = await prisma_client_1.default.contact.findMany({
+        where: {
+            listIds: {
+                hasSome: ['65b2cb4d9f9f640b8b5baa64']
+            },
+        },
+        select: {
+            id: true
+        }
+    });
+    // const contact = await prismaClient.contact.update({
+    //   where: {
+    //     email: 'anna.y@nobelcoaching.com',
+    //   },
+    //   data: {
+    //     eduQuestSelectedDateTime: '2024-02-03T14:00:00.000+00:00',
+    //     eduQuestEventTimestamp: 'February 03, 2024 16:00 GMT+02:00',
+    //     lists: {
+    //       connect: { id: '65b2cb4d9f9f640b8b5baa64' }
+    //     }
+    //   }
+    // });
+    const arrayofIDs = contact.map(data => data.id);
+    res.send({ arrayofIDs });
+});
+//startCronJobs();
 app.use(prisma_error_handler_1.default);
 app.use(error_handler_middleware_1.default);
 exports.default = app;

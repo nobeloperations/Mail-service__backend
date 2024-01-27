@@ -1,18 +1,20 @@
 const nodemailer = require('nodemailer');
 
 const {
+    GMAIL_USER,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_CLIENT_REFRESH_TOKEN
 } = process.env;
 
 const transportOptions = {
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
-        user: 'internships@nobelcoaching.com',
-        pass: 'Nobel!2021'
+        type: 'OAuth2',
+        user: GMAIL_USER,
+        clientId: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
+        refreshToken: GOOGLE_CLIENT_REFRESH_TOKEN,
     }
 };
 
@@ -21,7 +23,7 @@ const transporter = nodemailer.createTransport(transportOptions);
 const sentComposedMail = async (emailReceiver: string, composedMail: string) => {
     await transporter.sendMail({
         to: emailReceiver,
-        subject: 'Nodemailer test',
+        subject: 'Eduquest event',
         html: composedMail,
     });
 };

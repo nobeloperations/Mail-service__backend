@@ -12,7 +12,7 @@ const createResourse = Joi.object({
     occupation: Joi.string().required(),          
     sourceOfReferral: Joi.string().required(),    
     intershipMotivation: Joi.string().required(),
-    birthDate: Joi.date().iso().required(),    
+    birthDate: Joi.date().required(),    
     eduQuestSelectedDateTime: Joi.date(),
 });
 
@@ -29,8 +29,8 @@ const updateResource = Joi.object({
     sourceOfReferral: Joi.string(),    
     eduQuestDecision: Joi.string(),   
     intershipMotivation: Joi.string(),
-    birthDate: Joi.date().iso(),               
-    eduQuestSelectedDateTime: Joi.date().iso(),
+    birthDate: Joi.date(),               
+    eduQuestSelectedDateTime: Joi.date(),
 });
 
 const createResourseFormSubmitionForm = Joi.object({
@@ -43,7 +43,7 @@ const createResourseFormSubmitionForm = Joi.object({
     occupation: Joi.string().required(),          
     sourceOfReferral: Joi.string().required(),    
     intershipMotivation: Joi.string().required(),
-    birthDate: Joi.date().iso().required(),    
+    birthDate: Joi.date().required(),    
     eduQuestSelectedDateTime: Joi.date().allow(null),
 });
 

@@ -9,7 +9,6 @@ const generate_timestamp_1 = require("../helpers/generate-timestamp");
 const createContact = async (contactData) => {
     try {
         const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
-        console.log(isContactExist);
         if (!isContactExist) {
             const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
             const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
@@ -32,7 +31,6 @@ const deleteContactById = async (id) => {
         where: { id: id },
         include: { lists: true }
     });
-    console.log(contact.listIds[0]);
     const updateListsPromises = contact.listIds.map(list => prisma_client_1.default.contactstList.update({
         where: { id: list },
         data: { contacts: { disconnect: { id: id } } }
@@ -54,24 +52,29 @@ const getContactById = async (id) => {
 const getContactList = async (filteringParams) => {
     const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
+    const conditions = [];
+    if (search) {
+        conditions.push({
+            OR: [
+                { email: { contains: search } },
+                { firstName: { contains: search } },
+                { lastName: { contains: search } },
+            ],
+        });
+    }
+    if (listIds && listIds.length > 0) {
+        conditions.push({ listIds: { hasSome: listIds } });
+    }
     const whereCondition = {
-        AND: [
-            {
-                OR: [
-                    { email: { contains: search } },
-                    { firstName: { contains: search } },
-                    { lastName: { contains: search } },
-                ]
-            },
-            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
-        ]
+        AND: conditions,
     };
+    console.log(whereCondition);
     const contacts = await prisma_client_1.default.contact.findMany({
         skip,
         take: pageSize,
-        where: whereCondition
+        where: whereCondition,
     });
-    const contactsCount = await prisma_client_1.default.contact.count();
+    const contactsCount = contacts.length;
     return {
         contacts,
         contactsCount
