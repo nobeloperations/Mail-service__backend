@@ -185,7 +185,7 @@ enum TypeOfActivity {
 enum EduQuestDecision {
   SELECTED
   TRY_AGAIN
-  EGLISH_ISSUE
+  ENGLISH_ISSUE
 
   BEHAVIOR_ISSUE
   AUDIO_ISSUE

@@ -84,21 +84,21 @@ const getContactList = async (filteringParams: ContactsFilteringParams) => {
         AND: conditions,
     };
 
-    console.log(whereCondition);
-
     const contacts = await prismaClient.contact.findMany({
         skip,
         take: pageSize,
-        where: whereCondition,
+        where: whereCondition
     });
 
-    const contactsCount = contacts.length;
+    const contactsCount = await prismaClient.contact.count({
+        where: whereCondition,
+    });
 
     return {
         contacts,
         contactsCount
     };
-};  
+};
 
 const batchUpdatingContacts = async (updatingData: { contactIds: string[], updates: Prisma.ContactUpdateInput }) => {
     const { contactIds, updates } = updatingData;

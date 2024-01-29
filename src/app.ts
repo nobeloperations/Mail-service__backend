@@ -40,38 +40,6 @@ app.use('/test', async (req,res) => {
   res.json({message: "good"})
 });
 
-import prismaClient from './database/prisma-client';
-
-app.use('/test-nikita', async (req, res) => {
-  const contact = await prismaClient.contact.findMany({
-    where: {
-      listIds: {
-        hasSome: ['65b2cb4d9f9f640b8b5baa64']
-      },
-    },
-    select: {
-      id: true
-    }
-  });
-
-  // const contact = await prismaClient.contact.update({
-  //   where: {
-  //     email: 'anna.y@nobelcoaching.com',
-  //   },
-  //   data: {
-  //     eduQuestSelectedDateTime: '2024-02-03T14:00:00.000+00:00',
-  //     eduQuestEventTimestamp: 'February 03, 2024 16:00 GMT+02:00',
-  //     lists: {
-  //       connect: { id: '65b2cb4d9f9f640b8b5baa64' }
-  //     }
-  //   }
-  // });
-  const arrayofIDs = contact.map(data => data.id);
-
-  res.send({ arrayofIDs })
-
-});
-
 startCronJobs();
 
 app.use(prismaErrorHandler);

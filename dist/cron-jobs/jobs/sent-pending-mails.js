@@ -12,33 +12,24 @@ const mail_time_coordinator_service_1 = __importDefault(require("../../infrustru
 const uniqueEmailDecorator_1 = __importDefault(require("../../user-actions-system/helpers/uniqueEmailDecorator"));
 const MESSAGES_PER_MOMENT = Number(process.env.MESSAGES_PER_MOMENT);
 const sentPendingMails = async () => {
-    const pendingMails = await scheduled_mails_service_1.default.retrievePendingMails();
+    const pendingMails = (await scheduled_mails_service_1.default.retrievePendingMails());
     for (let i = 0; i < pendingMails.length; i += MESSAGES_PER_MOMENT) {
         const batchOfPendingMails = pendingMails.slice(i, i + MESSAGES_PER_MOMENT);
-        console.log(batchOfPendingMails);
+        console.log('start batcing sending');
         batchOfPendingMails.forEach(async (processedSheduledMailData) => {
             const { contactId, id, templateId, useContactTimezone, mailingAutomationId, ...restOfFields } = processedSheduledMailData;
             const contactData = await contactData_1.default.retrieveContactData(contactId);
             if (mail_time_coordinator_service_1.default.isTimeToSendMail(processedSheduledMailData) && contactData.isSubscribed) {
                 const composedMail = await mail_composer_service_1.default.composeMail(contactData, templateId);
                 const composedIdentifiedMail = (0, uniqueEmailDecorator_1.default)(composedMail, { contactId, emailId: id });
+                console.log('send');
                 await mail_sender_service_1.default.sentComposedMail(contactData.email, composedIdentifiedMail);
                 await scheduled_mails_service_1.default.deletePendingMail(id);
                 await sended_mails_1.default.addSendedMail({ emailId: id, contactId, templateId, ...restOfFields });
             }
         });
+        console.log('finish batching sending');
     }
-    // pendingMails.forEach(async (processedSheduledMailData) => {
-    //     const { contactId, id, templateId, useContactTimezone, mailingAutomationId,  ...restOfFields } = processedSheduledMailData;
-    //     const contactData = await ContactDataService.retrieveContactData(contactId);
-    //     if (MailTimeCoordinator.isTimeToSendMail(processedSheduledMailData) && contactData.isSubscribed) {
-    //         const composedMail = await MailComposer.composeMail(contactData, templateId);
-    //         const composedIdentifiedMail = modifyEmailTextWithUniqueValues(composedMail, {contactId, emailId: id})
-    //         await MailSender.sentComposedMail(contactData.email, composedIdentifiedMail);
-    //         await ScheduledMailsService.deletePendingMail(id);
-    //         await SendedMailsService.addSendedMail({emailId: id, contactId, templateId, ...restOfFields});
-    //     }        
-    // })
 };
 exports.default = sentPendingMails;
 //# sourceMappingURL=sent-pending-mails.js.map

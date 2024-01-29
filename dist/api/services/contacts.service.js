@@ -68,13 +68,14 @@ const getContactList = async (filteringParams) => {
     const whereCondition = {
         AND: conditions,
     };
-    console.log(whereCondition);
     const contacts = await prisma_client_1.default.contact.findMany({
         skip,
         take: pageSize,
+        where: whereCondition
+    });
+    const contactsCount = await prisma_client_1.default.contact.count({
         where: whereCondition,
     });
-    const contactsCount = contacts.length;
     return {
         contacts,
         contactsCount
