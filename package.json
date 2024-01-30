@@ -2,10 +2,9 @@
   "name": "mail_service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/server.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "tsc && node dist/server.js",
+    "start": "node ./dist/server.js",
     "start:dev": "nodemon - exec 'ts-node' src/server.ts"
   },
   "keywords": [],
@@ -13,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@joi/date": "^2.1.0",
+    "@prisma/client": "^5.6.0",
     "@types/express-fileupload": "^1.4.4",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -22,6 +22,7 @@
     "express-fileupload": "^1.4.3",
     "googleapis": "^128.0.0",
     "http-status-codes": "^2.3.0",
+    "ip": "^2.0.0",
     "joi": "^17.11.0",
     "joi-to-swagger": "^6.2.0",
     "jsonwebtoken": "^9.0.2",
@@ -30,11 +31,13 @@
     "mongodb": "^6.3.0",
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.7",
+    "prisma": "^5.5.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
-    "@prisma/client": "^5.6.0",
     "@types/express": "^4.17.20",
     "@types/jest": "^29.5.8",
     "@types/node": "^20.9.0",
@@ -45,10 +48,7 @@
     "jest-mock-extended": "^3.0.5",
     "mongodb-memory-server": "^9.1.1",
     "nodemon": "^3.0.1",
-    "prisma": "^5.5.2",
     "supertest": "^6.3.3",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"

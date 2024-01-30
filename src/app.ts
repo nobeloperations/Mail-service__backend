@@ -40,7 +40,7 @@ app.use('/test', async (req,res) => {
   res.json({message: "good"})
 });
 
-// startCronJobs();
+startCronJobs();
 
 app.use(prismaErrorHandler);
 app.use(errorHandler);

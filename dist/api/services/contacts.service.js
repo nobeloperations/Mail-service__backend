@@ -7,18 +7,23 @@ const prisma_client_1 = __importDefault(require("../../database/prisma-client"))
 const contacts_list_subscription_1 = require("../helpers/contacts-list-subscription");
 const generate_timestamp_1 = require("../helpers/generate-timestamp");
 const createContact = async (contactData) => {
-    const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
-    if (!isContactExist) {
-        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
-        const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
-        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
-        return subscriptionResult;
+    try {
+        const isContactExist = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
+        if (!isContactExist) {
+            const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+            const contact = await prisma_client_1.default.contact.create({ data: { ...contactData, eduQuestEventTimestamp } });
+            const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)(contact);
+            return subscriptionResult;
+        }
+        else {
+            const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
+            const updatedContact = await updateContactById(isContactExist.id, { ...contactData, eduQuestEventTimestamp });
+            const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
+            return subscriptionResult;
+        }
     }
-    else {
-        const eduQuestEventTimestamp = (0, generate_timestamp_1.generateTimestampField)(contactData.timezone, contactData.eduQuestSelectedDateTime);
-        const updatedContact = await updateContactById(isContactExist.id, { ...contactData, eduQuestEventTimestamp });
-        const subscriptionResult = await (0, contacts_list_subscription_1.subscribeToRelevantList)({ ...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime });
-        return subscriptionResult;
+    catch (error) {
+        console.log(error);
     }
 };
 const deleteContactById = async (id) => {
@@ -26,7 +31,6 @@ const deleteContactById = async (id) => {
         where: { id: id },
         include: { lists: true }
     });
-    console.log(contact.listIds[0]);
     const updateListsPromises = contact.listIds.map(list => prisma_client_1.default.contactstList.update({
         where: { id: list },
         data: { contacts: { disconnect: { id: id } } }
@@ -48,24 +52,30 @@ const getContactById = async (id) => {
 const getContactList = async (filteringParams) => {
     const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
+    const conditions = [];
+    if (search) {
+        conditions.push({
+            OR: [
+                { email: { contains: search } },
+                { firstName: { contains: search } },
+                { lastName: { contains: search } },
+            ],
+        });
+    }
+    if (listIds && listIds.length > 0) {
+        conditions.push({ listIds: { hasSome: listIds } });
+    }
     const whereCondition = {
-        AND: [
-            {
-                OR: [
-                    { email: { contains: search } },
-                    { firstName: { contains: search } },
-                    { lastName: { contains: search } },
-                ]
-            },
-            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
-        ]
+        AND: conditions,
     };
     const contacts = await prisma_client_1.default.contact.findMany({
         skip,
         take: pageSize,
         where: whereCondition
     });
-    const contactsCount = await prisma_client_1.default.contact.count();
+    const contactsCount = await prisma_client_1.default.contact.count({
+        where: whereCondition,
+    });
     return {
         contacts,
         contactsCount

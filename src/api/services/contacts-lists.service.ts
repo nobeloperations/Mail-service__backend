@@ -59,9 +59,38 @@ const getListContactsLists = async (filteringParams: ApiResourceFilteringParams)
     }));
 };
 
+const addContacListToMailingAutomation = async (listId: string, mailingAutomationId: string) => {
+    const { contactIds } = await prismaClient.contactstList.findUnique({ 
+        where: { id: listId } 
+    });
+    
+    const { automationScheduledMails } = await prismaClient.mailingAutomation.findUnique({ 
+        where: { id: mailingAutomationId }, 
+        include: { automationScheduledMails: true }
+    });
+
+    const scheduledMailsForContacts = contactIds.map(contactId => {
+        return automationScheduledMails.map(({ id, ...scheduledMailData }) => ({
+            contactId,
+            mailingAutomationId,
+            ...scheduledMailData
+        }));
+    }).flat();
+
+    await prismaClient.scheduledMail.createMany({ data: scheduledMailsForContacts });
+
+    const connectData = contactIds.map(contactId => ({
+        contactId,
+        mailingAutomationId
+    }));
+    
+    await prismaClient.contactMailingAutomation.createMany({ data: connectData });
+};
+
 export default {
     createContactsList,
     updateContactListById,
     deleteContactsListById,
     getListContactsLists,
+    addContacListToMailingAutomation
 };

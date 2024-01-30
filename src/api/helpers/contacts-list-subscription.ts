@@ -8,7 +8,7 @@ export const subscribeToRelevantList = async (contact) => {
     if(contact.eduQuestSelectedDateTime) {
         const isListExist = await prismaClient.contactstList.findUnique({ where: { eduQuestStartDate: contact.eduQuestSelectedDateTime } });
 
-        if(isListExist){
+        if(isListExist) {
         const { id } = isListExist
         await updateContactIds(id, contact.id)
         } else {

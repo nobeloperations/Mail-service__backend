@@ -9,7 +9,7 @@ const errorHandler = (
     next: NextFunction
 ) => {
     let errorResponse: HttpErrorResponse;
-console.log(error)
+    console.log(error)
     if (error instanceof HttpErrors) {
         errorResponse = {
             code: error.httpCode,
@@ -18,6 +18,7 @@ console.log(error)
             description: error.description,
         };
     } else {
+        console.log(error)
         const internalServerError = HttpErrors.InternalServerError();
         errorResponse = {
             code: internalServerError.httpCode,
@@ -25,7 +26,7 @@ console.log(error)
             message: internalServerError.message,
         };
     }
-
+    console.log(error)
     return res.json({ error: errorResponse });
 };
 
