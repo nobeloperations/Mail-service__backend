@@ -16,7 +16,7 @@ const createResourse = joi_1.default.object({
     occupation: joi_1.default.string().required(),
     sourceOfReferral: joi_1.default.string().required(),
     intershipMotivation: joi_1.default.string().required(),
-    birthDate: joi_1.default.date().iso().required(),
+    birthDate: joi_1.default.date().required(),
     eduQuestSelectedDateTime: joi_1.default.date(),
 });
 const updateResource = joi_1.default.object({
@@ -32,8 +32,8 @@ const updateResource = joi_1.default.object({
     sourceOfReferral: joi_1.default.string(),
     eduQuestDecision: joi_1.default.string(),
     intershipMotivation: joi_1.default.string(),
-    birthDate: joi_1.default.date().iso(),
-    eduQuestSelectedDateTime: joi_1.default.date().iso(),
+    birthDate: joi_1.default.date(),
+    eduQuestSelectedDateTime: joi_1.default.date(),
 });
 const createResourseFormSubmitionForm = joi_1.default.object({
     firstName: joi_1.default.string().required(),
@@ -45,8 +45,8 @@ const createResourseFormSubmitionForm = joi_1.default.object({
     occupation: joi_1.default.string().required(),
     sourceOfReferral: joi_1.default.string().required(),
     intershipMotivation: joi_1.default.string().required(),
-    birthDate: joi_1.default.date().iso().required(),
-    eduQuestSelectedDateTime: joi_1.default.date(),
+    birthDate: joi_1.default.date().required(),
+    eduQuestSelectedDateTime: joi_1.default.date().allow(null),
 });
 const bulkUpdatingResouces = joi_1.default.object({
     contactIds: joi_1.default.array().items(joi_1.default.string()).required(),

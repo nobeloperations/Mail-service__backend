@@ -13,7 +13,9 @@ const router = (0, express_1.Router)();
 router.post("/", (0, request_body_validator_1.default)(contacts_request_schemas_1.default.createResourseFormSubmitionForm), async (req, res) => {
     try {
         const contactData = req.body;
-        const userIpAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        const userIpAddress = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;
+        console.log(`Controller ip address x-forwarded-for: ${req.headers['x-forwarded-for']}`);
+        console.log(`Controller ip address remoteAddress: ${req.socket.remoteAddress}`);
         const userLocation = await (0, contactLocation_service_1.getLocationByIpAddress)(userIpAddress);
         if (userLocation && (userLocation.country === 'Russia' || userLocation.country === 'Belarus')) {
             return res.status(http_status_codes_1.StatusCodes.FORBIDDEN).json('It is not possible to create a contact from Russia or Belarus').end();
@@ -21,7 +23,8 @@ router.post("/", (0, request_body_validator_1.default)(contacts_request_schemas_
         const contact = await contacts_service_1.default.createContact({ ...contactData, ...userLocation });
         res.status(http_status_codes_1.StatusCodes.CREATED).json({ contact });
     }
-    catch {
+    catch (error) {
+        console.log(error);
         res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 });

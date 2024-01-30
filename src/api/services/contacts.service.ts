@@ -9,20 +9,24 @@ interface ContactsFilteringParams extends ApiResourceFilteringParams {
 }
 
 const createContact = async (contactData: Prisma.ContactCreateInput) => {
-    const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
+    try {
+        const isContactExist = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
 
-    if(!isContactExist){
-        const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
-        const contact = await prismaClient.contact.create({ data: {...contactData, eduQuestEventTimestamp} });
-        const subscriptionResult = await subscribeToRelevantList(contact)
+        if(!isContactExist){
+            const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
+            const contact = await prismaClient.contact.create({ data: {...contactData, eduQuestEventTimestamp} });
+            const subscriptionResult = await subscribeToRelevantList(contact)
 
-        return subscriptionResult
-    } else {
-        const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
-        const updatedContact = await updateContactById(isContactExist.id, {...contactData, eduQuestEventTimestamp})
-        const subscriptionResult = await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
+            return subscriptionResult
+        } else {
+            const eduQuestEventTimestamp = generateTimestampField(contactData.timezone, contactData.eduQuestSelectedDateTime)
+            const updatedContact = await updateContactById(isContactExist.id, {...contactData, eduQuestEventTimestamp})
+            const subscriptionResult = await subscribeToRelevantList({...updatedContact, eduQuestSelectedDateTime: contactData.eduQuestSelectedDateTime})
 
-        return subscriptionResult
+            return subscriptionResult
+        }
+    } catch(error) {
+        console.log(error)
     }
 };
 
@@ -60,17 +64,24 @@ const getContactList = async (filteringParams: ContactsFilteringParams) => {
     const { search, page, pageSize, listIds } = filteringParams;
     const skip = (page - 1) * pageSize;
 
+    const conditions = [];
+
+    if (search) {
+        conditions.push({
+            OR: [
+                { email: { contains: search } },
+                { firstName: { contains: search } },
+                { lastName: { contains: search } },
+            ],
+        });
+    }
+
+    if (listIds && listIds.length > 0) {
+        conditions.push({ listIds: { hasSome: listIds } });
+    }
+
     const whereCondition = {
-        AND: [
-            {
-                OR: [
-                    { email: { contains: search } },
-                    { firstName: { contains: search } },
-                    { lastName: { contains: search } },
-                ]
-            },
-            (listIds && listIds.length > 0 ? { listIds: { hasSome: listIds } } : {}),
-        ]
+        AND: conditions,
     };
 
     const contacts = await prismaClient.contact.findMany({
@@ -79,13 +90,15 @@ const getContactList = async (filteringParams: ContactsFilteringParams) => {
         where: whereCondition
     });
 
-    const contactsCount = await prismaClient.contact.count()
+    const contactsCount = await prismaClient.contact.count({
+        where: whereCondition,
+    });
 
     return {
         contacts,
         contactsCount
     };
-};  
+};
 
 const batchUpdatingContacts = async (updatingData: { contactIds: string[], updates: Prisma.ContactUpdateInput }) => {
     const { contactIds, updates } = updatingData;

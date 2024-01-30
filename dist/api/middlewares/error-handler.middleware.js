@@ -16,6 +16,7 @@ const errorHandler = (error, req, res, next) => {
         };
     }
     else {
+        console.log(error);
         const internalServerError = http_errors_1.default.InternalServerError();
         errorResponse = {
             code: internalServerError.httpCode,
@@ -23,6 +24,7 @@ const errorHandler = (error, req, res, next) => {
             message: internalServerError.message,
         };
     }
+    console.log(error);
     return res.json({ error: errorResponse });
 };
 exports.default = errorHandler;

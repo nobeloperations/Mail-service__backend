@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const http_errors_1 = __importDefault(require("../../utils/http-errors"));
 const prismaErrorHandler = (error, req, res, next) => {
+    console.log(error);
     if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
         switch (error.code) {
             case 'P2002':
