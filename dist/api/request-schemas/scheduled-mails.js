@@ -9,6 +9,7 @@ const createMailSchema = joi_1.default.object({
     templateId: joi_1.default.string().min(23).required(),
     scheduledDate: joi_1.default.date().required(),
     useContactTimezone: joi_1.default.boolean().required(),
+    mailingProfile: joi_1.default.string().valid('WEEKDAY_EQ_MAILING', 'WEEKEND_EQ_MAILING'),
 });
 const updateMailSchema = joi_1.default.object({
     contactId: joi_1.default.string().min(23),

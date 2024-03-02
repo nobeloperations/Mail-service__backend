@@ -31,10 +31,10 @@ const createContact = async (contactData: Prisma.ContactCreateInput) => {
 };
 
 const deleteContactById=async(id:string)=>{
-const contact = await prismaClient.contact.findUnique({
-    where: { id: id },
-    include: { lists: true }
-  });
+    const contact = await prismaClient.contact.findUnique({
+        where: { id: id },
+        include: { lists: true }
+    });
 
   const updateListsPromises = contact.listIds.map(list =>
     prismaClient.contactstList.update({
@@ -55,8 +55,21 @@ const updateContactById = async (id: string, contactData: Prisma.ContactUpdateIn
     return result;
 };
 
-const getContactById = async (id:string)=>{
-    const result=await prismaClient.contact.findUnique({where:{id}});
+const getContactById = async (id:string) => {
+    const result = await prismaClient.contact.findUnique({ 
+        where: { id },
+        include: {
+            lists: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+
+    delete result.listIds;
+
     return result;
 };
 
@@ -151,6 +164,36 @@ const batchDeletingContacts = async (deletingData: { contactIds: string[] }) => 
     return result;
 };
 
+const subscribeToList = async (contactId: string, listId: string) => {
+    const result = await prismaClient.contactstList.update({
+        where: { id: listId },
+        data: {
+            contacts: {
+                connect: {
+                    id: contactId
+                }
+            }
+        }
+    });
+
+    return result;
+};
+
+const unsubscribeFromList = async (contactId: string, listId: string) => {
+    const result = await prismaClient.contactstList.update({
+        where: { id: listId },
+        data: {
+            contacts: {
+                disconnect: {
+                    id: contactId
+                }
+            }
+        }
+    });
+    
+    return result;
+};
+
 const getContactActions = async (contactId: string, typeOfActivity: string | null) => {
     // const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity as ContactsActions["typeOfActivity"] } } : { contactId };
 
@@ -167,5 +210,7 @@ export default{
     updateContactById,
     batchUpdatingContacts,
     batchDeletingContacts,
-    getContactActions
+    getContactActions,
+    subscribeToList,
+    unsubscribeFromList
 };

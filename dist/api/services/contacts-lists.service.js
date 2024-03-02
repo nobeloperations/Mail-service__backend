@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const client_1 = require("@prisma/client");
 const prisma_client_1 = __importDefault(require("../../database/prisma-client"));
 const timestamp_generator_1 = __importDefault(require("../../utils/helpers/dynamic-fields-generators/timestamp.generator"));
 const createContactsList = async (contactListData) => {
@@ -47,9 +48,15 @@ const getListContactsLists = async (filteringParams) => {
     }));
 };
 const addContacListToMailingAutomation = async (listId, mailingAutomationId) => {
-    const { contactIds } = await prisma_client_1.default.contactstList.findUnique({
-        where: { id: listId }
+    const { contactIds, intake } = await prisma_client_1.default.contactstList.findUnique({
+        where: { id: listId },
+        include: {
+            intake: true
+        }
     });
+    const targetMailingProfile = intake ? (intake.programType === client_1.InternShipProgramType.WEEKDAY
+        ? client_1.MailingProfile.WEEKDAY_EQ_MAILING
+        : client_1.MailingProfile.WEEKEND_EQ_MAILING) : null;
     const { automationScheduledMails } = await prisma_client_1.default.mailingAutomation.findUnique({
         where: { id: mailingAutomationId },
         include: { automationScheduledMails: true }
@@ -58,7 +65,8 @@ const addContacListToMailingAutomation = async (listId, mailingAutomationId) => 
         return automationScheduledMails.map(({ id, ...scheduledMailData }) => ({
             contactId,
             mailingAutomationId,
-            ...scheduledMailData
+            mailingProfile: targetMailingProfile,
+            ...scheduledMailData,
         }));
     }).flat();
     await prisma_client_1.default.scheduledMail.createMany({ data: scheduledMailsForContacts });
@@ -69,25 +77,52 @@ const addContacListToMailingAutomation = async (listId, mailingAutomationId) => 
     const result = await prisma_client_1.default.contactMailingAutomation.createMany({ data: connectData });
     return result;
 };
-const syncMembersEqDate = async (listId) => {
-    const { contactIds, eduQuestStartDate: listEqData } = await prisma_client_1.default.contactstList.findUnique({ where: { id: listId } });
+const updateMembersEqDate = async (listId) => {
+    const contactListData = await prisma_client_1.default.contactstList.findUnique({ where: { id: listId } });
+    if (!contactListData || !contactListData.eduQuestStartDate) {
+        return null;
+    }
+    const { contactIds, eduQuestStartDate: listEqDate } = contactListData;
     const contactData = await prisma_client_1.default.contact.findMany({ where: { id: { in: contactIds } } });
-    const recordsToUpdate = contactData.map(targetContactData => ({
-        where: { id: targetContactData.id },
-        data: {
-            eduQuestSelectedDateTime: listEqData,
-            eduQuestEventTimestamp: (0, timestamp_generator_1.default)(targetContactData)
+    const contactsGroupedByTimezone = contactData.reduce((acc, contact) => {
+        const timezone = contact.timezone;
+        if (!acc[timezone]) {
+            acc[timezone] = [];
         }
-    }));
-    const result = await prisma_client_1.default.contact.updateMany({ data: recordsToUpdate });
-    return result;
+        acc[timezone].push(contact.id);
+        return acc;
+    }, {});
+    const updatePromises = Object.entries(contactsGroupedByTimezone).map(async ([timezone, contactIds]) => {
+        return prisma_client_1.default.contact.updateMany({
+            where: { id: { in: contactIds } },
+            data: {
+                eduQuestSelectedDateTime: listEqDate,
+                eduQuestEventTimestamp: (0, timestamp_generator_1.default)(timezone, listEqDate)
+            }
+        });
+    });
+    const result = await Promise.all(updatePromises);
+    return { updatedContactsCount: result.reduce((acc, data) => acc += data.count, 0) };
+};
+const mergeLists = async (targetListId, listIdToMerge) => {
+    const { contactIds: contactsIdsToMerge } = await prisma_client_1.default.contactstList.findUnique({ where: { id: listIdToMerge } });
+    const merginResult = await prisma_client_1.default.contactstList.update({
+        where: { id: targetListId },
+        data: {
+            contacts: {
+                connect: contactsIdsToMerge.map(id => ({ id }))
+            }
+        }
+    });
+    return merginResult;
 };
 exports.default = {
+    mergeLists,
     createContactsList,
+    updateMembersEqDate,
+    getListContactsLists,
     updateContactListById,
     deleteContactsListById,
-    getListContactsLists,
     addContacListToMailingAutomation,
-    syncMembersEqDate
 };
 //# sourceMappingURL=contacts-lists.service.js.map

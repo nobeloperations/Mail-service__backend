@@ -17,7 +17,7 @@ const createResourse = joi_1.default.object({
     sourceOfReferral: joi_1.default.string().required(),
     intershipMotivation: joi_1.default.string().required(),
     birthDate: joi_1.default.date().required(),
-    eduQuestSelectedDateTime: joi_1.default.date(),
+    eduQuestSelectedDateTime: joi_1.default.date().allow(null),
 });
 const updateResource = joi_1.default.object({
     firstName: joi_1.default.string(),

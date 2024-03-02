@@ -59,14 +59,26 @@ const getContactActions = async (req, res) => {
     const { id } = req.params;
     const typeOfActivity = typeof req.query.typeOfActivity === 'string' ? req.query.typeOfActivity : null;
     const userActions = await contacts_service_1.default.getContactActions(id, typeOfActivity);
-    res.status(200).json({
+    res.status(http_status_codes_1.StatusCodes.OK).json({
         userActions
     });
+};
+const subscribeToList = async (req, res) => {
+    const { contactId, listId } = req.params;
+    await contacts_service_1.default.subscribeToList(contactId, listId);
+    res.status(http_status_codes_1.StatusCodes.OK).json({ message: http_status_codes_1.ReasonPhrases.OK });
+};
+const unsubscribeFromList = async (req, res) => {
+    const { contactId, listId } = req.params;
+    await contacts_service_1.default.unsubscribeFromList(contactId, listId);
+    res.status(http_status_codes_1.StatusCodes.OK).json({ message: http_status_codes_1.ReasonPhrases.OK });
 };
 exports.default = {
     createContact: (0, exception_interceptor_middleware_1.default)(exports.createContact),
     getContactById: (0, exception_interceptor_middleware_1.default)(getContactById),
     getContactList: (0, exception_interceptor_middleware_1.default)(getContactList),
+    subscribeToList: (0, exception_interceptor_middleware_1.default)(subscribeToList),
+    unsubscribeFromList: (0, exception_interceptor_middleware_1.default)(unsubscribeFromList),
     deleteContactById: (0, exception_interceptor_middleware_1.default)(deleteContactById),
     updateContactById: (0, exception_interceptor_middleware_1.default)(updateContactById),
     batchUpdatingContacts: (0, exception_interceptor_middleware_1.default)(batchUpdatingContacts),

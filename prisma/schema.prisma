@@ -29,11 +29,12 @@ model Contact {
 
   age                 Int
   city                String
-  email               String @unique
+  email               String  @unique
   gender              String
   country             String
   timezone            String
   occupation          String
+  operationTimezone   String?
   sourceOfReferral    String //TODO: Define default sources
   intershipMotivation String
 
@@ -96,22 +97,22 @@ model ContactMailingAutomation {
 model ContactsActions {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  actionType        ContactActionType
   actionDescription String
-  createdAt         DateTime @default(now()) @db.Date
 
   contactId String  @db.ObjectId
   contact   Contact @relation(fields: [contactId], references: [id])
 
-  templateId String?       @db.ObjectId
-  template   MailTemplate? @relation(fields: [templateId], references: [id])
+  createdAt DateTime @default(now()) @db.Date
 }
 
 // MAILS
 model ScheduledMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  scheduledDate      DateTime @db.Date
-  useContactTimezone Boolean  @default(false)
+  scheduledDate      DateTime        @db.Date
+  mailingProfile     MailingProfile?
+  useContactTimezone Boolean         @default(false)
 
   contactId String  @db.ObjectId
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
@@ -126,8 +127,8 @@ model ScheduledMail {
 model SentMail {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  emailId  String   @unique
-  sentDate DateTime @default(now()) @db.Date
+  emailId  String    @unique
+  sentDate DateTime? @default(now()) @db.Date
 
   contactId String  @db.ObjectId
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
@@ -145,7 +146,6 @@ model MailTemplate {
 
   sentMails                SentMail[]
   scheduledMails           ScheduledMail[]
-  ContactsActions          ContactsActions[]
   AutomationScheduledMails AutomationScheduledMail[]
 }
 
@@ -218,4 +218,14 @@ enum InternShipProgramType {
 enum IntakeStatus {
   CLOSED
   OPENED
+}
+
+enum MailingProfile {
+  WEEKDAY_EQ_MAILING
+  WEEKEND_EQ_MAILING
+}
+
+enum ContactActionType {
+  OPEN_MAIL
+  CLICKED_ON_THE_LINK
 }

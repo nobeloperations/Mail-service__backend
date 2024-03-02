@@ -22,10 +22,9 @@ router.post(
 );
 
 router.put(
-    '/:id', 
-    isValidId,
-    validateBody(contactsListsSchema.updateResourseSchema),
-    ContactsListsController.updateContactListById
+    '/merge',
+    validateBody(contactsListsSchema.merginListsSchema),
+    ContactsListsController.mergeLists
 );
 
 router.post(
@@ -33,10 +32,17 @@ router.post(
     ContactsListsController.addContacListToMailingAutomation
 );
 
+router.put(
+    '/:id', 
+    isValidId,
+    validateBody(contactsListsSchema.updateResourseSchema),
+    ContactsListsController.updateContactListById
+);
+
 router.post(
-    '/:id/sync-members-eq-date', 
-    ContactsListsController.addContacListToMailingAutomation
-)
+    '/:id/update-members-eq-date', 
+    ContactsListsController.updateMembersEqDate
+);
 
 router.delete(
     '/:id',

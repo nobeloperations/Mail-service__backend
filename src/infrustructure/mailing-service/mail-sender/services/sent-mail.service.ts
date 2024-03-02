@@ -1,22 +1,14 @@
-import { v5 as uuidv5 } from 'uuid';
-import { SentMail } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 import prismaClient from '../../../../database/prisma-client';
 
 
-const createRecord = async (mailData: Omit<SentMail, 'emailId' | 'id' | 'sentDate'>) => {
-    const identifierString = `${mailData.contactId}-${mailData.templateId}-${Date.now()}`; 
-
-    const sentedmMail = await prismaClient.sentMail.create({
-        data: {
-            ...mailData,
-            emailId: uuidv5(identifierString, uuidv5.URL)
-        }
-    });
+const createRecord = async (data: Prisma.SentMailUncheckedCreateInput) => {
+    const sentedmMail = await prismaClient.sentMail.create({ data });
 
     return sentedmMail;
 }
 
 export default {
     createRecord
-}
+};

@@ -7,7 +7,7 @@ import prismaClient from '../../../database/prisma-client';
 type eqEventType = 'MAIN' | 'BACKUP';
 
 interface ContactEqDecision {
-    contactEmail: string;
+    contactId: string;
     eduQuestDecision: EduQuestDecision;
 }
 
@@ -41,8 +41,6 @@ const scheduleMailsWithEqDecisions = async (eventType: eqEventType, groupedConta
                     scheduledDate: moment.utc().format(),
                 };
             });
-
-            console.log(recordsToCreate.length);
 
             await prismaClient.scheduledMail.createMany({ data: recordsToCreate });
         })
@@ -85,15 +83,12 @@ const unsibscibeSelectedContactsFromMailing = async (groupedContactsIdsByEduQues
 const getGroupedContactsIdsByEduQuestDecision = async (data: ContactEqDecision[]): Promise<Record<string, string[]>> => {
     const result: Record<string, string[]> = {};
 
-    for (const { contactEmail, eduQuestDecision } of data) {
+    for (const { contactId, eduQuestDecision } of data) {
         if (!result[eduQuestDecision]) {
             result[eduQuestDecision] = [];
         }
 
-        const contact = await prismaClient.contact.findUnique({ where: { email: contactEmail } });
-        if (contact && contact.id) {
-            result[eduQuestDecision].push(contact.id);
-        }
+        result[eduQuestDecision].push(contactId);
     }
 
     console.log(result);

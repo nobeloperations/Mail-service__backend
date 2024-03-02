@@ -9,16 +9,15 @@ const scheduled_mails_service_1 = __importDefault(require("../services/scheduled
 const mail_sender_1 = __importDefault(require("../../infrustructure/mailing-service/mail-sender"));
 const MESSAGES_PER_MOMENT = Number(process.env.MESSAGES_PER_MOMENT);
 const sentPendingMails = async () => {
-    const pendingMails = (await scheduled_mails_service_1.default.retrievePendingMails()).slice(0, 10);
+    const pendingMails = (await scheduled_mails_service_1.default.retrievePendingMails()).slice(0, 20);
+    console.log(pendingMails);
     for (let i = 0; i < pendingMails.length; i += MESSAGES_PER_MOMENT) {
         const batchOfPendingMails = pendingMails.slice(i, i + MESSAGES_PER_MOMENT);
-        console.log(batchOfPendingMails);
         batchOfPendingMails.forEach(async (processedSheduledMailData) => {
-            const { contactId, id, templateId, useContactTimezone, mailingAutomationId, ...restOfFields } = processedSheduledMailData;
-            const contactData = await contactData_1.default.retrieveContactData(contactId);
+            const contactData = await contactData_1.default.retrieveContactData(processedSheduledMailData.contactId);
             if (isTimeToSendMail(processedSheduledMailData) && contactData.isSubscribed) {
-                await mail_sender_1.default.sentMail(contactData, templateId);
-                await scheduled_mails_service_1.default.deletePendingMail(id);
+                await mail_sender_1.default.sentScheduledMail(contactData, processedSheduledMailData);
+                await scheduled_mails_service_1.default.deletePendingMail(processedSheduledMailData.id);
             }
         });
         console.log('finish batching sending');

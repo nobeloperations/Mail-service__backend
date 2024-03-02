@@ -12,15 +12,16 @@ const applyingInternshipHandler = async (contactData, contactIpAddress) => {
     try {
         const contactLocation = await location_determination_service_1.default.getContactLocationByIpAddress(contactIpAddress);
         const dataAboutContactFromDatabase = await prisma_client_1.default.contact.findUnique({ where: { email: contactData.email } });
-        console.log(contactLocation);
         if (contactLocation && (contactLocation.country === 'Russia' || contactLocation.country === 'Belarus')) {
             const contactRecord = dataAboutContactFromDatabase
                 ? await contacts_service_1.default.updateContactById(dataAboutContactFromDatabase.id, { ...contactData, ...contactLocation })
                 : await contacts_service_1.default.createContact({ ...contactData, ...contactLocation });
             return await subscribeToBlockedContactsList(contactRecord, 'From country agressor');
         }
+        const summerOperationTimezone = generateSummerOperationtimezone({ ...contactData, ...contactLocation });
         const eqTimestampCalculatedValue = generateEqTimestampFieldBasedOnEqSelectedDate({ ...contactData, ...contactLocation });
         contactData.ipAddress = contactIpAddress;
+        contactData.operationTimezone = summerOperationTimezone;
         contactData.eduQuestEventTimestamp = eqTimestampCalculatedValue;
         const contactRecord = dataAboutContactFromDatabase
             ? await contacts_service_1.default.updateContactById(dataAboutContactFromDatabase.id, { ...contactData, ...contactLocation })
@@ -50,7 +51,7 @@ const subscribeToEQList = async (contactData) => {
             contacts: { connect: { id: contactData.id } }
         }
     });
-    await mail_sender_1.default.sentMail(contactData, '65ba9d47d3ed1c967f8f7483', 'Application submitted');
+    await mail_sender_1.default.sentMail(contactData, '65ba9d47d3ed1c967f8f7483', { subject: 'Application submitted' });
     return subscriptionResult;
 };
 const subscribeToFutureList = async (contactData) => {
@@ -88,6 +89,20 @@ const generateEqTimestampFieldBasedOnEqSelectedDate = (contactData) => {
     const momentDate = (0, moment_1.default)(contactData.eduQuestSelectedDateTime);
     const formatedDate = momentDate.tz(contactData.timezone).format('MMMM DD, YYYY HH:mm');
     return `${formatedDate} ${contactData.timezone}`;
+};
+const generateSummerOperationtimezone = (contactData) => {
+    try {
+        const now = moment_1.default.tz(contactData.timezone);
+        const standardOffset = now.clone().subtract(6, 'months').utcOffset();
+        const dstOffset = now.clone().add(6, 'months').utcOffset();
+        const maxOffset = Math.max(standardOffset, dstOffset);
+        const formattedOffset = (0, moment_1.default)().utcOffset(maxOffset).format('Z');
+        return `GMT${formattedOffset}`;
+    }
+    catch (e) {
+        console.log(e);
+        return '';
+    }
 };
 exports.default = applyingInternshipHandler;
 //# sourceMappingURL=index.js.map

@@ -58,4 +58,14 @@ router.get(
     ContactController.getContactActions
 );
 
+router.put(
+    '/:contactId/subscribe-to-list/:listId',
+    ContactController.subscribeToList
+);
+
+router.put(
+    '/:contactId/unsubscribe-from-list/:listId',
+    ContactController.unsubscribeFromList
+);
+
 export default router;

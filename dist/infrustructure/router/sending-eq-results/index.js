@@ -27,7 +27,6 @@ const scheduleMailsWithEqDecisions = async (eventType, groupedContactsIdsByEduQu
                 scheduledDate: moment_1.default.utc().format(),
             };
         });
-        console.log(recordsToCreate.length);
         await prisma_client_1.default.scheduledMail.createMany({ data: recordsToCreate });
     }));
     return scheduledMailsResult;
@@ -56,14 +55,11 @@ const unsibscibeSelectedContactsFromMailing = async (groupedContactsIdsByEduQues
 };
 const getGroupedContactsIdsByEduQuestDecision = async (data) => {
     const result = {};
-    for (const { contactEmail, eduQuestDecision } of data) {
+    for (const { contactId, eduQuestDecision } of data) {
         if (!result[eduQuestDecision]) {
             result[eduQuestDecision] = [];
         }
-        const contact = await prisma_client_1.default.contact.findUnique({ where: { email: contactEmail } });
-        if (contact && contact.id) {
-            result[eduQuestDecision].push(contact.id);
-        }
+        result[eduQuestDecision].push(contactId);
     }
     console.log(result);
     return result;

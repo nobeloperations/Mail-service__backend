@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, MailingProfile, InternShipProgramType } from '@prisma/client';
 import prismaClient from '../../database/prisma-client';
 
 import generateEqTimestampFieldBasedOnEqSelectedDate from '../../utils/helpers/dynamic-fields-generators/timestamp.generator';
@@ -53,9 +53,18 @@ const getListContactsLists = async (filteringParams: ApiResourceFilteringParams)
 };
 
 const addContacListToMailingAutomation = async (listId: string, mailingAutomationId: string) => {
-    const { contactIds } = await prismaClient.contactstList.findUnique({ 
-        where: { id: listId } 
+    const { contactIds, intake } = await prismaClient.contactstList.findUnique({ 
+        where: { id: listId } ,
+        include: {
+            intake: true
+        }
     });
+
+    const targetMailingProfile = intake ? (
+        intake.programType === InternShipProgramType.WEEKDAY 
+          ? MailingProfile.WEEKDAY_EQ_MAILING  
+          : MailingProfile.WEEKEND_EQ_MAILING
+    ) : null;
     
     const { automationScheduledMails } = await prismaClient.mailingAutomation.findUnique({ 
         where: { id: mailingAutomationId }, 
@@ -66,7 +75,8 @@ const addContacListToMailingAutomation = async (listId: string, mailingAutomatio
         return automationScheduledMails.map(({ id, ...scheduledMailData }) => ({
             contactId,
             mailingAutomationId,
-            ...scheduledMailData
+            mailingProfile: targetMailingProfile,
+            ...scheduledMailData, 
         }));
     }).flat();
 
@@ -82,29 +92,62 @@ const addContacListToMailingAutomation = async (listId: string, mailingAutomatio
     return result;
 };
 
-const syncMembersEqDate = async (listId: string) => {
-    const { contactIds, eduQuestStartDate: listEqData } = await prismaClient.contactstList.findUnique({ where: { id: listId } });
+const updateMembersEqDate = async (listId: string) => {
+    const contactListData = await prismaClient.contactstList.findUnique({ where: { id: listId } });
+
+    if (!contactListData || !contactListData.eduQuestStartDate) {
+        return null;
+    }
+
+    const { contactIds, eduQuestStartDate: listEqDate } = contactListData;
 
     const contactData = await prismaClient.contact.findMany({ where: { id: { in: contactIds } } });
 
-    const recordsToUpdate = contactData.map(targetContactData => ({
-        where: { id: targetContactData.id },
-        data: {
-            eduQuestSelectedDateTime: listEqData,
-            eduQuestEventTimestamp: generateEqTimestampFieldBasedOnEqSelectedDate(targetContactData)
+    const contactsGroupedByTimezone = contactData.reduce((acc, contact) => {
+        const timezone = contact.timezone;
+        if (!acc[timezone]) {
+            acc[timezone] = [];
         }
-    }));
+        acc[timezone].push(contact.id);
+        return acc;
+    }, {});
 
-    const result = await prismaClient.contact.updateMany({ data: recordsToUpdate });
+    const updatePromises = Object.entries(contactsGroupedByTimezone).map(async ([timezone, contactIds]) => {
+        return prismaClient.contact.updateMany({
+            where: { id: { in: contactIds as string[] } },
+            data: {
+                eduQuestSelectedDateTime: listEqDate,
+                eduQuestEventTimestamp: generateEqTimestampFieldBasedOnEqSelectedDate(timezone, listEqDate)
+            }
+        });
+    });
 
-    return result;
+    const result = await Promise.all(updatePromises);
+
+    return { updatedContactsCount: result.reduce((acc, data) => acc += data.count, 0) };
+};
+
+const mergeLists = async (targetListId: string, listIdToMerge: string) => {
+    const { contactIds: contactsIdsToMerge } = await prismaClient.contactstList.findUnique({ where: { id: listIdToMerge } });
+
+    const merginResult = await prismaClient.contactstList.update({
+        where: { id: targetListId },
+        data: {
+            contacts: {
+                connect: contactsIdsToMerge.map(id => ({ id }))
+            }
+        }
+    });
+
+    return merginResult;
 };
 
 export default {
+    mergeLists,
     createContactsList,
+    updateMembersEqDate,
+    getListContactsLists,
     updateContactListById,
     deleteContactsListById,
-    getListContactsLists,
     addContacListToMailingAutomation,
-    syncMembersEqDate
 };

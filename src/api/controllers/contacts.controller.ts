@@ -77,15 +77,33 @@ const getContactActions = async(req: Request, res: Response) => {
 
     const userActions = await ContactService.getContactActions(id, typeOfActivity)
 
-    res.status(200).json({
+    res.status(StatusCodes.OK).json({
         userActions
     })
-}
+};
+
+const subscribeToList = async (req: Request, res: Response) => {
+    const { contactId, listId } = req.params;
+
+    await ContactService.subscribeToList(contactId, listId);
+
+    res.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
+};
+
+const unsubscribeFromList = async (req: Request, res: Response) => {
+    const { contactId, listId } = req.params;
+
+    await ContactService.unsubscribeFromList(contactId, listId);
+
+    res.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
+};
 
 export default {
     createContact: ExceptionInterceptor(createContact),
     getContactById: ExceptionInterceptor(getContactById),
     getContactList: ExceptionInterceptor(getContactList),
+    subscribeToList: ExceptionInterceptor(subscribeToList),
+    unsubscribeFromList: ExceptionInterceptor(unsubscribeFromList),
     deleteContactById: ExceptionInterceptor(deleteContactById),
     updateContactById: ExceptionInterceptor(updateContactById),
     batchUpdatingContacts: ExceptionInterceptor(batchUpdatingContacts),

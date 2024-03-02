@@ -17,5 +17,7 @@ router.get('/:id', request_id_validator_middleware_1.default, contacts_controlle
 router.put('/:id', request_id_validator_middleware_1.default, (0, request_body_validator_1.default)(contacts_request_schemas_1.default.updateResource), contacts_controller_1.default.updateContactById);
 router.delete('/:id', request_id_validator_middleware_1.default, contacts_controller_1.default.deleteContactById);
 router.get('/:id/actions', request_id_validator_middleware_1.default, contacts_controller_1.default.getContactActions);
+router.put('/:contactId/subscribe-to-list/:listId', contacts_controller_1.default.subscribeToList);
+router.put('/:contactId/unsubscribe-from-list/:listId', contacts_controller_1.default.unsubscribeFromList);
 exports.default = router;
 //# sourceMappingURL=contacts.router.js.map

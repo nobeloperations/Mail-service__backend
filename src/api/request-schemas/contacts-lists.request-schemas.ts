@@ -15,8 +15,14 @@ const addRecordContactsToMailingAutomationSchema = Joi.object({
   mailingAutomationId: Joi.string().required()
 });
 
+const merginListsSchema = Joi.object({
+  targetListId: Joi.string().required(),
+  listIdToMerge: Joi.string().required()
+});
+
 export default {
+  merginListsSchema,
   createResourseSchema,
   updateResourseSchema,
   addRecordContactsToMailingAutomationSchema
-}
+};

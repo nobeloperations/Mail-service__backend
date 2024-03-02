@@ -36,16 +36,26 @@ const addContacListToMailingAutomation = async (req, res) => {
     const result = await contacts_lists_service_1.default.addContacListToMailingAutomation(listId, mailingAutomationId);
     res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
-const syncMembersEqDate = async (req, res) => {
+const updateMembersEqDate = async (req, res) => {
     const id = req.params.id;
-    const result = await contacts_lists_service_1.default.syncMembersEqDate(id);
+    const result = await contacts_lists_service_1.default.updateMembersEqDate(id);
     res.status(http_status_codes_1.StatusCodes.OK).json(result);
 };
+const mergeLists = async (req, res) => {
+    const { targetListId, listIdToMerge } = req.body;
+    const result = await contacts_lists_service_1.default.mergeLists(targetListId, listIdToMerge);
+    res.status(http_status_codes_1.StatusCodes.OK).json({
+        listId: targetListId,
+        tatolNumberOfContacts: result.contactIds.length
+    });
+};
 exports.default = {
+    mergeLists: (0, exception_interceptor_middleware_1.default)(mergeLists),
     createContactsList: (0, exception_interceptor_middleware_1.default)(createContactsList),
     updateContactListById: (0, exception_interceptor_middleware_1.default)(updateContactListById),
     deleteContactsListById: (0, exception_interceptor_middleware_1.default)(deleteContactsListById),
     getListContactsLists: (0, exception_interceptor_middleware_1.default)(getListContactsLists),
-    addContacListToMailingAutomation: (0, exception_interceptor_middleware_1.default)(addContacListToMailingAutomation)
+    addContacListToMailingAutomation: (0, exception_interceptor_middleware_1.default)(addContacListToMailingAutomation),
+    updateMembersEqDate: (0, exception_interceptor_middleware_1.default)(updateMembersEqDate)
 };
 //# sourceMappingURL=contacts-lists.controller.js.map

@@ -45,18 +45,31 @@ const addContacListToMailingAutomation = async (req: Request, res: Response) => 
     res.status(StatusCodes.OK).json(result);
 }
 
-const syncMembersEqDate = async (req: Request, res: Response) => {
+const updateMembersEqDate = async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const result = await ContactsListsService.syncMembersEqDate(id);
+    const result = await ContactsListsService.updateMembersEqDate(id);
     
     res.status(StatusCodes.OK).json(result);
 };
 
+const mergeLists = async (req: Request, res: Response) => {
+    const { targetListId, listIdToMerge } = req.body;
+
+    const result = await ContactsListsService.mergeLists(targetListId, listIdToMerge);
+
+    res.status(StatusCodes.OK).json({
+        listId: targetListId,
+        tatolNumberOfContacts: result.contactIds.length
+    });
+};
+
 export default {
+    mergeLists: ExceptionInterceptor(mergeLists),
     createContactsList: ExceptionInterceptor(createContactsList),
     updateContactListById: ExceptionInterceptor(updateContactListById),
     deleteContactsListById: ExceptionInterceptor(deleteContactsListById),
     getListContactsLists: ExceptionInterceptor(getListContactsLists),
-    addContacListToMailingAutomation: ExceptionInterceptor(addContacListToMailingAutomation)
+    addContacListToMailingAutomation: ExceptionInterceptor(addContacListToMailingAutomation),
+    updateMembersEqDate: ExceptionInterceptor(updateMembersEqDate)
 };

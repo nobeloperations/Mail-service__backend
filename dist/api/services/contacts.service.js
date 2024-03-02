@@ -46,7 +46,18 @@ const updateContactById = async (id, contactData) => {
     return result;
 };
 const getContactById = async (id) => {
-    const result = await prisma_client_1.default.contact.findUnique({ where: { id } });
+    const result = await prisma_client_1.default.contact.findUnique({
+        where: { id },
+        include: {
+            lists: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+    delete result.listIds;
     return result;
 };
 const getContactList = async (filteringParams) => {
@@ -121,6 +132,32 @@ const batchDeletingContacts = async (deletingData) => {
     });
     return result;
 };
+const subscribeToList = async (contactId, listId) => {
+    const result = await prisma_client_1.default.contactstList.update({
+        where: { id: listId },
+        data: {
+            contacts: {
+                connect: {
+                    id: contactId
+                }
+            }
+        }
+    });
+    return result;
+};
+const unsubscribeFromList = async (contactId, listId) => {
+    const result = await prisma_client_1.default.contactstList.update({
+        where: { id: listId },
+        data: {
+            contacts: {
+                disconnect: {
+                    id: contactId
+                }
+            }
+        }
+    });
+    return result;
+};
 const getContactActions = async (contactId, typeOfActivity) => {
     // const objectQuery = typeOfActivity ? { contactId, typeOfActivity: { equals: typeOfActivity as ContactsActions["typeOfActivity"] } } : { contactId };
     // return await prismaClient.contactsActions.findMany({
@@ -135,6 +172,8 @@ exports.default = {
     updateContactById,
     batchUpdatingContacts,
     batchDeletingContacts,
-    getContactActions
+    getContactActions,
+    subscribeToList,
+    unsubscribeFromList
 };
 //# sourceMappingURL=contacts.service.js.map

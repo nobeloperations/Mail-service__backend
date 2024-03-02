@@ -9,10 +9,10 @@ import prismaClient from '../../../database/prisma-client';
 
 const applyingInternshipHandler = async (contactData: Prisma.ContactCreateInput, contactIpAddress: string) => {
     try {
+
         const contactLocation = await LocationDeterminationService.getContactLocationByIpAddress(contactIpAddress);
         const dataAboutContactFromDatabase = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
         
-        console.log(contactLocation);
 
         if (contactLocation && (contactLocation.country === 'Russia' || contactLocation.country === 'Belarus')) {
             const contactRecord = dataAboutContactFromDatabase
@@ -22,9 +22,11 @@ const applyingInternshipHandler = async (contactData: Prisma.ContactCreateInput,
             return await subscribeToBlockedContactsList(contactRecord, 'From country agressor');
         }
         
+        const summerOperationTimezone = generateSummerOperationtimezone({...contactData, ...contactLocation});
         const eqTimestampCalculatedValue = generateEqTimestampFieldBasedOnEqSelectedDate({...contactData, ...contactLocation});
-
+        
         contactData.ipAddress = contactIpAddress;
+        contactData.operationTimezone = summerOperationTimezone;
         contactData.eduQuestEventTimestamp = eqTimestampCalculatedValue;
 
         const contactRecord = dataAboutContactFromDatabase
@@ -60,7 +62,7 @@ const subscribeToEQList = async (contactData: Contact) => {
         }
     });
 
-    await MailSenderService.sentMail(contactData, '65ba9d47d3ed1c967f8f7483', 'Application submitted');
+    await MailSenderService.sentMail(contactData, '65ba9d47d3ed1c967f8f7483', { subject: 'Application submitted' });
 
     return subscriptionResult;
 };
@@ -107,5 +109,23 @@ const generateEqTimestampFieldBasedOnEqSelectedDate = (contactData: Prisma.Conta
 
     return `${formatedDate} ${contactData.timezone}`;
 };
+
+const generateSummerOperationtimezone = (contactData: Prisma.ContactCreateInput) => {
+    try { 
+        const now = moment.tz(contactData.timezone);
+      
+        const standardOffset = now.clone().subtract(6, 'months').utcOffset();
+        const dstOffset = now.clone().add(6, 'months').utcOffset();
+      
+        const maxOffset = Math.max(standardOffset, dstOffset);
+      
+        const formattedOffset = moment().utcOffset(maxOffset).format('Z');
+        return `GMT${formattedOffset}`;
+    } catch(e) {
+        console.log(e);
+        return '';
+    }
+
+}; 
 
 export default applyingInternshipHandler;
