@@ -4,8 +4,7 @@ import PromoMailing from './promo-mailing';
 import processContactsEqDecision from './sending-eq-results';
 import applyingInternshipHandler from './applying-internship';
 
-import StatisticService from './statistics';
-
+import { PromoStatisticRouter } from './promo-statistics';
 
 const router = Router();
 
@@ -32,22 +31,6 @@ router.post('/schedule-promo-mail-about-nobel-channels', async (req: Request, re
     res.status(200).json(result);
 });
 
-router.get('/statistics/unique-countries', async (req: Request, res: Response) => {
-    const result = await StatisticService.getCountriesStats();
-
-    res.status(200).json(result);
-});
-
-router.get('/statistics/contacts-age', async (req: Request, res: Response) => {
-    const result = await StatisticService.getReferralResourcesStats();
-
-    res.status(200).json(result);
-});
-
-router.get('/statistics/referral-resources', async (req: Request, res: Response) => {
-    const result = await StatisticService.getReferralResourcesStats();
-
-    res.status(200).json(result);
-});
+router.use('/promo-stats', PromoStatisticRouter);
 
 export default router;
