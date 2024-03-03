@@ -195,6 +195,15 @@ model FutureEqDatesContactsList {
   createdAt DateTime @default(now()) @db.Date
 }
 
+model ReferralLink {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name          String
+  code          String @unique
+  url           String
+  clickingCount Int    @default(0) @db.Long
+}
+
 // ENUMS
 enum EduQuestDecision {
   SELECTED
