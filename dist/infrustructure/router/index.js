@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const promo_mailing_1 = __importDefault(require("./promo-mailing"));
 const sending_eq_results_1 = __importDefault(require("./sending-eq-results"));
 const applying_internship_1 = __importDefault(require("./applying-internship"));
-const statistics_1 = __importDefault(require("./statistics"));
+const promo_statistics_1 = require("./promo-statistics");
 const router = (0, express_1.default)();
 router.post('/contact-form-creation', async (req, res) => {
     const contactData = req.body;
@@ -25,13 +25,6 @@ router.post('/schedule-promo-mail-about-nobel-channels', async (req, res) => {
     const result = await promo_mailing_1.default.scheduleMailingsAboutNobelChannels(startDate, endDate);
     res.status(200).json(result);
 });
-router.get('/statistics/unique-countries', async (req, res) => {
-    const result = await statistics_1.default.getUniqueCountries();
-    res.status(200).json(result);
-});
-router.get('/statistics/contacts-age', async (req, res) => {
-    const result = await statistics_1.default.getGeneralStatisctsAboutParticipantsAge();
-    res.status(200).json(result);
-});
+router.use('/promo-stats', promo_statistics_1.PromoStatisticRouter);
 exports.default = router;
 //# sourceMappingURL=index.js.map
