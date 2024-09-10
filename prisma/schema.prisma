@@ -42,6 +42,9 @@ model Contact {
   eduQuestSelectedDateTime DateTime?
   eduQuestDecision         EduQuestDecision?
 
+  partnerLinkId String?      @db.ObjectId
+  partnerLink   PartnerLink? @relation(fields: [partnerLinkId], references: [id])
+
   ipAddress                  String?
   reinvitingDate             DateTime?
   birthDate                  DateTime  @db.Date
@@ -229,6 +232,14 @@ model MailingProfile {
   replingMail String?
 
   ScheduledMail ScheduledMail[]
+}
+
+model PartnerLink {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  urlIdentifier String @unique
+
+  Contact Contact[]
 }
 
 model ClassReminders {

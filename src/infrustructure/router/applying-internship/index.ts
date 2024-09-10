@@ -8,13 +8,12 @@ import LocationDeterminationService from '../../location-determination-service'
 
 import prismaClient from '../../../database/prisma-client';
 
-export const applyingInternshipHandler = async (contactData: Prisma.ContactCreateInput, contactIpAddress: string) => {
+export const applyingInternshipHandler = async (contactData: Prisma.ContactCreateInput & { partnerLinkIdentifier: string }, contactIpAddress: string) => {
     try {
-
         const contactLocation = await LocationDeterminationService.getContactLocationByIpAddress(contactIpAddress);
         const dataAboutContactFromDatabase = await prismaClient.contact.findUnique({ where: { email: contactData.email } });
+        const partnerLink = await prismaClient.partnerLink.findUnique({ where: { urlIdentifier: contactData.partnerLinkIdentifier }});
         
-
         if (contactLocation && (contactLocation.country === 'Russia' || contactLocation.country === 'Belarus' || contactLocation.country === 'Israel')) {
             const contactRecord = dataAboutContactFromDatabase
                 ? await ContacService.updateContactById(dataAboutContactFromDatabase.id, {...contactData, ...contactLocation})
@@ -29,10 +28,17 @@ export const applyingInternshipHandler = async (contactData: Prisma.ContactCreat
         contactData.ipAddress = contactIpAddress;
         contactData.operationTimezone = summerOperationTimezone;
         contactData.eduQuestEventTimestamp = eqTimestampCalculatedValue;
+        
+
+        if (partnerLink) {
+            contactData.partnerLink = { connect: { id: partnerLink.id } };
+        }
+
+        const { partnerLinkIdentifier, ...creationContactData } = contactData;
 
         const contactRecord = dataAboutContactFromDatabase
-            ? await ContacService.updateContactById(dataAboutContactFromDatabase.id, {...contactData, ...contactLocation})
-            : await ContacService.createContact({...contactData, ...contactLocation});
+            ? await ContacService.updateContactById(dataAboutContactFromDatabase.id, {...creationContactData, ...contactLocation})
+            : await ContacService.createContact({...creationContactData, ...contactLocation});
 
         const listSubscribtionResult = await subscribeToAppropriateList(contactRecord);
 

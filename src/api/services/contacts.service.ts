@@ -51,7 +51,10 @@ const deleteContactById=async(id:string)=>{
 }
 
 const updateContactById = async (id: string, contactData: Prisma.ContactUpdateInput) => {
-    const result = await prismaClient.contact.update({ where: { id }, data: contactData });
+    const result = await prismaClient.contact.update({ 
+        where: { id }, 
+        data: contactData, 
+    });
     return result;
 };
 
