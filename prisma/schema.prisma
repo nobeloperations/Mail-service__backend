@@ -1,0 +1,272 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Intake {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  eventDate                    DateTime @unique @db.Date
+  orientationEventDateTime     DateTime @db.Date
+  firstInternshipClassDateTime DateTime @db.Date
+  applicationDeadline          DateTime @db.Date
+  createdAt                    DateTime @default(now()) @db.Date
+
+  programType InternShipProgramType
+  status      IntakeStatus          @default(OPENED)
+
+  contactsList ContactstList?
+}
+
+model Contact {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+
+  age                 Int
+  city                String
+  email               String  @unique
+  gender              String
+  country             String
+  timezone            String
+  occupation          String
+  operationTimezone   String?
+  sourceOfReferral    String //TODO: Define default sources
+  intershipMotivation String
+
+  eduQuestEventTimestamp   String?
+  eduQuestSelectedDateTime DateTime?
+  eduQuestDecision         EduQuestDecision?
+
+  ipAddress                  String?
+  reinvitingDate             DateTime?
+  birthDate                  DateTime  @db.Date
+  isSubscribed               Boolean   @default(true)
+  isEqParticipationConfirmed Boolean   @default(false)
+  isParticipanteEqEvent      Boolean   @default(false)
+
+  createdAt DateTime @default(now()) @db.Date
+
+  listIds String[]        @db.ObjectId
+  lists   ContactstList[] @relation(fields: [listIds], references: [id])
+
+  SentMail                  SentMail[]
+  ScheduledMail             ScheduledMail[]
+  ContactsActions           ContactsActions[]
+  ClassReminders            ClassReminders[]
+  BlockedContactsLists      BlockedContactsList?
+  FutureEqDatesContactsList FutureEqDatesContactsList?
+
+  mailingAutomations ContactMailingAutomation[]
+}
+
+model Users {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  password String
+  name     String
+  token    String?
+}
+
+model ContactstList {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  name              String    @unique
+  eduQuestStartDate DateTime? @unique
+  createdAt         DateTime  @default(now()) @db.Date
+
+  intakeId String? @unique @db.ObjectId
+  intake   Intake? @relation(fields: [intakeId], references: [id])
+
+  contactIds String[]  @db.ObjectId
+  contacts   Contact[] @relation(fields: [contactIds], references: [id])
+}
+
+model ContactMailingAutomation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mailingAutomationId String            @db.ObjectId
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id])
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
+
+  addedAt DateTime @default(now())
+}
+
+model ContactsActions {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  actionType        ContactActionType
+  actionDescription String
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+// MAILS
+model ScheduledMail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  subject            String
+  scheduledDate      DateTime @db.Date
+  additionalData     Json?
+  additionalFlags    Json?
+  useContactTimezone Boolean  @default(false)
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+
+  mailingAutomationId String?            @db.ObjectId
+  mailingAutomation   MailingAutomation? @relation(fields: [mailingAutomationId], references: [id])
+
+  mailingProfileId String         @db.ObjectId
+  mailingProfile   MailingProfile @relation(fields: [mailingProfileId], references: [id])
+}
+
+model SentMail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  emailId  String    @unique
+  sentDate DateTime? @default(now()) @db.Date
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+}
+
+model MailTemplate {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name              String
+  googleDriveFileId String
+  createdAt         DateTime @default(now()) @db.Date
+
+  sentMails                SentMail[]
+  scheduledMails           ScheduledMail[]
+  AutomationScheduledMails AutomationScheduledMail[]
+}
+
+// MAILING AUTOMATIONS 
+model MailingAutomation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+
+  scheduledMails           ScheduledMail[]
+  automationScheduledMails AutomationScheduledMail[]
+  contacts                 ContactMailingAutomation[]
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+model AutomationScheduledMail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  useContactTimezone Boolean
+  scheduledDate      DateTime @db.Date
+
+  templateId String       @db.ObjectId
+  template   MailTemplate @relation(fields: [templateId], references: [id])
+
+  mailingAutomationId String            @db.ObjectId
+  mailingAutomation   MailingAutomation @relation(fields: [mailingAutomationId], references: [id], onDelete: Cascade)
+}
+
+model BlockedContactsList {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String  @unique @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  reasonOfBlocking String
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+model FutureEqDatesContactsList {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  contactId String  @unique @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+model ReferralLink {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+  code String @unique
+  url  String
+
+  referralLinkClickingStats ReferralLinkClickingStat[]
+}
+
+model ReferralLinkClickingStat {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  referralLinkId String       @db.ObjectId
+  referralLink   ReferralLink @relation(fields: [referralLinkId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+model MailingProfile {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  senderMail  String
+  replingMail String?
+
+  ScheduledMail ScheduledMail[]
+}
+
+model ClassReminders {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  classIdentifier String
+
+  contactId String  @db.ObjectId
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Date
+}
+
+// ENUMS
+enum EduQuestDecision {
+  SELECTED
+  TRY_AGAIN
+  ENGLISH_ISSUE
+
+  BEHAVIOR_ISSUE
+  AUDIO_ISSUE
+  PREFERRED_DEVICE
+  BACKGROUND_NOISES
+  POOR_INTERNET_CONNECTION
+
+  WE_MISSED_YOU
+}
+
+enum InternShipProgramType {
+  WEEKDAY
+  WEEKEND
+}
+
+enum IntakeStatus {
+  CLOSED
+  OPENED
+}
+
+enum ContactActionType {
+  OPEN_MAIL
+  CLICKED_ON_THE_LINK
+}

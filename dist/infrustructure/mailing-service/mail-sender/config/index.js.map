@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../../src/infrustructure/mailing-service/mail-sender/config/index.ts"],"names":[],"mappings":";;;AAEa,QAAA,UAAU,GAAG;IACtB,WAAW,EAAE,OAAO,CAAC,GAAG,CAAC,cAAc;IACvC,eAAe,EAAE,OAAO,CAAC,GAAG,CAAC,qBAAqB;IAClD,MAAM,EAAE,OAAO,CAAC,GAAG,CAAC,UAAU;CACjC,CAAC"}
